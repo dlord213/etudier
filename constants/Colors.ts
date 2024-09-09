@@ -23,6 +23,7 @@ interface BackgroundPalettes {
   Brand: string;
   Neutral?: string;
   Black?: string;
+  Hover?: string;
 }
 
 interface ColorProps {
@@ -43,6 +44,7 @@ const Colors: ColorProps = {
   Backgrounds_Dark: {
     Brand: "#2C2C2C",
     Black: "#000000",
+    Hover: "#434343",
   },
   Text_Light: {
     Default: "#303030",
