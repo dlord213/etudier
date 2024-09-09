@@ -18,17 +18,41 @@ interface TextPalettes {
   Tertiary: string;
 }
 
+interface BackgroundPalettes {
+  Default?: string;
+  Brand: string;
+  Neutral?: string;
+  Black?: string;
+}
+
 interface ColorProps {
-  Text: TextPalettes;
+  Backgrounds_Light: BackgroundPalettes;
+  Backgrounds_Dark: BackgroundPalettes;
+  Text_Light: TextPalettes;
+  Text_Dark: TextPalettes;
   Wewak: Palettes;
   Emerald: Palettes;
 }
 
 const Colors: ColorProps = {
-  Text: {
+  Backgrounds_Light: {
+    Default: "#FFFFFF",
+    Brand: "#E6E6E6",
+    Neutral: "#E3E3E3",
+  },
+  Backgrounds_Dark: {
+    Brand: "#2C2C2C",
+    Black: "#000000",
+  },
+  Text_Light: {
     Default: "#303030",
     Secondary: "#5A5A5A",
     Tertiary: "#767676",
+  },
+  Text_Dark: {
+    Default: "#F2F2F2",
+    Secondary: "#757575",
+    Tertiary: "#B3B3B3",
   },
   Wewak: {
     50: "#fdf3f4",
