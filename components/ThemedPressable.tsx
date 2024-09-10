@@ -1,4 +1,9 @@
-import { Pressable, useColorScheme, PressableProps } from "react-native";
+import {
+  Pressable,
+  useColorScheme,
+  PressableProps,
+  ViewStyle,
+} from "react-native";
 import { forwardRef } from "react";
 
 interface ThemedPressableProps extends PressableProps {

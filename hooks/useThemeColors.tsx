@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useColorScheme } from "react-native";
 
 export default function useThemeColors() {
