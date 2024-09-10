@@ -1,5 +1,5 @@
 node_modules/
-app-example/
+app_example/
 .expo/
 dist/
 npm-debug.*
@@ -19,3 +19,11 @@ web-build/
 
 expo-env.d.ts
 # @end expo-cli
+
+diseases = {
+  Anemia: {
+    keywords: ["difficulty", "difficult"]
+  }
+}
+
+user input -> check user input and find keywords -> return all results with the keywords
