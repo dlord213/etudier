@@ -7,8 +7,9 @@ import {
   WorkSans_900Black,
   useFonts,
 } from "@expo-google-fonts/work-sans";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Redirect, SplashScreen } from "expo-router";
+import * as SecureStore from "expo-secure-store";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -21,16 +22,38 @@ export default function Index() {
     WorkSans_700Bold,
     WorkSans_900Black,
   });
+  const [isInitialBoot, setIsInitialBoot] = useState<boolean | null>(null);
+
+  async function checkIfInitialBoot() {
+    let result = await SecureStore.getItemAsync("name");
+    if (result) {
+      setIsInitialBoot(false);
+    } else {
+      setIsInitialBoot(true);
+    }
+  }
 
   useEffect(() => {
-    if (loaded || error) {
-      SplashScreen.hideAsync();
-    }
+    const initialize = async () => {
+      if (loaded || error) {
+        await SplashScreen.hideAsync();
+        checkIfInitialBoot();
+      }
+    };
+
+    initialize();
   }, [loaded, error]);
 
   if (!loaded && !error) {
     return null;
   }
+  if (isInitialBoot === null) {
+    return null;
+  }
 
-  return <Redirect href="/initial_boot" />;
+  if (isInitialBoot) {
+    return <Redirect href="/initial_boot" />;
+  } else {
+    return <Redirect href="(tabs)/" />;
+  }
 }

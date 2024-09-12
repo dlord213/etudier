@@ -7,17 +7,23 @@ export default function RootLayout() {
 
   return (
     <ThemeContext.Provider value={{ palette, theme, togglePalette, setTheme }}>
-      <Stack initialRouteName="index">
-        <Stack.Screen name="index" options={{ headerShown: false }} />
+      <Stack
+        initialRouteName="index"
+        screenOptions={{ headerShown: false, orientation: "portrait" }}
+      >
+        <Stack.Screen name="index" options={{ animation: "fade" }} />
         <Stack.Screen
           name="initial_boot/index"
-          options={{ headerShown: false }}
+          options={{ animation: "fade_from_bottom" }}
         />
         <Stack.Screen
           name="initial_boot/welcome"
-          options={{ headerShown: false }}
+          options={{ animation: "fade_from_bottom" }}
         />
-        <Stack.Screen name="homepage/index" options={{ headerShown: false }} />
+        <Stack.Screen
+          name="(tabs)"
+          options={{ animation: "fade", animationDuration: 5000 }}
+        />
       </Stack>
     </ThemeContext.Provider>
   );

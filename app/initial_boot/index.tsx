@@ -1,5 +1,5 @@
 import Colors from "@/constants/Colors";
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, ToastAndroid, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useContext, useState } from "react";
 import { useRouter } from "expo-router";
@@ -43,8 +43,12 @@ export default function Page() {
       />
       <ThemedPressable
         onPress={() => {
-          save("name", name);
-          router.replace("/initial_boot/welcome");
+          if (name) {
+            save("name", name);
+            router.replace("/initial_boot/welcome");
+          } else {
+            ToastAndroid.show("You don't have a name?", ToastAndroid.SHORT);
+          }
         }}
         backgroundColor={Colors[palette][600]}
         children={

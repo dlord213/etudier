@@ -1,7 +1,8 @@
+import { Pressable, StyleSheet, Text } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { useContext } from "react";
-import { StyleSheet } from "react-native";
+import * as SecureStore from "expo-secure-store";
 import Colors from "@/constants/Colors";
+import { useContext } from "react";
 import ThemeContext from "@/contexts/ThemeContext";
 
 export default function Page() {
