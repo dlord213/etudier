@@ -21,7 +21,7 @@ function CustomTabBar({ state, descriptors, navigation }) {
   const iconColor =
     theme != "dark" ? Colors[palette][200] : Colors[palette][300];
   const activeIconColor =
-    theme != "dark" ? Colors[palette][900] : Colors[palette][600];
+    theme != "dark" ? Colors[palette][500] : Colors[palette][600];
 
   return (
     <View style={styleState.tabBar}>
