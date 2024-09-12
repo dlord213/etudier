@@ -13,6 +13,10 @@ export default function RootLayout() {
           name="initial_boot/index"
           options={{ headerShown: false }}
         />
+        <Stack.Screen
+          name="initial_boot/welcome"
+          options={{ headerShown: false }}
+        />
         <Stack.Screen name="homepage/index" options={{ headerShown: false }} />
       </Stack>
     </ThemeContext.Provider>

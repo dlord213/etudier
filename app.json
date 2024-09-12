@@ -43,7 +43,8 @@
             "deploymentTarget": "13.4"
           }
         }
-      ]
+      ],
+      "expo-secure-store"
     ],
     "experiments": {
       "typedRoutes": true

@@ -1,8 +1,9 @@
 import Colors from "@/constants/Colors";
-import { Pressable, StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useContext, useState } from "react";
-import { Link } from "expo-router";
+import { useRouter } from "expo-router";
+import * as SecureStore from "expo-secure-store";
 
 import AntDesign from "@expo/vector-icons/AntDesign";
 import ThemedText from "@/components/ThemedText";
@@ -10,16 +11,20 @@ import ThemedTextInput from "@/components/ThemedTextInput";
 import ThemedPressable from "@/components/ThemedPressable";
 import ThemeContext from "@/contexts/ThemeContext";
 
+async function save(key: any, value: any) {
+  await SecureStore.setItemAsync(key, value);
+}
+
 export default function Page() {
   const { palette, theme } = useContext(ThemeContext);
 
   const styleState = styles(theme);
+  const router = useRouter();
 
   const [name, setName] = useState<string>("");
-  const [index, setIndex] = useState(0);
 
-  const pages = [
-    <>
+  return (
+    <SafeAreaView style={styleState.safeAreaView}>
       <View>
         <ThemedText
           style={{ fontFamily: "WorkSans_900Black", fontSize: 36 }}
@@ -38,7 +43,8 @@ export default function Page() {
       />
       <ThemedPressable
         onPress={() => {
-          setIndex(1);
+          save("name", name);
+          router.replace("/initial_boot/welcome");
         }}
         backgroundColor={Colors[palette][600]}
         children={
@@ -85,88 +91,7 @@ export default function Page() {
           }}
         ></View>
       </View>
-    </>,
-    <>
-      <Pressable
-        onPress={() => {
-          setIndex(0);
-        }}
-      >
-        <AntDesign
-          name="arrowleft"
-          size={24}
-          color={
-            theme != "light"
-              ? Colors.Text_Dark.Default
-              : Colors.Text_Light.Default
-          }
-        />
-      </Pressable>
-      <View>
-        <ThemedText
-          style={{ fontFamily: "WorkSans_900Black", fontSize: 36 }}
-          text={"Welcome!"}
-        />
-        <ThemedText
-          style={{ fontFamily: "WorkSans_400Regular", fontSize: 14 }}
-          text="Let's make studying simple, focused, and fun. Ready to achieve your goals? We're here to help every step of the way!"
-          color="tertiary"
-        />
-      </View>
-      <Link href="homepage" asChild replace>
-        <ThemedPressable
-          backgroundColor={Colors[palette][600]}
-          children={
-            <>
-              <Text
-                style={{
-                  color:
-                    theme != "light"
-                      ? Colors.Text_Dark.Default
-                      : Colors.Text_Light.Default,
-                  fontFamily: "WorkSans_400Regular",
-                  fontSize: 14,
-                }}
-              >
-                Get started
-              </Text>
-              <AntDesign
-                name="arrowright"
-                size={24}
-                color={
-                  theme != "light"
-                    ? Colors.Text_Dark.Default
-                    : Colors.Text_Light.Default
-                }
-              />
-            </>
-          }
-        />
-      </Link>
-
-      <View style={{ gap: 8, flexDirection: "row" }}>
-        <View
-          style={{
-            width: "49%",
-            height: 8,
-            backgroundColor: Colors.Backgrounds_Dark.Hover,
-            borderRadius: 16,
-          }}
-        ></View>
-        <View
-          style={{
-            width: "49%",
-            height: 8,
-            backgroundColor: Colors[palette][600],
-            borderRadius: 16,
-          }}
-        ></View>
-      </View>
-    </>,
-  ];
-
-  return (
-    <SafeAreaView style={styleState.safeAreaView}>{pages[index]}</SafeAreaView>
+    </SafeAreaView>
   );
 }
 

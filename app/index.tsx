@@ -32,5 +32,5 @@ export default function Index() {
     return null;
   }
 
-  return <Redirect href="initial_boot" />;
+  return <Redirect href="/initial_boot" />;
 }
