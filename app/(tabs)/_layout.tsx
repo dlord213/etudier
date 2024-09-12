@@ -4,6 +4,7 @@ import { Tabs } from "expo-router";
 import { useContext } from "react";
 
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
+import CustomTabBar from "@/components/CustomTabBar";
 
 export default function Layout() {
   const { palette, theme } = useContext(ThemeContext);
@@ -13,13 +14,6 @@ export default function Layout() {
       screenOptions={{
         headerShown: false,
         tabBarShowLabel: false,
-        tabBarStyle: {
-          backgroundColor:
-            theme != "dark"
-              ? Colors.Backgrounds_Dark.Brand
-              : Colors.Backgrounds_Light.Brand,
-          borderWidth: 0,
-        },
         tabBarActiveTintColor:
           theme != "dark"
             ? Colors.Text_Dark.Default
@@ -29,9 +23,18 @@ export default function Layout() {
             ? Colors.Text_Dark.Secondary
             : Colors.Text_Light.Secondary,
       }}
+      tabBar={(props) => <CustomTabBar {...props} />}
     >
       <Tabs.Screen
         name="index"
+        options={{
+          tabBarIcon: ({ color }) => (
+            <MaterialIcons name="home" size={24} color={color} />
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="notes"
         options={{
           tabBarIcon: ({ color }) => (
             <MaterialIcons name="assignment-add" size={24} color={color} />
