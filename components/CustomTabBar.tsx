@@ -15,7 +15,13 @@ function CustomTabBar({ state, descriptors, navigation }) {
     notes: (props: any) => (
       <MaterialIcons name="assignment-add" size={24} {...props} />
     ),
+    timer: (props: any) => <MaterialIcons name="timer" size={24} {...props} />,
   };
+
+  const iconColor =
+    theme != "dark" ? Colors[palette][200] : Colors[palette][300];
+  const activeIconColor =
+    theme != "dark" ? Colors[palette][900] : Colors[palette][600];
 
   return (
     <View style={styleState.tabBar}>
@@ -62,9 +68,10 @@ function CustomTabBar({ state, descriptors, navigation }) {
               alignItems: "center",
               justifyContent: "space-between",
             }}
+            key={route.name}
           >
             {icons[route.name]({
-              color: isFocused ? Colors[palette][600] : Colors[palette][300],
+              color: isFocused ? activeIconColor : iconColor,
             })}
           </Pressable>
         );
@@ -80,10 +87,10 @@ const styles = (context: any) =>
       position: "absolute",
       bottom: 25,
       padding: 16,
-      borderRadius: 16,
-      justifyContent: "space-between",
+      borderRadius: 24,
+      justifyContent: "space-around",
       alignItems: "center",
-      marginHorizontal: 50,
+      marginHorizontal: 40,
       backgroundColor:
         context != "dark"
           ? Colors.Backgrounds_Dark.Brand
