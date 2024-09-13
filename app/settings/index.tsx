@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import { Pressable, StyleSheet } from "react-native";
+import { Pressable, StyleSheet, ToastAndroid } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import * as SecureStore from "expo-secure-store";
 
@@ -22,6 +22,7 @@ export default function Page() {
     await SecureStore.deleteItemAsync("name");
     router.dismissAll();
     router.replace("/");
+    ToastAndroid.show("Cleared data", ToastAndroid.SHORT);
   }
 
   return (
