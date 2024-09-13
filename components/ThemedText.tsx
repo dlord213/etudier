@@ -1,10 +1,20 @@
-import { Text, useColorScheme } from "react-native";
+import { Text, TextStyle, useColorScheme } from "react-native";
 import Colors from "@/constants/Colors";
 
-export default function ThemedText(props: any) {
-  const themeMode = useColorScheme();
+interface ThemedTextProps {
+  style: TextStyle;
+  text: string;
+  id?: any;
+  color?: string;
+}
 
-  const { style, text, id, color = "primary" } = props; // color = primary | secondary | tertiary
+export default function ThemedText({
+  style,
+  text,
+  id,
+  color = "primary",
+}: ThemedTextProps) {
+  const themeMode = useColorScheme();
 
   let textColor;
 

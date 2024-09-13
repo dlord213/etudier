@@ -1,9 +1,7 @@
-import Colors from "@/constants/Colors";
 import ThemeContext from "@/contexts/ThemeContext";
 import { Tabs } from "expo-router";
 import { useContext } from "react";
 
-import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import CustomTabBar from "@/components/CustomTabBar";
 
 export default function Layout() {
@@ -16,8 +14,8 @@ export default function Layout() {
       }}
       tabBar={(props) => <CustomTabBar {...props} />}
     >
-      <Tabs.Screen name="index" />
       <Tabs.Screen name="notes" />
+      <Tabs.Screen name="index" />
       <Tabs.Screen name="timer" />
     </Tabs>
   );

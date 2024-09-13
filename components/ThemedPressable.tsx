@@ -1,9 +1,4 @@
-import {
-  Pressable,
-  useColorScheme,
-  PressableProps,
-  ViewStyle,
-} from "react-native";
+import { Pressable, PressableProps, ViewStyle } from "react-native";
 import { forwardRef } from "react";
 
 interface ThemedPressableProps extends PressableProps {
@@ -13,7 +8,6 @@ interface ThemedPressableProps extends PressableProps {
 }
 
 const ThemedPressable = forwardRef<any, ThemedPressableProps>((props, ref) => {
-  const themeMode = useColorScheme();
   const { children, style, backgroundColor, onPress, ...rest } = props;
 
   return (
@@ -28,7 +22,7 @@ const ThemedPressable = forwardRef<any, ThemedPressableProps>((props, ref) => {
           justifyContent: "space-between",
           alignItems: "center",
           backgroundColor: backgroundColor,
-          opacity: pressed ? 0.7 : 1,
+          opacity: pressed ? 0.8 : 1,
           borderRadius: 16,
         },
         style,

@@ -20,6 +20,7 @@ export default function RootLayout() {
           name="initial_boot/welcome"
           options={{ animation: "fade_from_bottom" }}
         />
+        <Stack.Screen name="notes_modal" options={{ presentation: "modal" }} />
         <Stack.Screen
           name="(tabs)"
           options={{ animation: "fade", animationDuration: 5000 }}
