@@ -49,14 +49,7 @@ export default function Page() {
           />
         </ThemedPressableOpacity>
       </View>
-      <ThemedBottomSheetModal
-        height="20%"
-        ref={sheetRef}
-        dragHandleStyle={{
-          backgroundColor: Colors[palette][600],
-          borderColor: Colors[palette][600],
-        }}
-      >
+      <ThemedBottomSheetModal height="20%" ref={sheetRef}>
         <View style={{ gap: 8 }}>
           <ThemedPressableOpacity style={{ flexDirection: "row", gap: 8 }}>
             <AntDesign

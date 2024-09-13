@@ -4,10 +4,10 @@ import { Stack } from "expo-router";
 import { useWindowDimensions } from "react-native";
 
 export default function RootLayout() {
-  const [palette, theme, togglePalette, setTheme] = useThemeColors();
+  const [palette, theme, setPalette, setTheme] = useThemeColors();
 
   return (
-    <ThemeContext.Provider value={{ palette, theme, togglePalette, setTheme }}>
+    <ThemeContext.Provider value={{ palette, theme, setPalette, setTheme }}>
       <Stack
         initialRouteName="index"
         screenOptions={{ headerShown: false, orientation: "portrait" }}
@@ -27,6 +27,10 @@ export default function RootLayout() {
         />
         <Stack.Screen
           name="settings/index"
+          options={{ animation: "fade_from_bottom" }}
+        />
+        <Stack.Screen
+          name="settings/theme"
           options={{ animation: "fade_from_bottom" }}
         />
         <Stack.Screen

@@ -81,7 +81,7 @@ export default function Page() {
           </ThemedPressableOpacity>
           <ThemedPressableOpacity
             onPress={() => {
-              router.replace("/settings");
+              router.push("/settings");
             }}
           >
             <Ionicons
