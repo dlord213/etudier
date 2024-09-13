@@ -14,7 +14,8 @@ import TabBarVisibilityContext from "@/contexts/TabBarVisibilityContext";
 import ThemedPressable from "@/components/ThemedPressable";
 import ThemedText from "@/components/ThemedText";
 import Colors from "@/constants/Colors";
-import NotesBottomSheetModal from "@/components/NotesBottomSheetModal";
+import NotesBottomSheetModal from "@/components/ThemedBottomSheetModal";
+import ThemedBottomSheetModal from "@/components/ThemedBottomSheetModal";
 
 export default function Page() {
   const { palette, theme } = useContext(ThemeContext);
@@ -86,20 +87,19 @@ export default function Page() {
       >
         <FontAwesome6 name="add" size={16} color={Colors.Text_Dark.Default} />
       </Pressable>
-      <NotesBottomSheetModal
+      <ThemedBottomSheetModal
         onClose={() => {
-          setIsTabBarVisible(true);
           setTimeout(() => {
+            setIsTabBarVisible(true);
             setIsPriority(false);
             setDescription("");
             setTitle("");
-          }, 500);
+          }, 200);
         }}
         onOpen={() => {
           setIsTabBarVisible(false);
         }}
         ref={sheetRef}
-        style={{ padding: 16 }}
       >
         <View style={{ marginBottom: 8 }}>
           <TextInput
@@ -118,8 +118,8 @@ export default function Page() {
               fontSize: 24,
               color:
                 theme == "dark"
-                  ? Colors.Text_Light.Default
-                  : Colors.Text_Dark.Default,
+                  ? Colors.Text_Dark.Default
+                  : Colors.Text_Light.Default,
             }}
           />
           <TextInput
@@ -138,8 +138,8 @@ export default function Page() {
               fontSize: 14,
               color:
                 theme == "dark"
-                  ? Colors.Text_Light.Default
-                  : Colors.Text_Dark.Default,
+                  ? Colors.Text_Dark.Tertiary
+                  : Colors.Text_Light.Tertiary,
             }}
           />
         </View>
@@ -198,7 +198,7 @@ export default function Page() {
             />
           </Pressable>
         </View>
-      </NotesBottomSheetModal>
+      </ThemedBottomSheetModal>
     </SafeAreaView>
   );
 }

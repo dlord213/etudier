@@ -9,6 +9,7 @@ import ThemedText from "@/components/ThemedText";
 import Colors from "@/constants/Colors";
 import ThemeContext from "@/contexts/ThemeContext";
 import ThemedPressableOpacity from "@/components/ThemedPressableOpacity";
+import ThemedBottomSheetModal from "@/components/ThemedBottomSheetModal";
 
 export default function Page() {
   const { palette, theme } = useContext(ThemeContext);
@@ -48,16 +49,9 @@ export default function Page() {
           />
         </ThemedPressableOpacity>
       </View>
-      <BottomSheet
+      <ThemedBottomSheetModal
         height="20%"
         ref={sheetRef}
-        style={{
-          padding: 16,
-          backgroundColor:
-            theme != "dark"
-              ? Colors[palette][600]
-              : Colors.Backgrounds_Dark.Hover,
-        }}
         dragHandleStyle={{
           backgroundColor: Colors[palette][600],
           borderColor: Colors[palette][600],
@@ -83,7 +77,7 @@ export default function Page() {
             />
           </ThemedPressableOpacity>
         </View>
-      </BottomSheet>
+      </ThemedBottomSheetModal>
     </SafeAreaView>
   );
 }
