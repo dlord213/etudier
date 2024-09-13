@@ -84,15 +84,7 @@ export default function Page() {
           },
         ]}
       >
-        <FontAwesome6
-          name="add"
-          size={16}
-          color={
-            theme == "dark"
-              ? Colors.Text_Dark.Default
-              : Colors.Text_Light.Default
-          }
-        />
+        <FontAwesome6 name="add" size={16} color={Colors.Text_Dark.Default} />
       </Pressable>
       <NotesBottomSheetModal
         onClose={() => {

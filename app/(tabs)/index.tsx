@@ -140,6 +140,7 @@ export default function Page() {
         <ThemedText
           text="No tasks."
           style={{
+            color: Colors.Text_Dark.Default,
             fontFamily: "WorkSans_700Bold",
             fontSize: 24,
             flex: 1,
@@ -148,11 +149,7 @@ export default function Page() {
         <FontAwesome5
           name="clipboard"
           size={48}
-          color={
-            theme == "dark"
-              ? Colors.Text_Dark.Default
-              : Colors.Text_Light.Default
-          }
+          color={Colors.Text_Dark.Default}
         />
       </View>
 
@@ -192,20 +189,13 @@ export default function Page() {
         <ThemedText
           text="No schedules."
           style={{
+            color: Colors.Text_Dark.Default,
             fontFamily: "WorkSans_700Bold",
             fontSize: 24,
             flex: 1,
           }}
         />
-        <FontAwesome5
-          name="clock"
-          size={36}
-          color={
-            theme == "dark"
-              ? Colors.Text_Dark.Default
-              : Colors.Text_Light.Default
-          }
-        />
+        <FontAwesome5 name="clock" size={36} color={Colors.Text_Dark.Default} />
       </View>
     </>,
   ];
