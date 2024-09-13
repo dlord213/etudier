@@ -8,7 +8,7 @@ import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 function CustomTabBar({ state, descriptors, navigation, isTabBarVisible }) {
   const { palette, theme } = useContext(ThemeContext);
 
-  const styleState = styles([theme, isTabBarVisible]);
+  const styleState = styles([palette, theme, isTabBarVisible]);
 
   const icons = {
     index: (props: any) => <MaterialIcons name="home" size={24} {...props} />,
@@ -19,9 +19,9 @@ function CustomTabBar({ state, descriptors, navigation, isTabBarVisible }) {
   };
 
   const iconColor =
-    theme != "dark" ? Colors[palette][200] : Colors[palette][300];
+    theme != "dark" ? Colors[palette][500] : Colors[palette][100];
   const activeIconColor =
-    theme != "dark" ? Colors[palette][500] : Colors[palette][600];
+    theme != "dark" ? Colors[palette][200] : Colors[palette][500];
 
   return (
     <View style={styleState.tabBar}>
@@ -83,7 +83,7 @@ function CustomTabBar({ state, descriptors, navigation, isTabBarVisible }) {
 const styles = (context: any) =>
   StyleSheet.create({
     tabBar: {
-      display: context[1] ? "flex" : "none",
+      display: context[2] ? "flex" : "none",
       flexDirection: "row",
       position: "absolute",
       bottom: 25,
@@ -93,9 +93,9 @@ const styles = (context: any) =>
       alignItems: "center",
       marginHorizontal: 40,
       backgroundColor:
-        context[0] != "dark"
-          ? Colors.Backgrounds_Dark.Brand
-          : Colors.Backgrounds_Light.Brand,
+        context[1] != "dark"
+          ? Colors[context[0]][600]
+          : Colors.Backgrounds_Dark.Hover,
       borderWidth: 0,
     },
   });
