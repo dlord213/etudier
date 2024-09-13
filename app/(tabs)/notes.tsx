@@ -1,7 +1,8 @@
 import { useContext, useRef, useState } from "react";
 import { Pressable, StyleSheet, TextInput, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import BottomSheet, { BottomSheetMethods } from "@devvie/bottom-sheet";
+import { BottomSheetMethods } from "@devvie/bottom-sheet";
+import Checkbox from "expo-checkbox";
 
 import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
 import ThemedPressable from "@/components/ThemedPressable";
@@ -11,9 +12,15 @@ import ThemeContext from "@/contexts/ThemeContext";
 import TabBarVisibilityContext from "@/contexts/TabBarVisibilityContext";
 import NotesBottomSheetModal from "@/components/NotesBottomSheetModal";
 
+import Ionicons from "@expo/vector-icons/Ionicons";
+
 export default function Page() {
   const { palette, theme } = useContext(ThemeContext);
   const { setIsTabBarVisible } = useContext(TabBarVisibilityContext);
+
+  const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
+  const [isPriority, setIsPriority] = useState(false);
 
   const styleState = styles(theme);
 
@@ -88,6 +95,11 @@ export default function Page() {
       <NotesBottomSheetModal
         onClose={() => {
           setIsTabBarVisible(true);
+          setTimeout(() => {
+            setIsPriority(false);
+            setDescription("");
+            setTitle("");
+          }, 500);
         }}
         onOpen={() => {
           setIsTabBarVisible(false);
@@ -95,10 +107,12 @@ export default function Page() {
         ref={sheetRef}
         style={{ padding: 16 }}
       >
-        <View>
+        <View style={{ marginBottom: 8 }}>
           <TextInput
             placeholder="Title"
             inputMode="text"
+            value={title}
+            onChangeText={setTitle}
             multiline
             placeholderTextColor={
               theme == "dark"
@@ -116,6 +130,8 @@ export default function Page() {
           />
           <TextInput
             placeholder="Description"
+            value={description}
+            onChangeText={setDescription}
             inputMode="text"
             multiline
             placeholderTextColor={
@@ -133,37 +149,61 @@ export default function Page() {
             }}
           />
         </View>
-        <Pressable
-          onPress={() => {
-            sheetRef.current?.open();
+        <View
+          style={{
+            borderWidth: 0.5,
+            borderColor: Colors[palette][600],
+            borderRadius: 16,
+            marginVertical: 8,
           }}
-          style={({ pressed }) => [
-            {
-              backgroundColor: Colors[palette][600],
-              padding: 16,
-              marginVertical: 8,
-              borderRadius: 8,
-              opacity: pressed ? 0.8 : 1,
-              flexDirection: "row",
-              alignItems: "center",
-              justifyContent: "space-between",
-            },
-          ]}
+        ></View>
+        <View
+          style={{
+            flexDirection: "row",
+            justifyContent: "space-between",
+            display: !title ? "none" : "flex",
+          }}
         >
-          <FontAwesome6
-            name="add"
-            size={16}
-            color={
-              theme == "dark"
-                ? Colors.Text_Dark.Default
-                : Colors.Text_Light.Default
-            }
-          />
-          <ThemedText
-            text="Add note"
-            style={{ fontFamily: "WorkSans_400Regular" }}
-          />
-        </Pressable>
+          <View style={{ flexDirection: "row", gap: 8, alignItems: "center" }}>
+            <Checkbox
+              value={isPriority}
+              onValueChange={setIsPriority}
+              color={Colors[palette][600]}
+              style={{ borderRadius: 4 }}
+            />
+            <ThemedText
+              text="Priority"
+              style={{ fontFamily: "WorkSans_400Regular" }}
+              color="secondary"
+            />
+          </View>
+          <Pressable
+            onPress={() => {
+              sheetRef.current?.open();
+            }}
+            style={({ pressed }) => [
+              {
+                backgroundColor: Colors[palette][600],
+                padding: 8,
+                borderRadius: 8,
+                opacity: pressed ? 0.8 : 1,
+                flexDirection: "row",
+                alignItems: "center",
+                justifyContent: "space-between",
+              },
+            ]}
+          >
+            <Ionicons
+              name="send"
+              size={16}
+              color={
+                theme == "dark"
+                  ? Colors.Text_Dark.Default
+                  : Colors.Text_Light.Default
+              }
+            />
+          </Pressable>
+        </View>
       </NotesBottomSheetModal>
     </SafeAreaView>
   );
