@@ -10,14 +10,18 @@ import ThemedText from "@/components/ThemedText";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
 import ThemedPressableOpacity from "@/components/ThemedPressableOpacity";
-
-async function clearData() {
-  await SecureStore.deleteItemAsync("name");
-}
+import { useRouter } from "expo-router";
 
 export default function Page() {
   const { palette, theme } = useContext(ThemeContext);
   const styleState = styles(theme);
+
+  const router = useRouter();
+
+  async function clearData() {
+    await SecureStore.deleteItemAsync("name");
+    router.replace("/");
+  }
 
   return (
     <SafeAreaView style={styleState.safeAreaView}>
