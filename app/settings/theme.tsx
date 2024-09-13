@@ -1,13 +1,19 @@
-import ThemedText from "@/components/ThemedText";
-import Colors from "@/constants/Colors";
-import ThemeContext from "@/contexts/ThemeContext";
 import { useContext } from "react";
 import { Pressable, StyleSheet, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import * as SecureStore from "expo-secure-store";
+
+import ThemedText from "@/components/ThemedText";
+import Colors from "@/constants/Colors";
+import ThemeContext from "@/contexts/ThemeContext";
 
 export default function Page() {
   const { setPalette, theme } = useContext(ThemeContext);
   const styleState = styles(theme);
+
+  async function changeStoredPalette(palette: string) {
+    await SecureStore.setItemAsync("palette", palette);
+  }
 
   return (
     <SafeAreaView style={styleState.safeAreaView}>
@@ -28,6 +34,7 @@ export default function Page() {
       >
         <Pressable
           onPress={() => {
+            changeStoredPalette("Astral");
             setPalette("Astral");
           }}
           style={{
@@ -39,6 +46,7 @@ export default function Page() {
         />
         <Pressable
           onPress={() => {
+            changeStoredPalette("Emerald");
             setPalette("Emerald");
           }}
           style={{
@@ -50,6 +58,7 @@ export default function Page() {
         />
         <Pressable
           onPress={() => {
+            changeStoredPalette("Victoria");
             setPalette("Victoria");
           }}
           style={{
@@ -61,6 +70,7 @@ export default function Page() {
         />
         <Pressable
           onPress={() => {
+            changeStoredPalette("Wewak");
             setPalette("Wewak");
           }}
           style={{
@@ -72,6 +82,7 @@ export default function Page() {
         />
         <Pressable
           onPress={() => {
+            changeStoredPalette("Willow");
             setPalette("Willow");
           }}
           style={{

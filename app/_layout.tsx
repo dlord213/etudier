@@ -1,7 +1,6 @@
 import ThemeContext from "@/contexts/ThemeContext";
 import useThemeColors from "@/hooks/useThemeColors";
 import { Stack } from "expo-router";
-import { useWindowDimensions } from "react-native";
 
 export default function RootLayout() {
   const [palette, theme, setPalette, setTheme] = useThemeColors();
