@@ -12,6 +12,7 @@ import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
 import Entypo from "@expo/vector-icons/Entypo";
 import { Link, useRouter } from "expo-router";
 import { opacity } from "react-native-reanimated/lib/typescript/reanimated2/Colors";
+import ThemedPressableOpacity from "@/components/ThemedPressableOpacity";
 
 export default function Page() {
   const { palette, theme } = useContext(ThemeContext);
@@ -63,23 +64,24 @@ export default function Page() {
           />
         </View>
         <View style={{ flexDirection: "row", gap: 16 }}>
-          <Ionicons
-            name="stats-chart"
-            size={20}
-            color={
-              theme == "dark"
-                ? Colors.Text_Dark.Default
-                : Colors.Text_Light.Default
-            }
-          />
-          <Pressable
-            style={({ pressed }) => [
-              {
-                opacity: pressed ? 0.6 : 1,
-              },
-            ]}
+          <ThemedPressableOpacity
             onPress={() => {
-              router.push("/settings");
+              router.push("/activity_log");
+            }}
+          >
+            <Ionicons
+              name="stats-chart"
+              size={20}
+              color={
+                theme == "dark"
+                  ? Colors.Text_Dark.Default
+                  : Colors.Text_Light.Default
+              }
+            />
+          </ThemedPressableOpacity>
+          <ThemedPressableOpacity
+            onPress={() => {
+              router.replace("/settings");
             }}
           >
             <Ionicons
@@ -91,7 +93,7 @@ export default function Page() {
                   : Colors.Text_Light.Default
               }
             />
-          </Pressable>
+          </ThemedPressableOpacity>
           <FontAwesome5
             name="bell"
             size={20}
