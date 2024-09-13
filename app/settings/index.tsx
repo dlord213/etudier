@@ -1,6 +1,7 @@
 import { useContext } from "react";
 import { Pressable, StyleSheet } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import * as SecureStore from "expo-secure-store";
 
 import Colors from "@/constants/Colors";
 import ThemeContext from "@/contexts/ThemeContext";
@@ -8,6 +9,11 @@ import ThemedText from "@/components/ThemedText";
 
 import AntDesign from "@expo/vector-icons/AntDesign";
 import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
+import ThemedPressableOpacity from "@/components/ThemedPressableOpacity";
+
+async function clearData() {
+  await SecureStore.deleteItemAsync("name");
+}
 
 export default function Page() {
   const { palette, theme } = useContext(ThemeContext);
@@ -31,15 +37,8 @@ export default function Page() {
           color: Colors[palette][500],
         }}
       />
-      <Pressable
-        style={({ pressed }) => [
-          {
-            flexDirection: "row",
-            gap: 16,
-            alignItems: "center",
-            opacity: pressed ? 0.7 : 1,
-          },
-        ]}
+      <ThemedPressableOpacity
+        style={{ flexDirection: "row", gap: 16, alignItems: "center" }}
       >
         <AntDesign
           name="reload1"
@@ -54,16 +53,12 @@ export default function Page() {
           text="Reset history log"
           style={{ fontFamily: "WorkSans_400Regular" }}
         />
-      </Pressable>
-      <Pressable
-        style={({ pressed }) => [
-          {
-            flexDirection: "row",
-            gap: 16,
-            alignItems: "center",
-            opacity: pressed ? 0.7 : 1,
-          },
-        ]}
+      </ThemedPressableOpacity>
+      <ThemedPressableOpacity
+        style={{ flexDirection: "row", gap: 16, alignItems: "center" }}
+        onPress={() => {
+          clearData();
+        }}
       >
         <FontAwesome6
           name="trash"
@@ -78,7 +73,7 @@ export default function Page() {
           text="Clear data"
           style={{ fontFamily: "WorkSans_400Regular" }}
         />
-      </Pressable>
+      </ThemedPressableOpacity>
     </SafeAreaView>
   );
 }
