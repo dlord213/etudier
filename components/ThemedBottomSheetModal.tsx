@@ -23,7 +23,7 @@ const ThemedBottomSheetModal = forwardRef<
         padding: 16,
         backgroundColor:
           theme != "dark"
-            ? Colors[palette][600]
+            ? Colors.Backgrounds_Light.Default
             : Colors.Backgrounds_Dark.Hover,
       }}
       ref={ref}

@@ -187,15 +187,7 @@ export default function Page() {
               },
             ]}
           >
-            <Ionicons
-              name="send"
-              size={16}
-              color={
-                theme == "dark"
-                  ? Colors.Text_Dark.Default
-                  : Colors.Text_Light.Default
-              }
-            />
+            <Ionicons name="send" size={16} color={Colors.Text_Dark.Default} />
           </Pressable>
         </View>
       </ThemedBottomSheetModal>
