@@ -1,16 +1,23 @@
+import { useContext, useRef, useState } from "react";
+import { Pressable, StyleSheet, View } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
+import BottomSheet, { BottomSheetMethods } from "@devvie/bottom-sheet";
+
+import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
 import ThemedPressable from "@/components/ThemedPressable";
 import ThemedText from "@/components/ThemedText";
 import Colors from "@/constants/Colors";
 import ThemeContext from "@/contexts/ThemeContext";
-import { useContext } from "react";
-import { Pressable, StyleSheet, View } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
-
-import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
+import { useNavigation } from "expo-router";
+import TabBarVisibilityContext from "@/contexts/TabBarVisibilityContext";
 
 export default function Page() {
   const { palette, theme } = useContext(ThemeContext);
+  const { setIsTabBarVisible } = useContext(TabBarVisibilityContext);
+
   const styleState = styles(theme);
+
+  const sheetRef = useRef<BottomSheetMethods>(null);
 
   return (
     <SafeAreaView style={styleState.safeAreaView}>
@@ -53,6 +60,9 @@ export default function Page() {
         />
       </View>
       <Pressable
+        onPress={() => {
+          sheetRef.current?.open();
+        }}
         style={({ pressed }) => [
           {
             bottom: 100,
@@ -75,6 +85,18 @@ export default function Page() {
           }
         />
       </Pressable>
+      <BottomSheet
+        ref={sheetRef}
+        style={{ zIndex: 10 }}
+        onOpen={() => {
+          setIsTabBarVisible(false);
+        }}
+        onClose={() => {
+          setIsTabBarVisible(true);
+        }}
+      >
+        <ThemedText text="TEST" style={{ fontFamily: "WorkSans_400Regular" }} />
+      </BottomSheet>
     </SafeAreaView>
   );
 }

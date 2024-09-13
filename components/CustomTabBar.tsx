@@ -5,10 +5,10 @@ import { View, StyleSheet, Pressable } from "react-native";
 
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 
-function CustomTabBar({ state, descriptors, navigation }) {
+function CustomTabBar({ state, descriptors, navigation, isTabBarVisible }) {
   const { palette, theme } = useContext(ThemeContext);
 
-  const styleState = styles(theme);
+  const styleState = styles([theme, isTabBarVisible]);
 
   const icons = {
     index: (props: any) => <MaterialIcons name="home" size={24} {...props} />,
@@ -83,6 +83,7 @@ function CustomTabBar({ state, descriptors, navigation }) {
 const styles = (context: any) =>
   StyleSheet.create({
     tabBar: {
+      display: context[1] ? "flex" : "none",
       flexDirection: "row",
       position: "absolute",
       bottom: 25,
@@ -92,7 +93,7 @@ const styles = (context: any) =>
       alignItems: "center",
       marginHorizontal: 40,
       backgroundColor:
-        context != "dark"
+        context[0] != "dark"
           ? Colors.Backgrounds_Dark.Brand
           : Colors.Backgrounds_Light.Brand,
       borderWidth: 0,
