@@ -20,6 +20,7 @@ export default function Page() {
 
   async function clearData() {
     await SecureStore.deleteItemAsync("name");
+    router.dismissAll();
     router.replace("/");
   }
 

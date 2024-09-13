@@ -10,7 +10,8 @@ import ThemeContext from "@/contexts/ThemeContext";
 import ThemedText from "@/components/ThemedText";
 import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
 import Entypo from "@expo/vector-icons/Entypo";
-import { Link } from "expo-router";
+import { Link, useRouter } from "expo-router";
+import { opacity } from "react-native-reanimated/lib/typescript/reanimated2/Colors";
 
 export default function Page() {
   const { palette, theme } = useContext(ThemeContext);
@@ -18,6 +19,8 @@ export default function Page() {
   const styleState = styles(theme);
   const [name, setName] = useState<string | null>(null);
   const [index, setIndex] = useState(0);
+
+  const router = useRouter();
 
   useEffect(() => {
     const getName = async () => {
@@ -69,7 +72,16 @@ export default function Page() {
                 : Colors.Text_Light.Default
             }
           />
-          <Link href="/settings" asChild>
+          <Pressable
+            style={({ pressed }) => [
+              {
+                opacity: pressed ? 0.6 : 1,
+              },
+            ]}
+            onPress={() => {
+              router.push("/settings");
+            }}
+          >
             <Ionicons
               name="settings-outline"
               size={20}
@@ -79,7 +91,7 @@ export default function Page() {
                   : Colors.Text_Light.Default
               }
             />
-          </Link>
+          </Pressable>
           <FontAwesome5
             name="bell"
             size={20}
