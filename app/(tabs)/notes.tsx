@@ -1,5 +1,12 @@
 import { useContext, useRef, useState } from "react";
-import { Pressable, StyleSheet, View } from "react-native";
+import {
+  Pressable,
+  StyleSheet,
+  Text,
+  TextInput,
+  useWindowDimensions,
+  View,
+} from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import BottomSheet, { BottomSheetMethods } from "@devvie/bottom-sheet";
 
@@ -87,7 +94,10 @@ export default function Page() {
       </Pressable>
       <BottomSheet
         ref={sheetRef}
-        style={{ zIndex: 10 }}
+        style={{ padding: 16 }}
+        height="50%"
+        disableKeyboardHandling
+        closeDuration={250}
         onOpen={() => {
           setIsTabBarVisible(false);
         }}
@@ -95,7 +105,75 @@ export default function Page() {
           setIsTabBarVisible(true);
         }}
       >
-        <ThemedText text="TEST" style={{ fontFamily: "WorkSans_400Regular" }} />
+        <View>
+          <TextInput
+            placeholder="Title"
+            inputMode="text"
+            multiline
+            placeholderTextColor={
+              theme == "dark"
+                ? Colors.Text_Dark.Tertiary
+                : Colors.Text_Light.Tertiary
+            }
+            style={{
+              fontFamily: "WorkSans_700Bold",
+              fontSize: 24,
+              color:
+                theme == "dark"
+                  ? Colors.Text_Light.Default
+                  : Colors.Text_Dark.Default,
+            }}
+          />
+          <TextInput
+            placeholder="Description"
+            inputMode="text"
+            multiline
+            placeholderTextColor={
+              theme == "dark"
+                ? Colors.Text_Dark.Tertiary
+                : Colors.Text_Light.Tertiary
+            }
+            style={{
+              fontFamily: "WorkSans_400Regular",
+              fontSize: 14,
+              color:
+                theme == "dark"
+                  ? Colors.Text_Light.Default
+                  : Colors.Text_Dark.Default,
+            }}
+          />
+        </View>
+        <Pressable
+          onPress={() => {
+            sheetRef.current?.open();
+          }}
+          style={({ pressed }) => [
+            {
+              backgroundColor: Colors[palette][600],
+              padding: 16,
+              marginVertical: 8,
+              borderRadius: 8,
+              opacity: pressed ? 0.8 : 1,
+              flexDirection: "row",
+              alignItems: "center",
+              justifyContent: "space-between",
+            },
+          ]}
+        >
+          <FontAwesome6
+            name="add"
+            size={16}
+            color={
+              theme == "dark"
+                ? Colors.Text_Dark.Default
+                : Colors.Text_Light.Default
+            }
+          />
+          <ThemedText
+            text="Add note"
+            style={{ fontFamily: "WorkSans_400Regular" }}
+          />
+        </Pressable>
       </BottomSheet>
     </SafeAreaView>
   );
