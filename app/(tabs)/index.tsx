@@ -10,6 +10,7 @@ import ThemeContext from "@/contexts/ThemeContext";
 import ThemedText from "@/components/ThemedText";
 import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
 import Entypo from "@expo/vector-icons/Entypo";
+import { Link } from "expo-router";
 
 export default function Page() {
   const { palette, theme } = useContext(ThemeContext);
@@ -68,15 +69,17 @@ export default function Page() {
                 : Colors.Text_Light.Default
             }
           />
-          <Ionicons
-            name="settings-outline"
-            size={20}
-            color={
-              theme == "dark"
-                ? Colors.Text_Dark.Default
-                : Colors.Text_Light.Default
-            }
-          />
+          <Link href="/settings" asChild>
+            <Ionicons
+              name="settings-outline"
+              size={20}
+              color={
+                theme == "dark"
+                  ? Colors.Text_Dark.Default
+                  : Colors.Text_Light.Default
+              }
+            />
+          </Link>
           <FontAwesome5
             name="bell"
             size={20}

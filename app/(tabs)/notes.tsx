@@ -1,18 +1,20 @@
 import { useContext, useRef, useState } from "react";
 import { Pressable, StyleSheet, TextInput, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { BottomSheetMethods } from "@devvie/bottom-sheet";
+
 import Checkbox from "expo-checkbox";
+import { BottomSheetMethods } from "@devvie/bottom-sheet";
 
 import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
+import Ionicons from "@expo/vector-icons/Ionicons";
+
+import ThemeContext from "@/contexts/ThemeContext";
+import TabBarVisibilityContext from "@/contexts/TabBarVisibilityContext";
+
 import ThemedPressable from "@/components/ThemedPressable";
 import ThemedText from "@/components/ThemedText";
 import Colors from "@/constants/Colors";
-import ThemeContext from "@/contexts/ThemeContext";
-import TabBarVisibilityContext from "@/contexts/TabBarVisibilityContext";
 import NotesBottomSheetModal from "@/components/NotesBottomSheetModal";
-
-import Ionicons from "@expo/vector-icons/Ionicons";
 
 export default function Page() {
   const { palette, theme } = useContext(ThemeContext);

@@ -25,6 +25,10 @@ export default function RootLayout() {
           name="(tabs)"
           options={{ animation: "fade", animationDuration: 5000 }}
         />
+        <Stack.Screen
+          name="settings/index"
+          options={{ animation: "fade_from_bottom" }}
+        />
       </Stack>
     </ThemeContext.Provider>
   );
