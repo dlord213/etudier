@@ -1,12 +1,5 @@
 import { useContext, useRef, useState } from "react";
-import {
-  Pressable,
-  StyleSheet,
-  Text,
-  TextInput,
-  useWindowDimensions,
-  View,
-} from "react-native";
+import { Pressable, StyleSheet, TextInput, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import BottomSheet, { BottomSheetMethods } from "@devvie/bottom-sheet";
 
@@ -15,8 +8,8 @@ import ThemedPressable from "@/components/ThemedPressable";
 import ThemedText from "@/components/ThemedText";
 import Colors from "@/constants/Colors";
 import ThemeContext from "@/contexts/ThemeContext";
-import { useNavigation } from "expo-router";
 import TabBarVisibilityContext from "@/contexts/TabBarVisibilityContext";
+import NotesBottomSheetModal from "@/components/NotesBottomSheetModal";
 
 export default function Page() {
   const { palette, theme } = useContext(ThemeContext);
@@ -92,18 +85,15 @@ export default function Page() {
           }
         />
       </Pressable>
-      <BottomSheet
-        ref={sheetRef}
-        style={{ padding: 16 }}
-        height="50%"
-        disableKeyboardHandling
-        closeDuration={250}
-        onOpen={() => {
-          setIsTabBarVisible(false);
-        }}
+      <NotesBottomSheetModal
         onClose={() => {
           setIsTabBarVisible(true);
         }}
+        onOpen={() => {
+          setIsTabBarVisible(false);
+        }}
+        ref={sheetRef}
+        style={{ padding: 16 }}
       >
         <View>
           <TextInput
@@ -174,7 +164,7 @@ export default function Page() {
             style={{ fontFamily: "WorkSans_400Regular" }}
           />
         </Pressable>
-      </BottomSheet>
+      </NotesBottomSheetModal>
     </SafeAreaView>
   );
 }
