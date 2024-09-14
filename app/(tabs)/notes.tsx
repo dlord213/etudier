@@ -1,21 +1,18 @@
 import { useContext, useRef, useState } from "react";
 import { Pressable, StyleSheet, TextInput, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-
 import Checkbox from "expo-checkbox";
 import { BottomSheetMethods } from "@devvie/bottom-sheet";
 
 import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
 import Ionicons from "@expo/vector-icons/Ionicons";
 
-import ThemeContext from "@/contexts/ThemeContext";
-import TabBarVisibilityContext from "@/contexts/TabBarVisibilityContext";
-
 import ThemedPressable from "@/components/ThemedPressable";
 import ThemedText from "@/components/ThemedText";
-import Colors from "@/constants/Colors";
-import NotesBottomSheetModal from "@/components/ThemedBottomSheetModal";
 import ThemedBottomSheetModal from "@/components/ThemedBottomSheetModal";
+import ThemeContext from "@/contexts/ThemeContext";
+import TabBarVisibilityContext from "@/contexts/TabBarVisibilityContext";
+import Colors from "@/constants/Colors";
 
 export default function Page() {
   const { palette, theme } = useContext(ThemeContext);
@@ -31,14 +28,7 @@ export default function Page() {
 
   return (
     <SafeAreaView style={styleState.safeAreaView}>
-      <ThemedText
-        text="Notes"
-        style={{
-          fontFamily: "WorkSans_700Bold",
-          textAlign: "center",
-          fontSize: 36,
-        }}
-      />
+      <ThemedText text="Notes" style={styleState.headingTextStyle} />
       <View style={{ flexDirection: "row", gap: 8 }}>
         <ThemedPressable
           children={
@@ -113,14 +103,7 @@ export default function Page() {
                 ? Colors.Text_Dark.Tertiary
                 : Colors.Text_Light.Tertiary
             }
-            style={{
-              fontFamily: "WorkSans_700Bold",
-              fontSize: 24,
-              color:
-                theme == "dark"
-                  ? Colors.Text_Dark.Default
-                  : Colors.Text_Light.Default,
-            }}
+            style={styleState.textInputStyle}
           />
           <TextInput
             placeholder="Description"
@@ -133,24 +116,10 @@ export default function Page() {
                 ? Colors.Text_Dark.Tertiary
                 : Colors.Text_Light.Tertiary
             }
-            style={{
-              fontFamily: "WorkSans_400Regular",
-              fontSize: 14,
-              color:
-                theme == "dark"
-                  ? Colors.Text_Dark.Tertiary
-                  : Colors.Text_Light.Tertiary,
-            }}
+            style={styleState.textInputStyle}
           />
         </View>
-        <View
-          style={{
-            borderWidth: 0.5,
-            borderColor: Colors[palette][600],
-            borderRadius: 16,
-            marginVertical: 8,
-          }}
-        ></View>
+        <View style={styleState.borderStyle}></View>
         <View
           style={{
             flexDirection: "row",
@@ -205,5 +174,24 @@ const styles = (context: any) =>
           : Colors.Backgrounds_Light.Brand,
       padding: 16,
       gap: 16,
+    },
+    headingTextStyle: {
+      fontFamily: "WorkSans_700Bold",
+      textAlign: "center",
+      fontSize: 36,
+    },
+    textInputStyle: {
+      fontFamily: "WorkSans_400Regular",
+      fontSize: 14,
+      color:
+        theme == "dark"
+          ? Colors.Text_Dark.Tertiary
+          : Colors.Text_Light.Tertiary,
+    },
+    borderStyle: {
+      borderWidth: 0.5,
+      borderColor: Colors[palette][600],
+      borderRadius: 16,
+      marginVertical: 8,
     },
   });

@@ -1,18 +1,18 @@
 import { ActivityIndicator, Pressable, StyleSheet, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import * as SecureStore from "expo-secure-store";
-import Colors from "@/constants/Colors";
 import { useContext, useEffect, useState } from "react";
+import { useRouter } from "expo-router";
 
 import Ionicons from "@expo/vector-icons/Ionicons";
 import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
-import ThemeContext from "@/contexts/ThemeContext";
-import ThemedText from "@/components/ThemedText";
 import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
 import Entypo from "@expo/vector-icons/Entypo";
-import { Link, useRouter } from "expo-router";
-import { opacity } from "react-native-reanimated/lib/typescript/reanimated2/Colors";
+
+import ThemeContext from "@/contexts/ThemeContext";
+import ThemedText from "@/components/ThemedText";
 import ThemedPressableOpacity from "@/components/ThemedPressableOpacity";
+import Colors from "@/constants/Colors";
 
 export default function Page() {
   const { palette, theme } = useContext(ThemeContext);
@@ -22,6 +22,9 @@ export default function Page() {
   const [index, setIndex] = useState(0);
 
   const router = useRouter();
+
+  const headingIconColor =
+    theme == "dark" ? Colors.Text_Dark.Default : Colors.Text_Light.Default;
 
   useEffect(() => {
     const getName = async () => {
@@ -55,12 +58,12 @@ export default function Page() {
         <View>
           <ThemedText
             text={"Welcome, " + name}
-            style={{ fontFamily: "WorkSans_600SemiBold", fontSize: 24 }}
+            style={styleState.headingBoldTextStyle}
           />
           <ThemedText
             text={"Today, you have ? tasks"}
             color="tertiary"
-            style={{ fontFamily: "WorkSans_400Regular", fontSize: 14 }}
+            style={styleState.headingTertiaryTextStyle}
           />
         </View>
         <View style={{ flexDirection: "row", gap: 16 }}>
@@ -69,15 +72,7 @@ export default function Page() {
               router.push("/activity_log");
             }}
           >
-            <Ionicons
-              name="stats-chart"
-              size={20}
-              color={
-                theme == "dark"
-                  ? Colors.Text_Dark.Default
-                  : Colors.Text_Light.Default
-              }
-            />
+            <Ionicons name="stats-chart" size={20} color={headingIconColor} />
           </ThemedPressableOpacity>
           <ThemedPressableOpacity
             onPress={() => {
@@ -87,22 +82,10 @@ export default function Page() {
             <Ionicons
               name="settings-outline"
               size={20}
-              color={
-                theme == "dark"
-                  ? Colors.Text_Dark.Default
-                  : Colors.Text_Light.Default
-              }
+              color={headingIconColor}
             />
           </ThemedPressableOpacity>
-          <FontAwesome5
-            name="bell"
-            size={20}
-            color={
-              theme == "dark"
-                ? Colors.Text_Dark.Default
-                : Colors.Text_Light.Default
-            }
-          />
+          <FontAwesome5 name="bell" size={20} color={headingIconColor} />
         </View>
       </View>
 
@@ -118,36 +101,11 @@ export default function Page() {
           style={{ fontFamily: "WorkSans_400Regular" }}
         />
         <Pressable>
-          <FontAwesome6
-            name="add"
-            size={20}
-            color={
-              theme == "dark"
-                ? Colors.Text_Dark.Default
-                : Colors.Text_Light.Default
-            }
-          />
+          <FontAwesome6 name="add" size={20} color={headingIconColor} />
         </Pressable>
       </View>
-      <View
-        style={{
-          flexDirection: "row",
-          backgroundColor: Colors[palette][600],
-          padding: 16,
-          borderRadius: 16,
-          justifyContent: "space-between",
-          alignItems: "center",
-        }}
-      >
-        <ThemedText
-          text="No tasks."
-          style={{
-            color: Colors.Text_Dark.Default,
-            fontFamily: "WorkSans_700Bold",
-            fontSize: 24,
-            flex: 1,
-          }}
-        />
+      <View style={styleState.cardStyle}>
+        <ThemedText text="No tasks." style={styleState.cardHeadingTextStyle} />
         <FontAwesome5
           name="clipboard"
           size={48}
@@ -178,24 +136,10 @@ export default function Page() {
           />
         </Pressable>
       </View>
-      <View
-        style={{
-          flexDirection: "row",
-          backgroundColor: Colors[palette][600],
-          padding: 16,
-          borderRadius: 16,
-          justifyContent: "space-between",
-          alignItems: "center",
-        }}
-      >
+      <View style={styleState.cardStyle}>
         <ThemedText
           text="No schedules."
-          style={{
-            color: Colors.Text_Dark.Default,
-            fontFamily: "WorkSans_700Bold",
-            fontSize: 24,
-            flex: 1,
-          }}
+          style={styleState.cardHeadingTextStyle}
         />
         <FontAwesome5 name="clock" size={36} color={Colors.Text_Dark.Default} />
       </View>
@@ -224,5 +168,27 @@ const styles = (context: any) =>
           : Colors.Backgrounds_Light.Brand,
       padding: 16,
       gap: 16,
+    },
+    headingBoldTextStyle: {
+      fontFamily: "WorkSans_600SemiBold",
+      fontSize: 24,
+    },
+    headingTertiaryTextStyle: {
+      fontFamily: "WorkSans_400Regular",
+      fontSize: 14,
+    },
+    cardHeadingTextStyle: {
+      color: Colors.Text_Dark.Default,
+      fontFamily: "WorkSans_700Bold",
+      fontSize: 24,
+      flex: 1,
+    },
+    cardStyle: {
+      flexDirection: "row",
+      backgroundColor: context[palette][600],
+      padding: 16,
+      borderRadius: 16,
+      justifyContent: "space-between",
+      alignItems: "center",
     },
   });

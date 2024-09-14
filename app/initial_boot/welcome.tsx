@@ -2,40 +2,26 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { StyleSheet, View, Text } from "react-native";
 import { useContext } from "react";
 import * as SecureStore from "expo-secure-store";
+import { Link } from "expo-router";
 
 import AntDesign from "@expo/vector-icons/AntDesign";
 import ThemeContext from "@/contexts/ThemeContext";
 import Colors from "@/constants/Colors";
 import ThemedText from "@/components/ThemedText";
 import ThemedPressable from "@/components/ThemedPressable";
-import { Link } from "expo-router";
-
-async function getValueFor(key: any) {
-  let result = await SecureStore.getItemAsync(key);
-  if (result) {
-    alert("🔐 Here's your value 🔐 \n" + result);
-  } else {
-    alert("No values stored under that key.");
-  }
-}
 
 export default function Page() {
   const { palette, theme } = useContext(ThemeContext);
 
   const styleState = styles(theme);
 
+  const iconColor =
+    theme != "light" ? Colors.Text_Dark.Default : Colors.Text_Light.Default;
+
   return (
     <SafeAreaView style={styleState.safeAreaView}>
       <Link href="/initial_boot">
-        <AntDesign
-          name="arrowleft"
-          size={24}
-          color={
-            theme != "light"
-              ? Colors.Text_Dark.Default
-              : Colors.Text_Light.Default
-          }
-        />
+        <AntDesign name="arrowleft" size={24} color={iconColor} />
       </Link>
       <View>
         <ThemedText
@@ -55,25 +41,14 @@ export default function Page() {
             <>
               <Text
                 style={{
-                  color:
-                    theme != "light"
-                      ? Colors.Text_Dark.Default
-                      : Colors.Text_Light.Default,
+                  color: iconColor,
                   fontFamily: "WorkSans_400Regular",
                   fontSize: 14,
                 }}
               >
                 Get started
               </Text>
-              <AntDesign
-                name="arrowright"
-                size={24}
-                color={
-                  theme != "light"
-                    ? Colors.Text_Dark.Default
-                    : Colors.Text_Light.Default
-                }
-              />
+              <AntDesign name="arrowright" size={24} color={iconColor} />
             </>
           }
         />

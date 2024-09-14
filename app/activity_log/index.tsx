@@ -1,10 +1,11 @@
-import { useContext, useRef, useState } from "react";
+import { useContext, useRef } from "react";
 import { StyleSheet, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import BottomSheet, { BottomSheetMethods } from "@devvie/bottom-sheet";
+import { BottomSheetMethods } from "@devvie/bottom-sheet";
 
 import Ionicons from "@expo/vector-icons/Ionicons";
 import AntDesign from "@expo/vector-icons/AntDesign";
+
 import ThemedText from "@/components/ThemedText";
 import Colors from "@/constants/Colors";
 import ThemeContext from "@/contexts/ThemeContext";
@@ -26,13 +27,7 @@ export default function Page() {
           justifyContent: "space-between",
         }}
       >
-        <ThemedText
-          text="Activity Log"
-          style={{
-            fontFamily: "WorkSans_700Bold",
-            fontSize: 30,
-          }}
-        />
+        <ThemedText text="Activity Log" style={styleState.headingTextStyle} />
         <ThemedPressableOpacity
           onPress={() => {
             sheetRef.current?.open();
@@ -85,5 +80,9 @@ const styles = (context: any) =>
           : Colors.Backgrounds_Light.Brand,
       padding: 16,
       gap: 16,
+    },
+    headingTextStyle: {
+      fontFamily: "WorkSans_700Bold",
+      fontSize: 30,
     },
   });

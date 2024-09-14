@@ -1,4 +1,3 @@
-import Colors from "@/constants/Colors";
 import { StyleSheet, Text, ToastAndroid, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useContext, useState } from "react";
@@ -9,7 +8,9 @@ import AntDesign from "@expo/vector-icons/AntDesign";
 import ThemedText from "@/components/ThemedText";
 import ThemedTextInput from "@/components/ThemedTextInput";
 import ThemedPressable from "@/components/ThemedPressable";
+
 import ThemeContext from "@/contexts/ThemeContext";
+import Colors from "@/constants/Colors";
 
 async function save(key: any, value: any) {
   await SecureStore.setItemAsync(key, value);

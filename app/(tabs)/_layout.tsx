@@ -1,12 +1,10 @@
-import ThemeContext from "@/contexts/ThemeContext";
 import { Tabs } from "expo-router";
-import { useContext, useState } from "react";
+import { useState } from "react";
 
 import CustomTabBar from "@/components/CustomTabBar";
 import TabBarVisibilityContext from "@/contexts/TabBarVisibilityContext";
 
 export default function Layout() {
-  const { palette, theme } = useContext(ThemeContext);
   const [isTabBarVisible, setIsTabBarVisible] = useState(true);
 
   return (

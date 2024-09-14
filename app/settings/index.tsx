@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import { Pressable, StyleSheet, ToastAndroid } from "react-native";
+import { StyleSheet, ToastAndroid } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import * as SecureStore from "expo-secure-store";
 import { useRouter } from "expo-router";
@@ -19,6 +19,9 @@ export default function Page() {
   const styleState = styles(theme);
 
   const router = useRouter();
+
+  const iconColor =
+    theme == "dark" ? Colors.Text_Dark.Default : Colors.Text_Light.Default;
 
   async function clearData() {
     await SecureStore.deleteItemAsync("name");
@@ -40,15 +43,7 @@ export default function Page() {
       <ThemedPressableOpacity
         style={{ flexDirection: "row", gap: 16, alignItems: "center" }}
       >
-        <MaterialCommunityIcons
-          name="bell"
-          size={24}
-          color={
-            theme == "dark"
-              ? Colors.Text_Dark.Default
-              : Colors.Text_Light.Default
-          }
-        />
+        <MaterialCommunityIcons name="bell" size={24} color={iconColor} />
         <ThemedText
           text="Notifications"
           style={{ fontFamily: "WorkSans_400Regular" }}
@@ -60,15 +55,7 @@ export default function Page() {
           router.push("settings/theme");
         }}
       >
-        <Ionicons
-          name="color-palette"
-          size={24}
-          color={
-            theme == "dark"
-              ? Colors.Text_Dark.Default
-              : Colors.Text_Light.Default
-          }
-        />
+        <Ionicons name="color-palette" size={24} color={iconColor} />
         <ThemedText
           text="Theme"
           style={{ fontFamily: "WorkSans_400Regular" }}
@@ -85,15 +72,7 @@ export default function Page() {
       <ThemedPressableOpacity
         style={{ flexDirection: "row", gap: 16, alignItems: "center" }}
       >
-        <AntDesign
-          name="reload1"
-          size={20}
-          color={
-            theme == "dark"
-              ? Colors.Text_Dark.Default
-              : Colors.Text_Light.Default
-          }
-        />
+        <AntDesign name="reload1" size={20} color={iconColor} />
         <ThemedText
           text="Reset history log"
           style={{ fontFamily: "WorkSans_400Regular" }}
@@ -105,15 +84,7 @@ export default function Page() {
           clearData();
         }}
       >
-        <FontAwesome6
-          name="trash"
-          size={24}
-          color={
-            theme == "dark"
-              ? Colors.Text_Dark.Default
-              : Colors.Text_Light.Default
-          }
-        />
+        <FontAwesome6 name="trash" size={24} color={iconColor} />
         <ThemedText
           text="Clear data"
           style={{ fontFamily: "WorkSans_400Regular" }}
