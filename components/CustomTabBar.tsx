@@ -4,6 +4,7 @@ import { useContext } from "react";
 import { View, StyleSheet, Pressable } from "react-native";
 
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
+import TabBarButton from "./TabBarButton";
 
 function CustomTabBar({ state, descriptors, navigation, isTabBarVisible }) {
   const { palette, theme } = useContext(ThemeContext);
@@ -17,11 +18,6 @@ function CustomTabBar({ state, descriptors, navigation, isTabBarVisible }) {
     ),
     timer: (props: any) => <MaterialIcons name="timer" size={24} {...props} />,
   };
-
-  const iconColor =
-    theme != "dark" ? Colors[palette][500] : Colors[palette][100];
-  const activeIconColor =
-    theme != "dark" ? Colors[palette][200] : Colors[palette][500];
 
   return (
     <View style={styleState.tabBar}>
@@ -56,24 +52,13 @@ function CustomTabBar({ state, descriptors, navigation, isTabBarVisible }) {
         };
 
         return (
-          <Pressable
-            accessibilityRole="button"
-            accessibilityState={isFocused ? { selected: true } : {}}
-            accessibilityLabel={options.tabBarAccessibilityLabel}
-            testID={options.tabBarTestID}
+          <TabBarButton
+            key={route.name}
+            isFocused={isFocused}
             onPress={onPress}
             onLongPress={onLongPress}
-            style={{
-              flex: 1,
-              alignItems: "center",
-              justifyContent: "space-between",
-            }}
-            key={route.name}
-          >
-            {icons[route.name]({
-              color: isFocused ? activeIconColor : iconColor,
-            })}
-          </Pressable>
+            icon={icons[route.name]}
+          />
         );
       })}
     </View>
