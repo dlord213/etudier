@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import { Pressable, StyleSheet, View } from "react-native";
+import { Pressable, StyleSheet, Switch, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import * as SecureStore from "expo-secure-store";
 
@@ -8,12 +8,16 @@ import Colors from "@/constants/Colors";
 import ThemeContext from "@/contexts/ThemeContext";
 
 export default function Page() {
-  const { setPalette, theme } = useContext(ThemeContext);
+  const { palette, setPalette, theme, setTheme } = useContext(ThemeContext);
   const styleState = styles(theme);
 
   async function changeStoredPalette(palette: string) {
     await SecureStore.setItemAsync("palette", palette);
   }
+
+  const toggleTheme = () => {
+    setTheme(theme === "dark" ? "light" : "dark");
+  };
 
   return (
     <SafeAreaView style={styleState.safeAreaView}>
@@ -25,6 +29,28 @@ export default function Page() {
           textAlign: "center",
         }}
       />
+      <View
+        style={{
+          flexDirection: "row",
+          justifyContent: "space-between",
+          alignItems: "center",
+        }}
+      >
+        <ThemedText
+          text="Dark Mode"
+          style={{ fontFamily: "WorkSans_400Regular" }}
+        />
+        <Switch
+          value={theme == "dark" ? true : false}
+          thumbColor={Colors[palette][500]}
+          trackColor={{
+            false: Colors[palette][300],
+            true: Colors[palette][100],
+          }}
+          ios_backgroundColor={Colors[palette][50]}
+          onValueChange={toggleTheme}
+        />
+      </View>
       <View
         style={{
           flexDirection: "row",

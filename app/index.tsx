@@ -54,6 +54,6 @@ export default function Index() {
   if (isInitialBoot) {
     return <Redirect href="/initial_boot" />;
   } else {
-    return <Redirect href="(tabs)/" />;
+    return <Redirect href="/(tabs)" />;
   }
 }

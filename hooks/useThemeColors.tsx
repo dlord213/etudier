@@ -3,10 +3,10 @@ import { useColorScheme } from "react-native";
 import * as SecureStore from "expo-secure-store";
 
 export default function useThemeColors() {
-  const themeMode = useColorScheme();
+  const systemTheme = useColorScheme();
 
   const [palette, setPalette] = useState("");
-  const [theme, setTheme] = useState(themeMode);
+  const [theme, setTheme] = useState(systemTheme);
 
   async function getStoredPalette() {
     let result = await SecureStore.getItemAsync("palette");
@@ -21,7 +21,13 @@ export default function useThemeColors() {
     if (!palette) {
       getStoredPalette();
     }
-  }, [palette]);
+  }, [palette, theme]);
+
+  useEffect(() => {
+    if (!theme || theme === "system") {
+      setTheme(systemTheme); // Keep system theme unless manually changed
+    }
+  }, [systemTheme]);
 
   return [palette, theme, setPalette, setTheme];
 }

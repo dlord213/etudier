@@ -1,5 +1,7 @@
-import { Text, TextStyle, useColorScheme } from "react-native";
+import { Text, TextStyle } from "react-native";
 import Colors from "@/constants/Colors";
+import { useContext } from "react";
+import ThemeContext from "@/contexts/ThemeContext";
 
 interface ThemedTextProps {
   style: TextStyle;
@@ -14,25 +16,21 @@ export default function ThemedText({
   id,
   color = "primary",
 }: ThemedTextProps) {
-  const themeMode = useColorScheme();
+  const { theme } = useContext(ThemeContext);
 
   let textColor;
 
   if (color == "primary") {
     textColor =
-      themeMode != "light"
-        ? Colors.Text_Dark.Default
-        : Colors.Text_Light.Default;
+      theme != "light" ? Colors.Text_Dark.Default : Colors.Text_Light.Default;
   } else if (color == "secondary") {
     textColor =
-      themeMode != "light"
+      theme != "light"
         ? Colors.Text_Dark.Secondary
         : Colors.Text_Light.Secondary;
   } else if (color == "tertiary") {
     textColor =
-      themeMode != "light"
-        ? Colors.Text_Dark.Tertiary
-        : Colors.Text_Light.Tertiary;
+      theme != "light" ? Colors.Text_Dark.Tertiary : Colors.Text_Light.Tertiary;
   }
 
   return (
