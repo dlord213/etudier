@@ -119,7 +119,13 @@ export default function Page() {
             style={styleState.textInputStyle}
           />
         </View>
-        <View style={styleState.borderStyle}></View>
+
+        <View
+          style={[
+            styleState.borderStyle,
+            { borderColor: Colors[palette][600] },
+          ]}
+        ></View>
         <View
           style={{
             flexDirection: "row",
@@ -184,13 +190,12 @@ const styles = (context: any) =>
       fontFamily: "WorkSans_400Regular",
       fontSize: 14,
       color:
-        theme == "dark"
+        context == "dark"
           ? Colors.Text_Dark.Tertiary
           : Colors.Text_Light.Tertiary,
     },
     borderStyle: {
       borderWidth: 0.5,
-      borderColor: Colors[palette][600],
       borderRadius: 16,
       marginVertical: 8,
     },

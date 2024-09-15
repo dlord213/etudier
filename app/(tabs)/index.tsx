@@ -17,7 +17,7 @@ import Colors from "@/constants/Colors";
 export default function Page() {
   const { palette, theme } = useContext(ThemeContext);
 
-  const styleState = styles(theme);
+  const styleState = styles([theme, palette]);
   const [name, setName] = useState<string | null>(null);
   const [index, setIndex] = useState(0);
 
@@ -104,7 +104,12 @@ export default function Page() {
           <FontAwesome6 name="add" size={20} color={headingIconColor} />
         </Pressable>
       </View>
-      <View style={styleState.cardStyle}>
+      <View
+        style={[
+          styleState.cardStyle,
+          { backgroundColor: Colors[palette][600] },
+        ]}
+      >
         <ThemedText text="No tasks." style={styleState.cardHeadingTextStyle} />
         <FontAwesome5
           name="clipboard"
@@ -136,7 +141,13 @@ export default function Page() {
           />
         </Pressable>
       </View>
-      <View style={styleState.cardStyle}>
+
+      <View
+        style={[
+          styleState.cardStyle,
+          { backgroundColor: Colors[palette][600] },
+        ]}
+      >
         <ThemedText
           text="No schedules."
           style={styleState.cardHeadingTextStyle}
@@ -163,7 +174,7 @@ const styles = (context: any) =>
     safeAreaView: {
       flex: 1,
       backgroundColor:
-        context != "light"
+        context[0] != "light"
           ? Colors.Backgrounds_Dark.Brand
           : Colors.Backgrounds_Light.Brand,
       padding: 16,
@@ -185,7 +196,6 @@ const styles = (context: any) =>
     },
     cardStyle: {
       flexDirection: "row",
-      backgroundColor: context[palette][600],
       padding: 16,
       borderRadius: 16,
       justifyContent: "space-between",
