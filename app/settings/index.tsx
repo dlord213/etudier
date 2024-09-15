@@ -25,6 +25,7 @@ export default function Page() {
 
   async function clearData() {
     await SecureStore.deleteItemAsync("name");
+    await SecureStore.deleteItemAsync("palette");
     router.dismissAll();
     router.replace("/");
     ToastAndroid.show("Cleared data", ToastAndroid.SHORT);
