@@ -19,7 +19,6 @@ export default function Page() {
 
   const styleState = styles([theme, palette]);
   const [name, setName] = useState<string | null>(null);
-  const [index, setIndex] = useState(0);
 
   const router = useRouter();
 
@@ -29,25 +28,36 @@ export default function Page() {
   useEffect(() => {
     const getName = async () => {
       const storedName = await SecureStore.getItemAsync("name");
-      setName(storedName);
-      setIndex(1);
+      if (storedName) {
+        setName(storedName);
+      } else {
+        router.replace("/");
+      }
     };
 
     if (!name) {
       getName();
     }
-  }, []);
+  }, [name]);
 
-  const pages = [
-    <>
+  if (!name) {
+    return (
       <ActivityIndicator
         color={
           theme == "dark" ? Colors.Text_Dark.Default : Colors.Text_Light.Default
         }
         size={64}
       />
-    </>,
-    <>
+    );
+  }
+
+  return (
+    <SafeAreaView
+      style={[
+        styleState.safeAreaView,
+        { justifyContent: !name ? "center" : "flex-start" },
+      ]}
+    >
       <View
         style={{
           flexDirection: "row",
@@ -88,7 +98,6 @@ export default function Page() {
           <FontAwesome5 name="bell" size={20} color={headingIconColor} />
         </View>
       </View>
-
       <View
         style={{
           flexDirection: "row",
@@ -100,24 +109,36 @@ export default function Page() {
           text="Tasks overview"
           style={{ fontFamily: "WorkSans_400Regular" }}
         />
-        <Pressable>
+        <ThemedPressableOpacity
+          onPress={() => {
+            router.push("/tasks");
+          }}
+        >
           <FontAwesome6 name="add" size={20} color={headingIconColor} />
-        </Pressable>
+        </ThemedPressableOpacity>
       </View>
-      <View
-        style={[
-          styleState.cardStyle,
-          { backgroundColor: Colors[palette][600] },
-        ]}
+      <ThemedPressableOpacity
+        onPress={() => {
+          router.push("/tasks");
+        }}
       >
-        <ThemedText text="No tasks." style={styleState.cardHeadingTextStyle} />
-        <FontAwesome5
-          name="clipboard"
-          size={48}
-          color={Colors.Text_Dark.Default}
-        />
-      </View>
-
+        <View
+          style={[
+            styleState.cardStyle,
+            { backgroundColor: Colors[palette][600] },
+          ]}
+        >
+          <ThemedText
+            text="No tasks."
+            style={styleState.cardHeadingTextStyle}
+          />
+          <FontAwesome5
+            name="clipboard"
+            size={48}
+            color={Colors.Text_Dark.Default}
+          />
+        </View>
+      </ThemedPressableOpacity>
       <View
         style={{
           flexDirection: "row",
@@ -141,30 +162,24 @@ export default function Page() {
           />
         </Pressable>
       </View>
-
-      <View
-        style={[
-          styleState.cardStyle,
-          { backgroundColor: Colors[palette][600] },
-        ]}
-      >
-        <ThemedText
-          text="No schedules."
-          style={styleState.cardHeadingTextStyle}
-        />
-        <FontAwesome5 name="clock" size={36} color={Colors.Text_Dark.Default} />
-      </View>
-    </>,
-  ];
-
-  return (
-    <SafeAreaView
-      style={[
-        styleState.safeAreaView,
-        { justifyContent: index == 0 ? "center" : "flex-start" },
-      ]}
-    >
-      {pages[index]}
+      <ThemedPressableOpacity>
+        <View
+          style={[
+            styleState.cardStyle,
+            { backgroundColor: Colors[palette][600] },
+          ]}
+        >
+          <ThemedText
+            text="No schedules."
+            style={styleState.cardHeadingTextStyle}
+          />
+          <FontAwesome5
+            name="clock"
+            size={36}
+            color={Colors.Text_Dark.Default}
+          />
+        </View>
+      </ThemedPressableOpacity>
     </SafeAreaView>
   );
 }
@@ -192,7 +207,6 @@ const styles = (context: any) =>
       color: Colors.Text_Dark.Default,
       fontFamily: "WorkSans_700Bold",
       fontSize: 24,
-      flex: 1,
     },
     cardStyle: {
       flexDirection: "row",

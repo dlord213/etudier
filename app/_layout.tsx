@@ -36,6 +36,10 @@ export default function RootLayout() {
           name="activity_log/index"
           options={{ animation: "fade_from_bottom" }}
         />
+        <Stack.Screen
+          name="tasks/index"
+          options={{ animation: "fade_from_bottom" }}
+        />
       </Stack>
     </ThemeContext.Provider>
   );

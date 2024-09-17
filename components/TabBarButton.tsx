@@ -37,7 +37,7 @@ export default function TabBarButton({
     scale.value = withTiming(isFocused ? 1.2 : 1, {
       duration: 500,
     });
-    translateY.value = withTiming(isFocused ? -3 : 1, {
+    translateY.value = withTiming(isFocused ? -2 : 1, {
       duration: 200,
       easing: Easing.inOut(Easing.circle),
     });
