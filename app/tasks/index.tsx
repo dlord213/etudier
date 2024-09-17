@@ -1,5 +1,5 @@
 import { useContext, useRef, useState } from "react";
-import { Pressable, StyleSheet, TextInput, View } from "react-native";
+import { Pressable, TextInput, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { BottomSheetMethods } from "@devvie/bottom-sheet";
 
@@ -14,6 +14,7 @@ import Ionicons from "@expo/vector-icons/Ionicons";
 import ThemedBottomSheetModal from "@/components/ThemedBottomSheetModal";
 
 import styles from "@/styles/tasks";
+import ThemedModalTextInput from "@/components/ThemedModalTextInput";
 
 export default function Index() {
   const { palette, theme } = useContext(ThemeContext);
@@ -105,31 +106,16 @@ export default function Index() {
         ref={sheetRef}
       >
         <View style={{ marginBottom: 8 }}>
-          <TextInput
-            placeholder="Title"
-            inputMode="text"
-            value={title}
+          <ThemedModalTextInput
             onChangeText={setTitle}
-            multiline
-            placeholderTextColor={
-              theme == "dark"
-                ? Colors.Text_Dark.Tertiary
-                : Colors.Text_Light.Tertiary
-            }
-            style={styleState.textInputStyle}
+            value={title}
+            placeholder="Title"
           />
-          <TextInput
-            placeholder="Description"
-            value={description}
+          <ThemedModalTextInput
             onChangeText={setDescription}
-            inputMode="text"
-            multiline
-            placeholderTextColor={
-              theme == "dark"
-                ? Colors.Text_Dark.Tertiary
-                : Colors.Text_Light.Tertiary
-            }
-            style={styleState.textInputStyle}
+            value={description}
+            placeholder="Description"
+            style={{ fontFamily: "WorkSans_400Regular", fontSize: 14 }}
           />
         </View>
 

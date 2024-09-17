@@ -14,6 +14,7 @@ import ThemeContext from "@/contexts/ThemeContext";
 import TabBarVisibilityContext from "@/contexts/TabBarVisibilityContext";
 import Colors from "@/constants/Colors";
 import styles from "@/styles/tabs_notes";
+import ThemedModalTextInput from "@/components/ThemedModalTextInput";
 
 export default function Page() {
   const { palette, theme } = useContext(ThemeContext);
@@ -93,34 +94,18 @@ export default function Page() {
         ref={sheetRef}
       >
         <View style={{ marginBottom: 8 }}>
-          <TextInput
-            placeholder="Title"
-            inputMode="text"
-            value={title}
+          <ThemedModalTextInput
             onChangeText={setTitle}
-            multiline
-            placeholderTextColor={
-              theme == "dark"
-                ? Colors.Text_Dark.Tertiary
-                : Colors.Text_Light.Tertiary
-            }
-            style={styleState.textInputStyle}
+            value={title}
+            placeholder="Title"
           />
-          <TextInput
-            placeholder="Description"
-            value={description}
+          <ThemedModalTextInput
             onChangeText={setDescription}
-            inputMode="text"
-            multiline
-            placeholderTextColor={
-              theme == "dark"
-                ? Colors.Text_Dark.Tertiary
-                : Colors.Text_Light.Tertiary
-            }
-            style={styleState.textInputStyle}
+            value={description}
+            placeholder="Description"
+            style={{ fontFamily: "WorkSans_400Regular", fontSize: 14 }}
           />
         </View>
-
         <View
           style={[
             styleState.borderStyle,

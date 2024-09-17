@@ -17,14 +17,7 @@ const styles = (context: any) =>
       textAlign: "center",
       fontSize: 36,
     },
-    textInputStyle: {
-      fontFamily: "WorkSans_400Regular",
-      fontSize: 14,
-      color:
-        context == "dark"
-          ? Colors.Text_Dark.Tertiary
-          : Colors.Text_Light.Tertiary,
-    },
+
     borderStyle: {
       borderWidth: 0.5,
       borderRadius: 16,
