@@ -110,6 +110,7 @@ export default function Index() {
         <FontAwesome6 name="add" size={16} color={Colors.Text_Dark.Default} />
       </Pressable>
       <ThemedBottomSheetModal
+        height={"30%"}
         onClose={() => {
           setTimeout(() => {
             setDescription("");

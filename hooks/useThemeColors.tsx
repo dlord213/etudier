@@ -17,15 +17,25 @@ export default function useThemeColors() {
     }
   }
 
+  async function getStoredTheme() {
+    let result = await SecureStore.getItemAsync("theme");
+    if (result) {
+      setTheme(result);
+    } else {
+      setTheme(systemTheme);
+    }
+  }
+
   useEffect(() => {
     if (!palette) {
       getStoredPalette();
+      getStoredTheme();
     }
   }, [palette, theme]);
 
   useEffect(() => {
     if (!theme || theme === "system") {
-      setTheme(systemTheme); // Keep system theme unless manually changed
+      setTheme(systemTheme);
     }
   }, [systemTheme]);
 

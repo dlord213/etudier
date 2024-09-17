@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import { Pressable, StyleSheet, Switch, View } from "react-native";
+import { Pressable, Switch, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import * as SecureStore from "expo-secure-store";
 
@@ -16,8 +16,10 @@ export default function Page() {
     await SecureStore.setItemAsync("palette", palette);
   }
 
-  const toggleTheme = () => {
-    setTheme(theme === "dark" ? "light" : "dark");
+  const toggleTheme = async () => {
+    const newTheme = theme === "dark" ? "light" : "dark";
+    setTheme(newTheme);
+    await SecureStore.setItemAsync("theme", newTheme);
   };
 
   return (
