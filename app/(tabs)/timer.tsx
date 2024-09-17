@@ -7,63 +7,14 @@ import Colors from "@/constants/Colors";
 import ThemeContext from "@/contexts/ThemeContext";
 import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
 import styles from "@/styles/tabs_timer";
+import useTimer from "@/hooks/useTimer";
 
 export default function Page() {
   const { palette, theme } = useContext(ThemeContext);
   const styleState = styles(theme);
 
-  const [timer, setTimer] = useState(25 * 60);
-  const [isRunning, setIsRunning] = useState(false);
-  const [isBreak, setIsBreak] = useState(false);
-  const intervalRef = useRef<NodeJS.Timeout | null>(null);
-
-  const formatTime = (seconds: number) => {
-    const minutes = Math.floor(seconds / 60);
-    const secs = seconds % 60;
-    return `${minutes.toString().padStart(2, "0")}:${secs
-      .toString()
-      .padStart(2, "0")}`;
-  };
-
-  const startTimer = () => {
-    if (!isRunning) {
-      setIsRunning(true);
-      intervalRef.current = setInterval(() => {
-        setTimer((prevTime) => {
-          if (prevTime === 0) {
-            clearInterval(intervalRef.current as NodeJS.Timeout);
-
-            if (!isBreak) {
-              setIsBreak(true);
-              setTimer(5 * 60);
-              startTimer();
-            } else {
-              setIsBreak(false);
-              setTimer(25 * 60);
-            }
-
-            return 0;
-          }
-          return prevTime - 1;
-        });
-      }, 1000);
-    }
-  };
-
-  const pauseTimer = () => {
-    if (isRunning && intervalRef.current) {
-      clearInterval(intervalRef.current);
-      setIsRunning(false);
-    }
-  };
-
-  useEffect(() => {
-    return () => {
-      if (intervalRef.current) {
-        clearInterval(intervalRef.current);
-      }
-    };
-  }, []);
+  const [timer, formatTime, startTimer, pauseTimer, isRunning, isBreak] =
+    useTimer();
 
   return (
     <SafeAreaView style={styleState.safeAreaView}>
