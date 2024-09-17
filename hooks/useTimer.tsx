@@ -21,14 +21,18 @@ export default function useTimer() {
         setTimer((prevTime) => {
           if (prevTime === 0) {
             clearInterval(intervalRef.current as NodeJS.Timeout);
+
             if (!isBreak) {
               setIsBreak(true);
               setTimer(5 * 60);
+              setIsRunning(false);
             } else {
               setIsBreak(false);
               setTimer(25 * 60);
+              setIsRunning(false);
             }
-            return prevTime;
+
+            return 0;
           }
           return prevTime - 1;
         });
@@ -42,6 +46,12 @@ export default function useTimer() {
       setIsRunning(false);
     }
   };
+
+  useEffect(() => {
+    if (isBreak && !isRunning) {
+      startTimer();
+    }
+  }, [isBreak, isRunning]);
 
   useEffect(() => {
     return () => {
