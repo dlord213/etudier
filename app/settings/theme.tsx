@@ -6,6 +6,7 @@ import * as SecureStore from "expo-secure-store";
 import ThemedText from "@/components/ThemedText";
 import Colors from "@/constants/Colors";
 import ThemeContext from "@/contexts/ThemeContext";
+import styles from "@/styles/settings";
 
 export default function Page() {
   const { palette, setPalette, theme, setTheme } = useContext(ThemeContext);
@@ -122,16 +123,3 @@ export default function Page() {
     </SafeAreaView>
   );
 }
-
-const styles = (context: any) =>
-  StyleSheet.create({
-    safeAreaView: {
-      flex: 1,
-      backgroundColor:
-        context != "light"
-          ? Colors.Backgrounds_Dark.Brand
-          : Colors.Backgrounds_Light.Brand,
-      padding: 16,
-      gap: 16,
-    },
-  });

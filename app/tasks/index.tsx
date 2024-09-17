@@ -15,10 +15,13 @@ export default function Index() {
 
   return (
     <SafeAreaView style={styleState.safeAreaView}>
-      <ThemedText
-        text="Tasks"
-        style={[styleState.headingTextStyle, { textAlign: "center" }]}
-      />
+      <View style={{ flexDirection: "row" }}>
+        <ThemedText
+          text="Tasks"
+          style={[styleState.headingTextStyle, { textAlign: "center" }]}
+        />
+      </View>
+
       <View
         style={[
           styleState.cardStyle,

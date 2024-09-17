@@ -1,5 +1,5 @@
 import { useContext, useRef } from "react";
-import { StyleSheet, View } from "react-native";
+import { View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { BottomSheetMethods } from "@devvie/bottom-sheet";
 
@@ -11,6 +11,7 @@ import Colors from "@/constants/Colors";
 import ThemeContext from "@/contexts/ThemeContext";
 import ThemedPressableOpacity from "@/components/ThemedPressableOpacity";
 import ThemedBottomSheetModal from "@/components/ThemedBottomSheetModal";
+import styles from "@/styles/activity_log";
 
 export default function Page() {
   const { palette, theme } = useContext(ThemeContext);
@@ -69,20 +70,3 @@ export default function Page() {
     </SafeAreaView>
   );
 }
-
-const styles = (context: any) =>
-  StyleSheet.create({
-    safeAreaView: {
-      flex: 1,
-      backgroundColor:
-        context != "light"
-          ? Colors.Backgrounds_Dark.Brand
-          : Colors.Backgrounds_Light.Brand,
-      padding: 16,
-      gap: 16,
-    },
-    headingTextStyle: {
-      fontFamily: "WorkSans_700Bold",
-      fontSize: 30,
-    },
-  });

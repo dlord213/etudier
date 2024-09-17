@@ -1,7 +1,6 @@
 import { SafeAreaView } from "react-native-safe-area-context";
-import { StyleSheet, View, Text } from "react-native";
+import { View, Text } from "react-native";
 import { useContext } from "react";
-import * as SecureStore from "expo-secure-store";
 import { Link } from "expo-router";
 
 import AntDesign from "@expo/vector-icons/AntDesign";
@@ -9,6 +8,7 @@ import ThemeContext from "@/contexts/ThemeContext";
 import Colors from "@/constants/Colors";
 import ThemedText from "@/components/ThemedText";
 import ThemedPressable from "@/components/ThemedPressable";
+import styles from "@/styles/initial_boot_welcome";
 
 export default function Page() {
   const { palette, theme } = useContext(ThemeContext);
@@ -74,17 +74,3 @@ export default function Page() {
     </SafeAreaView>
   );
 }
-
-const styles = (context: any) =>
-  StyleSheet.create({
-    safeAreaView: {
-      flex: 1,
-      backgroundColor:
-        context != "light"
-          ? Colors.Backgrounds_Dark.Brand
-          : Colors.Backgrounds_Light.Brand,
-      padding: 16,
-      justifyContent: "flex-end",
-      gap: 16,
-    },
-  });

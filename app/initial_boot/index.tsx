@@ -1,4 +1,4 @@
-import { StyleSheet, Text, ToastAndroid, View } from "react-native";
+import { Text, ToastAndroid, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useContext, useState } from "react";
 import { useRouter } from "expo-router";
@@ -11,6 +11,7 @@ import ThemedPressable from "@/components/ThemedPressable";
 
 import ThemeContext from "@/contexts/ThemeContext";
 import Colors from "@/constants/Colors";
+import styles from "@/styles/initial_boot";
 
 async function save(key: any, value: any) {
   await SecureStore.setItemAsync(key, value);
@@ -99,17 +100,3 @@ export default function Page() {
     </SafeAreaView>
   );
 }
-
-const styles = (context: any) =>
-  StyleSheet.create({
-    safeAreaView: {
-      flex: 1,
-      backgroundColor:
-        context != "light"
-          ? Colors.Backgrounds_Dark.Brand
-          : Colors.Backgrounds_Light.Brand,
-      padding: 16,
-      justifyContent: "flex-end",
-      gap: 16,
-    },
-  });

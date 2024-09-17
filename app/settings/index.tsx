@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import { StyleSheet, ToastAndroid } from "react-native";
+import { ToastAndroid } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import * as SecureStore from "expo-secure-store";
 import { useRouter } from "expo-router";
@@ -13,6 +13,7 @@ import AntDesign from "@expo/vector-icons/AntDesign";
 import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
+import styles from "@/styles/settings";
 
 export default function Page() {
   const { palette, theme } = useContext(ThemeContext);
@@ -94,16 +95,3 @@ export default function Page() {
     </SafeAreaView>
   );
 }
-
-const styles = (context: any) =>
-  StyleSheet.create({
-    safeAreaView: {
-      flex: 1,
-      backgroundColor:
-        context != "light"
-          ? Colors.Backgrounds_Dark.Brand
-          : Colors.Backgrounds_Light.Brand,
-      padding: 16,
-      gap: 16,
-    },
-  });

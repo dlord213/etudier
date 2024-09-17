@@ -1,12 +1,12 @@
 import { useContext, useState, useEffect, useRef } from "react";
-import { Pressable, StyleSheet, View } from "react-native";
+import { Pressable, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 import ThemedText from "@/components/ThemedText";
 import Colors from "@/constants/Colors";
 import ThemeContext from "@/contexts/ThemeContext";
-
 import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
+import styles from "@/styles/tabs_timer";
 
 export default function Page() {
   const { palette, theme } = useContext(ThemeContext);
@@ -166,21 +166,3 @@ export default function Page() {
     </SafeAreaView>
   );
 }
-
-const styles = (context: any) =>
-  StyleSheet.create({
-    safeAreaView: {
-      flex: 1,
-      backgroundColor:
-        context != "light"
-          ? Colors.Backgrounds_Dark.Brand
-          : Colors.Backgrounds_Light.Brand,
-      padding: 16,
-      gap: 16,
-    },
-    headingTextStyle: {
-      fontFamily: "WorkSans_700Bold",
-      textAlign: "center",
-      fontSize: 36,
-    },
-  });
