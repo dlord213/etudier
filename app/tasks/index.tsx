@@ -1,6 +1,7 @@
-import { useContext } from "react";
-import { StyleSheet, View } from "react-native";
+import { useContext, useRef, useState } from "react";
+import { Pressable, StyleSheet, TextInput, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { BottomSheetMethods } from "@devvie/bottom-sheet";
 
 import ThemedText from "@/components/ThemedText";
 import Colors from "@/constants/Colors";
@@ -8,10 +9,20 @@ import ThemeContext from "@/contexts/ThemeContext";
 import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
 import ThemedPressable from "@/components/ThemedPressable";
 import AntDesign from "@expo/vector-icons/AntDesign";
+import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
+import Ionicons from "@expo/vector-icons/Ionicons";
+import ThemedBottomSheetModal from "@/components/ThemedBottomSheetModal";
+
+import styles from "@/styles/tasks";
 
 export default function Index() {
   const { palette, theme } = useContext(ThemeContext);
   const styleState = styles(theme);
+
+  const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
+
+  const sheetRef = useRef<BottomSheetMethods>(null);
 
   return (
     <SafeAreaView style={styleState.safeAreaView}>
@@ -21,7 +32,6 @@ export default function Index() {
           style={[styleState.headingTextStyle, { textAlign: "center" }]}
         />
       </View>
-
       <View
         style={[
           styleState.cardStyle,
@@ -67,41 +77,95 @@ export default function Index() {
           backgroundColor={Colors[palette][200]}
         />
       </View>
+      <Pressable
+        onPress={() => {
+          sheetRef.current?.open();
+        }}
+        style={({ pressed }) => [
+          {
+            bottom: 25,
+            position: "absolute",
+            right: 25,
+            backgroundColor: Colors[palette][600],
+            padding: 16,
+            borderRadius: 8,
+            opacity: pressed ? 0.8 : 1,
+          },
+        ]}
+      >
+        <FontAwesome6 name="add" size={16} color={Colors.Text_Dark.Default} />
+      </Pressable>
+      <ThemedBottomSheetModal
+        onClose={() => {
+          setTimeout(() => {
+            setDescription("");
+            setTitle("");
+          }, 200);
+        }}
+        ref={sheetRef}
+      >
+        <View style={{ marginBottom: 8 }}>
+          <TextInput
+            placeholder="Title"
+            inputMode="text"
+            value={title}
+            onChangeText={setTitle}
+            multiline
+            placeholderTextColor={
+              theme == "dark"
+                ? Colors.Text_Dark.Tertiary
+                : Colors.Text_Light.Tertiary
+            }
+            style={styleState.textInputStyle}
+          />
+          <TextInput
+            placeholder="Description"
+            value={description}
+            onChangeText={setDescription}
+            inputMode="text"
+            multiline
+            placeholderTextColor={
+              theme == "dark"
+                ? Colors.Text_Dark.Tertiary
+                : Colors.Text_Light.Tertiary
+            }
+            style={styleState.textInputStyle}
+          />
+        </View>
+
+        <View
+          style={[
+            styleState.borderStyle,
+            { borderColor: Colors[palette][600] },
+          ]}
+        ></View>
+        <View
+          style={{
+            flexDirection: "row",
+            justifyContent: "space-between",
+            display: !title ? "none" : "flex",
+          }}
+        >
+          <Pressable
+            onPress={() => {
+              sheetRef.current?.open();
+            }}
+            style={({ pressed }) => [
+              {
+                backgroundColor: Colors[palette][600],
+                padding: 8,
+                borderRadius: 8,
+                opacity: pressed ? 0.8 : 1,
+                flexDirection: "row",
+                alignItems: "center",
+                justifyContent: "space-between",
+              },
+            ]}
+          >
+            <Ionicons name="send" size={16} color={Colors.Text_Dark.Default} />
+          </Pressable>
+        </View>
+      </ThemedBottomSheetModal>
     </SafeAreaView>
   );
 }
-
-const styles = (context: any) =>
-  StyleSheet.create({
-    safeAreaView: {
-      flex: 1,
-      backgroundColor:
-        context[0] != "light"
-          ? Colors.Backgrounds_Dark.Brand
-          : Colors.Backgrounds_Light.Brand,
-      padding: 16,
-      gap: 16,
-    },
-    headingTextStyle: {
-      fontFamily: "WorkSans_700Bold",
-      textAlign: "center",
-      fontSize: 36,
-    },
-    cardBodyTextStyle: {
-      color: Colors.Text_Dark.Default,
-      fontFamily: "WorkSans_400Regular",
-      fontSize: 12,
-    },
-    cardHeadingTextStyle: {
-      color: Colors.Text_Dark.Default,
-      fontFamily: "WorkSans_700Bold",
-      fontSize: 24,
-    },
-    cardStyle: {
-      flexDirection: "row",
-      padding: 16,
-      borderRadius: 16,
-      justifyContent: "space-between",
-      alignItems: "center",
-    },
-  });

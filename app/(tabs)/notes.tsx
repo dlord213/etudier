@@ -1,5 +1,5 @@
 import { useContext, useRef, useState } from "react";
-import { Pressable, StyleSheet, TextInput, View } from "react-native";
+import { Pressable, TextInput, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Checkbox from "expo-checkbox";
 import { BottomSheetMethods } from "@devvie/bottom-sheet";
