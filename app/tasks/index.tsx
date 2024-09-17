@@ -1,5 +1,5 @@
 import { useContext, useRef, useState } from "react";
-import { Pressable, TextInput, View } from "react-native";
+import { Pressable, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { BottomSheetMethods } from "@devvie/bottom-sheet";
 
@@ -12,9 +12,12 @@ import AntDesign from "@expo/vector-icons/AntDesign";
 import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import ThemedBottomSheetModal from "@/components/ThemedBottomSheetModal";
+import Octicons from "@expo/vector-icons/Octicons";
+import FontAwesome from "@expo/vector-icons/FontAwesome";
 
 import styles from "@/styles/tasks";
 import ThemedModalTextInput from "@/components/ThemedModalTextInput";
+import ThemedPressableOpacity from "@/components/ThemedPressableOpacity";
 
 export default function Index() {
   const { palette, theme } = useContext(ThemeContext);
@@ -22,8 +25,18 @@ export default function Index() {
 
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
+  const [isStarred, setIsStarred] = useState(false);
+  const [isDescriptionVisible, setIsDescriptionVisible] = useState(false);
 
   const sheetRef = useRef<BottomSheetMethods>(null);
+
+  const handleStarredPress = () => {
+    setIsStarred((prevState) => !prevState);
+  };
+
+  const handleDescriptionPress = () => {
+    setIsDescriptionVisible((prevState) => !prevState);
+  };
 
   return (
     <SafeAreaView style={styleState.safeAreaView}>
@@ -58,7 +71,7 @@ export default function Index() {
           style={{ paddingHorizontal: 24 }}
           children={
             <>
-              <AntDesign name="star" size={16} color={Colors[palette][600]} />
+              <FontAwesome name="star" size={24} color={Colors[palette][600]} />
             </>
           }
           backgroundColor={Colors[palette][200]}
@@ -115,10 +128,13 @@ export default function Index() {
             onChangeText={setDescription}
             value={description}
             placeholder="Description"
-            style={{ fontFamily: "WorkSans_400Regular", fontSize: 14 }}
+            style={{
+              fontFamily: "WorkSans_400Regular",
+              fontSize: 14,
+              display: isDescriptionVisible ? "flex" : "none",
+            }}
           />
         </View>
-
         <View
           style={[
             styleState.borderStyle,
@@ -129,9 +145,33 @@ export default function Index() {
           style={{
             flexDirection: "row",
             justifyContent: "space-between",
-            display: !title ? "none" : "flex",
+            alignItems: "center",
           }}
         >
+          <View style={{ flexDirection: "row", gap: 16 }}>
+            <ThemedPressableOpacity onPress={handleDescriptionPress}>
+              <Octicons
+                name="note"
+                size={24}
+                color={Colors.Text_Dark.Default}
+              />
+            </ThemedPressableOpacity>
+            <ThemedPressableOpacity onPress={handleStarredPress}>
+              {isStarred ? (
+                <FontAwesome
+                  name="star-o"
+                  size={24}
+                  color={Colors.Text_Dark.Default}
+                />
+              ) : (
+                <FontAwesome
+                  name="star"
+                  size={24}
+                  color={Colors.Text_Dark.Default}
+                />
+              )}
+            </ThemedPressableOpacity>
+          </View>
           <Pressable
             onPress={() => {
               sheetRef.current?.open();
@@ -145,6 +185,7 @@ export default function Index() {
                 flexDirection: "row",
                 alignItems: "center",
                 justifyContent: "space-between",
+                display: !title ? "none" : "flex",
               },
             ]}
           >
