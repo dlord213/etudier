@@ -2,6 +2,7 @@ import { useContext, useRef } from "react";
 import { View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { BottomSheetMethods } from "@devvie/bottom-sheet";
+import { StatusBar } from "expo-status-bar";
 
 import Ionicons from "@expo/vector-icons/Ionicons";
 import AntDesign from "@expo/vector-icons/AntDesign";
@@ -67,6 +68,7 @@ export default function Page() {
           </ThemedPressableOpacity>
         </View>
       </ThemedBottomSheetModal>
+      <StatusBar style={theme == "dark" ? "dark" : "inverted"} />
     </SafeAreaView>
   );
 }

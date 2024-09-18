@@ -2,6 +2,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { View, Text } from "react-native";
 import { useContext } from "react";
 import { Link } from "expo-router";
+import { StatusBar } from "expo-status-bar";
 
 import AntDesign from "@expo/vector-icons/AntDesign";
 import ThemeContext from "@/contexts/ThemeContext";
@@ -71,6 +72,7 @@ export default function Page() {
           }}
         ></View>
       </View>
+      <StatusBar style={theme == "dark" ? "dark" : "inverted"} />
     </SafeAreaView>
   );
 }

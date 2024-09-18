@@ -1,8 +1,9 @@
 import { useContext, useRef, useState } from "react";
-import { Pressable, TextInput, View } from "react-native";
+import { Pressable, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Checkbox from "expo-checkbox";
 import { BottomSheetMethods } from "@devvie/bottom-sheet";
+import { StatusBar } from "expo-status-bar";
 
 import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
 import Ionicons from "@expo/vector-icons/Ionicons";
@@ -152,6 +153,7 @@ export default function Page() {
           </Pressable>
         </View>
       </ThemedBottomSheetModal>
+      <StatusBar style={theme == "dark" ? "dark" : "inverted"} />
     </SafeAreaView>
   );
 }

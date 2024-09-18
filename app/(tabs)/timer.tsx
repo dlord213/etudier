@@ -1,6 +1,7 @@
-import { useContext, useState, useEffect, useRef } from "react";
+import { useContext } from "react";
 import { Pressable, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { StatusBar } from "expo-status-bar";
 
 import ThemedText from "@/components/ThemedText";
 import Colors from "@/constants/Colors";
@@ -114,6 +115,7 @@ export default function Page() {
           </>
         )}
       </View>
+      <StatusBar style={theme == "dark" ? "dark" : "inverted"} />
     </SafeAreaView>
   );
 }

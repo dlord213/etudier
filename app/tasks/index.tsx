@@ -2,13 +2,13 @@ import { useContext, useRef, useState } from "react";
 import { Pressable, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { BottomSheetMethods } from "@devvie/bottom-sheet";
+import { StatusBar } from "expo-status-bar";
 
 import ThemedText from "@/components/ThemedText";
 import Colors from "@/constants/Colors";
 import ThemeContext from "@/contexts/ThemeContext";
 import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
 import ThemedPressable from "@/components/ThemedPressable";
-import AntDesign from "@expo/vector-icons/AntDesign";
 import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import ThemedBottomSheetModal from "@/components/ThemedBottomSheetModal";
@@ -193,6 +193,7 @@ export default function Index() {
           </Pressable>
         </View>
       </ThemedBottomSheetModal>
+      <StatusBar style={theme == "dark" ? "dark" : "inverted"} />
     </SafeAreaView>
   );
 }

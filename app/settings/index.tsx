@@ -3,6 +3,7 @@ import { ToastAndroid } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import * as SecureStore from "expo-secure-store";
 import { useRouter } from "expo-router";
+import { StatusBar } from "expo-status-bar";
 
 import Colors from "@/constants/Colors";
 import ThemeContext from "@/contexts/ThemeContext";
@@ -92,6 +93,7 @@ export default function Page() {
           style={{ fontFamily: "WorkSans_400Regular" }}
         />
       </ThemedPressableOpacity>
+      <StatusBar style={theme == "dark" ? "dark" : "inverted"} />
     </SafeAreaView>
   );
 }
