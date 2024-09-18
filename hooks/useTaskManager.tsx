@@ -3,8 +3,6 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { DateTimePickerAndroid } from "@react-native-community/datetimepicker";
 
 export default function useTaskManager() {
-  const todayDate = new Date();
-
   const [task, setTask] = useState({
     title: "",
     description: "",
@@ -15,14 +13,20 @@ export default function useTaskManager() {
 
   const [storedTasks, setStoredTasks] = useState(null);
 
-  const handleTitleChange = (newTitle) => {
+  const [isDescriptionVisible, setIsDescriptionVisible] = useState(false);
+
+  const handleDescriptionPress = () => {
+    setIsDescriptionVisible((prevState) => !prevState);
+  };
+
+  const handleTitleChange = (newTitle: any) => {
     setTask((prevTask) => ({
       ...prevTask,
       title: newTitle,
     }));
   };
 
-  const handleDescriptionChange = (newDescription) => {
+  const handleDescriptionChange = (newDescription: any) => {
     setTask((prevTask) => ({
       ...prevTask,
       description: newDescription,
@@ -36,18 +40,18 @@ export default function useTaskManager() {
     }));
   };
 
-  const handleDateChange = (newDate) => {
+  const handleDateChange = (newDate: any) => {
     setTask((prevTask) => ({
       ...prevTask,
       date: newDate.toLocaleDateString(),
     }));
   };
 
-  const dateOnChange = (event, selectedDate) => {
+  const dateOnChange = (event: any, selectedDate: any) => {
     handleDateChange(selectedDate);
   };
 
-  const handleDeleteTask = async (taskIndex) => {
+  const handleDeleteTask = async (taskIndex: any) => {
     const tasksString = await AsyncStorage.getItem("@tasks");
     let tasks = tasksString !== null ? JSON.parse(tasksString) : [];
 
@@ -58,7 +62,7 @@ export default function useTaskManager() {
     setStoredTasks([...tasks]);
   };
 
-  const handleCompleteTask = async (taskIndex) => {
+  const handleCompleteTask = async (taskIndex: any) => {
     const tasksString = await AsyncStorage.getItem("@tasks");
     let tasks = tasksString !== null ? JSON.parse(tasksString) : [];
 
@@ -73,7 +77,7 @@ export default function useTaskManager() {
     setStoredTasks([...tasks]);
   };
 
-  const handleStarredTask = async (taskIndex) => {
+  const handleStarredTask = async (taskIndex: any) => {
     const tasksString = await AsyncStorage.getItem("@tasks");
     let tasks = tasksString !== null ? JSON.parse(tasksString) : [];
 
@@ -133,5 +137,7 @@ export default function useTaskManager() {
     handleStarredTask,
     handleDatePress,
     handleAddTasks,
+    isDescriptionVisible,
+    handleDescriptionPress,
   };
 }

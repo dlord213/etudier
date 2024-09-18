@@ -1,31 +1,32 @@
-import { useContext, useEffect, useRef, useState } from "react";
+import { useContext, useRef } from "react";
 import { Pressable, useWindowDimensions, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { BottomSheetMethods } from "@devvie/bottom-sheet";
 import { StatusBar } from "expo-status-bar";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 
-import ThemedText from "@/components/ThemedText";
-import Colors from "@/constants/Colors";
-import ThemeContext from "@/contexts/ThemeContext";
 import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
-import ThemedPressable from "@/components/ThemedPressable";
 import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
 import Ionicons from "@expo/vector-icons/Ionicons";
-import ThemedBottomSheetModal from "@/components/ThemedBottomSheetModal";
 import Octicons from "@expo/vector-icons/Octicons";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
+import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 
 import styles from "@/styles/tasks";
 import ThemedModalTextInput from "@/components/ThemedModalTextInput";
 import ThemedPressableOpacity from "@/components/ThemedPressableOpacity";
-import MaterialIcons from "@expo/vector-icons/MaterialIcons";
+import ThemeContext from "@/contexts/ThemeContext";
+import ThemedPressable from "@/components/ThemedPressable";
+import ThemedBottomSheetModal from "@/components/ThemedBottomSheetModal";
+import ThemedText from "@/components/ThemedText";
+import Colors from "@/constants/Colors";
+
 import useTaskManager from "@/hooks/useTaskManager";
 
 export default function Index() {
   const { palette, theme } = useContext(ThemeContext);
   const styleState = styles(theme);
   const { height: screenHeight } = useWindowDimensions();
+
   const iconColor =
     theme == "dark" ? Colors.Text_Dark.Default : Colors.Text_Light.Default;
 
@@ -45,15 +46,11 @@ export default function Index() {
     handleStarredTask,
     handleDatePress,
     handleAddTasks,
+    isDescriptionVisible,
+    handleDescriptionPress,
   } = useTaskManager();
 
-  const [isDescriptionVisible, setIsDescriptionVisible] = useState(false);
-
   const sheetRef = useRef<BottomSheetMethods>(null);
-
-  const handleDescriptionPress = () => {
-    setIsDescriptionVisible((prevState) => !prevState);
-  };
 
   return (
     <SafeAreaView style={styleState.safeAreaView}>
@@ -152,8 +149,8 @@ export default function Index() {
       />
       {storedTasks != null
         ? storedTasks
-            .filter((task) => task.date === dateToday.toLocaleDateString())
-            .map((obj) => {
+            .filter((task: any) => task.date === dateToday.toLocaleDateString())
+            .map((obj: any) => {
               1;
               const originalIndex = storedTasks.findIndex(
                 (task: any) =>
@@ -246,8 +243,10 @@ export default function Index() {
       />
       {storedTasks != null
         ? storedTasks
-            .filter((task) => task.date === dateTomorrow.toLocaleDateString())
-            .map((obj) => {
+            .filter(
+              (task: any) => task.date === dateTomorrow.toLocaleDateString()
+            )
+            .map((obj: any) => {
               const originalIndex = storedTasks.findIndex(
                 (task: any) =>
                   task.title === obj.title && task.date === obj.date
