@@ -26,10 +26,40 @@ export default function Index() {
   const styleState = styles(theme);
   const { height: screenHeight } = useWindowDimensions();
 
-  const [title, setTitle] = useState("");
-  const [description, setDescription] = useState("");
-  const [date, setDate] = useState(new Date());
-  const [isStarred, setIsStarred] = useState(false);
+  const [task, setTask] = useState({
+    title: "",
+    description: "",
+    date: new Date(),
+    isStarred: false,
+  });
+
+  const handleTitleChange = (newTitle) => {
+    setTask((prevTask) => ({
+      ...prevTask,
+      title: newTitle,
+    }));
+  };
+
+  const handleDescriptionChange = (newDescription) => {
+    setTask((prevTask) => ({
+      ...prevTask,
+      description: newDescription,
+    }));
+  };
+
+  const toggleIsStarred = () => {
+    setTask((prevTask) => ({
+      ...prevTask,
+      isStarred: !prevTask.isStarred,
+    }));
+  };
+
+  const handleDateChange = (newDate) => {
+    setTask((prevTask) => ({
+      ...prevTask,
+      date: newDate,
+    }));
+  };
 
   const [isDescriptionVisible, setIsDescriptionVisible] = useState(false);
 
@@ -38,18 +68,14 @@ export default function Index() {
 
   const sheetRef = useRef<BottomSheetMethods>(null);
 
-  const handleStarredPress = () => {
-    setIsStarred((prevState) => !prevState);
-  };
-
   const dateOnChange = (event, selectedDate) => {
     const currentDate = selectedDate;
-    setDate(currentDate);
+    handleDateChange(selectedDate);
   };
 
   const handleDatePress = () => {
     DateTimePickerAndroid.open({
-      value: date,
+      value: task.date,
       onChange: dateOnChange,
       mode: "date",
       is24Hour: true,
@@ -63,8 +89,10 @@ export default function Index() {
 
   const handleAddTasks = () => {
     sheetRef.current?.close();
-    console.log(title);
-    console.log(description);
+    console.log(task.title);
+    console.log(task.description);
+    console.log(task.date);
+    console.log(task.isStarred);
   };
 
   return (
@@ -141,8 +169,13 @@ export default function Index() {
       <ThemedBottomSheetModal
         onClose={() => {
           setTimeout(() => {
-            setDescription("");
-            setTitle("");
+            setTask({
+              title: "",
+              description: "",
+              date: new Date(),
+              isStarred: false,
+            });
+            setIsDescriptionVisible(false);
           }, 250);
         }}
         ref={sheetRef}
@@ -150,15 +183,15 @@ export default function Index() {
       >
         <View style={{ marginBottom: 8 }}>
           <ThemedModalTextInput
-            onChangeText={setTitle}
-            value={title}
+            onChangeText={handleTitleChange}
+            value={task.title}
             placeholder="Title"
             multiline={false}
             style={{ fontSize: 24 }}
           />
           <ThemedModalTextInput
-            onChangeText={setDescription}
-            value={description}
+            onChangeText={handleDescriptionChange}
+            value={task.description}
             placeholder="Description"
             style={{
               fontFamily: "WorkSans_400Regular",
@@ -198,8 +231,8 @@ export default function Index() {
                 }
               />
             </ThemedPressableOpacity>
-            <ThemedPressableOpacity onPress={handleStarredPress}>
-              {isStarred ? (
+            <ThemedPressableOpacity onPress={toggleIsStarred}>
+              {!task.isStarred ? (
                 <FontAwesome name="star-o" size={24} color={iconColor} />
               ) : (
                 <FontAwesome name="star" size={24} color={iconColor} />
@@ -217,7 +250,7 @@ export default function Index() {
                 flexDirection: "row",
                 alignItems: "center",
                 justifyContent: "space-between",
-                display: !title ? "none" : "flex",
+                display: !task.title ? "none" : "flex",
               },
             ]}
           >
