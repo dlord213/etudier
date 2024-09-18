@@ -1,5 +1,5 @@
 import { useContext, useRef, useState } from "react";
-import { Pressable, View } from "react-native";
+import { Pressable, useWindowDimensions, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { BottomSheetMethods } from "@devvie/bottom-sheet";
 import { StatusBar } from "expo-status-bar";
@@ -22,6 +22,7 @@ import ThemedPressableOpacity from "@/components/ThemedPressableOpacity";
 export default function Index() {
   const { palette, theme } = useContext(ThemeContext);
   const styleState = styles(theme);
+  const { height: screenHeight } = useWindowDimensions();
 
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
@@ -113,7 +114,6 @@ export default function Index() {
         <FontAwesome6 name="add" size={16} color={Colors.Text_Dark.Default} />
       </Pressable>
       <ThemedBottomSheetModal
-        height={"30%"}
         onClose={() => {
           setTimeout(() => {
             setDescription("");
@@ -121,12 +121,15 @@ export default function Index() {
           }, 200);
         }}
         ref={sheetRef}
+        height={isDescriptionVisible ? "50%" : "25%"}
       >
         <View style={{ marginBottom: 8 }}>
           <ThemedModalTextInput
             onChangeText={setTitle}
             value={title}
             placeholder="Title"
+            multiline={false}
+            style={{ fontSize: 24 }}
           />
           <ThemedModalTextInput
             onChangeText={setDescription}
@@ -136,15 +139,10 @@ export default function Index() {
               fontFamily: "WorkSans_400Regular",
               fontSize: 14,
               display: isDescriptionVisible ? "flex" : "none",
+              maxHeight: screenHeight / 4,
             }}
           />
         </View>
-        <View
-          style={[
-            styleState.borderStyle,
-            { borderColor: Colors[palette][600] },
-          ]}
-        ></View>
         <View
           style={{
             flexDirection: "row",

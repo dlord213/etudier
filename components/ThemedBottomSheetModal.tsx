@@ -14,7 +14,7 @@ interface ThemedBottomSheetModalProps {
 const ThemedBottomSheetModal = forwardRef<
   BottomSheetMethods,
   ThemedBottomSheetModalProps
->(({ height = "50%", onOpen, onClose, children }, ref) => {
+>(({ height, onOpen, onClose, children }, ref) => {
   const { palette, theme } = useContext(ThemeContext);
 
   return (
@@ -30,8 +30,9 @@ const ThemedBottomSheetModal = forwardRef<
       height={height}
       onOpen={onOpen}
       onClose={onClose}
+      closeDuration={500}
       disableKeyboardHandling
-      closeDuration={250}
+      disableBodyPanning
       dragHandleStyle={{
         backgroundColor: Colors[palette][600],
         borderColor: Colors[palette][600],

@@ -1,5 +1,5 @@
 import { useContext, useRef, useState } from "react";
-import { Pressable, View } from "react-native";
+import { Pressable, useWindowDimensions, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Checkbox from "expo-checkbox";
 import { BottomSheetMethods } from "@devvie/bottom-sheet";
@@ -20,6 +20,7 @@ import ThemedModalTextInput from "@/components/ThemedModalTextInput";
 export default function Page() {
   const { palette, theme } = useContext(ThemeContext);
   const { setIsTabBarVisible } = useContext(TabBarVisibilityContext);
+  const { height: screenHeight } = useWindowDimensions();
 
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
@@ -99,12 +100,18 @@ export default function Page() {
             onChangeText={setTitle}
             value={title}
             placeholder="Title"
+            multiline={false}
+            style={{ fontSize: 24 }}
           />
           <ThemedModalTextInput
             onChangeText={setDescription}
             value={description}
             placeholder="Description"
-            style={{ fontFamily: "WorkSans_400Regular", fontSize: 14 }}
+            style={{
+              fontFamily: "WorkSans_400Regular",
+              fontSize: 14,
+              maxHeight: screenHeight / 4,
+            }}
           />
         </View>
         <View
