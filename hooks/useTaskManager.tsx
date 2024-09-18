@@ -45,6 +45,17 @@ export default function useTaskManager() {
     handleDateChange(selectedDate);
   };
 
+  const handleDeleteTask = async (taskIndex) => {
+    const tasksString = await AsyncStorage.getItem("@tasks");
+    let tasks = tasksString !== null ? JSON.parse(tasksString) : [];
+
+    tasks.splice(taskIndex, 1);
+
+    await AsyncStorage.setItem("@tasks", JSON.stringify(tasks));
+
+    setStoredTasks([...tasks]);
+  };
+
   const handleCompleteTask = async (taskIndex) => {
     const tasksString = await AsyncStorage.getItem("@tasks");
     let tasks = tasksString !== null ? JSON.parse(tasksString) : [];
@@ -114,6 +125,7 @@ export default function useTaskManager() {
     handleDescriptionChange,
     toggleIsStarred,
     handleDateChange,
+    handleDeleteTask,
     handleCompleteTask,
     handleStarredTask,
     handleDatePress,
