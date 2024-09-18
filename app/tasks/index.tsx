@@ -15,12 +15,12 @@ import Ionicons from "@expo/vector-icons/Ionicons";
 import ThemedBottomSheetModal from "@/components/ThemedBottomSheetModal";
 import Octicons from "@expo/vector-icons/Octicons";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
-import { DateTimePickerAndroid } from "@react-native-community/datetimepicker";
 
 import styles from "@/styles/tasks";
 import ThemedModalTextInput from "@/components/ThemedModalTextInput";
 import ThemedPressableOpacity from "@/components/ThemedPressableOpacity";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
+import useTaskManager from "@/hooks/useTaskManager";
 
 export default function Index() {
   const { palette, theme } = useContext(ThemeContext);
@@ -33,137 +33,27 @@ export default function Index() {
   const dateTomorrow = new Date(dateToday);
   dateTomorrow.setDate(dateToday.getDate() + 1);
 
-  const [task, setTask] = useState({
-    title: "",
-    description: "",
-    date: new Date(),
-    isStarred: false,
-    isCompleted: false,
-  });
+  const {
+    task,
+    setTask,
+    storedTasks,
+    handleTitleChange,
+    handleDescriptionChange,
+    toggleIsStarred,
+    handleDeleteTask,
+    handleCompleteTask,
+    handleStarredTask,
+    handleDatePress,
+    handleAddTasks,
+  } = useTaskManager();
 
-  const [storedTasks, setStoredTasks] = useState(null);
   const [isDescriptionVisible, setIsDescriptionVisible] = useState(false);
 
   const sheetRef = useRef<BottomSheetMethods>(null);
 
-  const handleTitleChange = (newTitle) => {
-    setTask((prevTask) => ({
-      ...prevTask,
-      title: newTitle,
-    }));
-  };
-
-  const handleDescriptionChange = (newDescription) => {
-    setTask((prevTask) => ({
-      ...prevTask,
-      description: newDescription,
-    }));
-  };
-
-  const toggleIsStarred = () => {
-    setTask((prevTask) => ({
-      ...prevTask,
-      isStarred: !prevTask.isStarred,
-    }));
-  };
-
-  const handleDateChange = (newDate) => {
-    setTask((prevTask) => ({
-      ...prevTask,
-      date: newDate.toLocaleDateString(),
-    }));
-  };
-
-  const dateOnChange = (event, selectedDate) => {
-    const currentDate = selectedDate;
-    handleDateChange(selectedDate);
-  };
-
-  const handleDeleteTask = async (taskIndex) => {
-    const tasksString = await AsyncStorage.getItem("@tasks");
-    let tasks = tasksString !== null ? JSON.parse(tasksString) : [];
-
-    tasks.splice(taskIndex, 1);
-
-    await AsyncStorage.setItem("@tasks", JSON.stringify(tasks));
-
-    setStoredTasks([...tasks]);
-
-    console.log("Task deleted successfully:", taskIndex);
-  };
-
-  const handleCompleteTask = async (taskIndex) => {
-    const tasksString = await AsyncStorage.getItem("@tasks");
-    let tasks = tasksString !== null ? JSON.parse(tasksString) : [];
-
-    if (tasks[taskIndex].isCompleted == true) {
-      tasks[taskIndex].isCompleted = false;
-      console.log(tasks[taskIndex]);
-    } else {
-      tasks[taskIndex].isCompleted = true;
-      console.log(tasks[taskIndex]);
-    }
-
-    await AsyncStorage.setItem("@tasks", JSON.stringify(tasks));
-
-    setStoredTasks([...tasks]);
-  };
-
-  const handleStarredTask = async (taskIndex) => {
-    const tasksString = await AsyncStorage.getItem("@tasks");
-    let tasks = tasksString !== null ? JSON.parse(tasksString) : [];
-
-    if (tasks[taskIndex].isStarred == true) {
-      tasks[taskIndex].isStarred = false;
-    } else {
-      tasks[taskIndex].isStarred = true;
-    }
-
-    await AsyncStorage.setItem("@tasks", JSON.stringify(tasks));
-
-    setStoredTasks([...tasks]);
-  };
-
-  const handleDatePress = () => {
-    DateTimePickerAndroid.open({
-      value: task.date,
-      onChange: dateOnChange,
-      mode: "date",
-      is24Hour: true,
-      display: "calendar",
-      minimumDate: new Date(),
-    });
-  };
-
   const handleDescriptionPress = () => {
     setIsDescriptionVisible((prevState) => !prevState);
   };
-
-  const handleAddTasks = async () => {
-    sheetRef.current?.close();
-
-    const tasksString = await AsyncStorage.getItem("@tasks");
-    let tasks = tasksString !== null ? JSON.parse(tasksString) : [];
-
-    tasks.push(task);
-
-    await AsyncStorage.setItem("@tasks", JSON.stringify(tasks));
-
-    setStoredTasks(tasks);
-  };
-
-  useEffect(() => {
-    const getStoredTasks = async () => {
-      let result = await AsyncStorage.getItem("@tasks");
-      if (result) {
-        setStoredTasks(JSON.parse(result));
-      }
-    };
-
-    if (storedTasks == null) {
-      getStoredTasks();
-    }
-  }, []);
 
   return (
     <SafeAreaView style={styleState.safeAreaView}>
@@ -263,7 +153,8 @@ export default function Index() {
       {storedTasks != null
         ? storedTasks
             .filter((task) => task.date === dateToday.toLocaleDateString())
-            .map((obj, index) => {
+            .map((obj) => {
+              1;
               const originalIndex = storedTasks.findIndex(
                 (task: any) =>
                   task.title === obj.title && task.date === obj.date
@@ -356,7 +247,7 @@ export default function Index() {
       {storedTasks != null
         ? storedTasks
             .filter((task) => task.date === dateTomorrow.toLocaleDateString())
-            .map((obj, index) => {
+            .map((obj) => {
               const originalIndex = storedTasks.findIndex(
                 (task: any) =>
                   task.title === obj.title && task.date === obj.date

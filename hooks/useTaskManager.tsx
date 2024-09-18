@@ -3,6 +3,8 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { DateTimePickerAndroid } from "@react-native-community/datetimepicker";
 
 export default function useTaskManager() {
+  const todayDate = new Date();
+
   const [task, setTask] = useState({
     title: "",
     description: "",
@@ -120,6 +122,7 @@ export default function useTaskManager() {
 
   return {
     task,
+    setTask,
     storedTasks,
     handleTitleChange,
     handleDescriptionChange,
