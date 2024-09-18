@@ -15,6 +15,7 @@ import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import styles from "@/styles/settings";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function Page() {
   const { palette, theme } = useContext(ThemeContext);
@@ -77,7 +78,23 @@ export default function Page() {
       >
         <AntDesign name="reload1" size={20} color={iconColor} />
         <ThemedText
-          text="Reset history log"
+          text="Reset activity log"
+          style={{ fontFamily: "WorkSans_400Regular" }}
+        />
+      </ThemedPressableOpacity>
+      <ThemedPressableOpacity
+        onPress={async () => {
+          await AsyncStorage.clear();
+        }}
+        style={{ flexDirection: "row", gap: 16, alignItems: "center" }}
+      >
+        <MaterialCommunityIcons
+          name="note-remove"
+          size={24}
+          color={iconColor}
+        />
+        <ThemedText
+          text="Clear all tasks & logs"
           style={{ fontFamily: "WorkSans_400Regular" }}
         />
       </ThemedPressableOpacity>

@@ -84,6 +84,7 @@ export default function Index() {
       mode: "date",
       is24Hour: true,
       display: "calendar",
+      minimumDate: new Date(),
     });
   };
 
@@ -98,7 +99,11 @@ export default function Index() {
     let tasks = tasksString !== null ? JSON.parse(tasksString) : [];
 
     tasks.push(task);
+
     await AsyncStorage.setItem("@tasks", JSON.stringify(tasks));
+
+    setStoredTasks(tasks);
+
     console.log("Task added successfully!", tasks);
   };
 
@@ -203,7 +208,7 @@ export default function Index() {
       </Pressable>
       {storedTasks != null
         ? storedTasks.map((obj, index) => (
-            <View
+            <ThemedPressableOpacity
               key={index}
               style={{
                 flexDirection: "row",
@@ -235,7 +240,7 @@ export default function Index() {
                   <FontAwesome name="star" size={24} color={iconColor} />
                 )}
               </ThemedPressableOpacity>
-            </View>
+            </ThemedPressableOpacity>
           ))
         : null}
       <ThemedBottomSheetModal
