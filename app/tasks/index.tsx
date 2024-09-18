@@ -3,6 +3,7 @@ import { Pressable, useWindowDimensions, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { BottomSheetMethods } from "@devvie/bottom-sheet";
 import { StatusBar } from "expo-status-bar";
+import { DateTimePickerAndroid } from "@react-native-community/datetimepicker";
 
 import ThemedText from "@/components/ThemedText";
 import Colors from "@/constants/Colors";
@@ -18,6 +19,7 @@ import FontAwesome from "@expo/vector-icons/FontAwesome";
 import styles from "@/styles/tasks";
 import ThemedModalTextInput from "@/components/ThemedModalTextInput";
 import ThemedPressableOpacity from "@/components/ThemedPressableOpacity";
+import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 
 export default function Index() {
   const { palette, theme } = useContext(ThemeContext);
@@ -26,7 +28,9 @@ export default function Index() {
 
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
+  const [date, setDate] = useState(new Date());
   const [isStarred, setIsStarred] = useState(false);
+
   const [isDescriptionVisible, setIsDescriptionVisible] = useState(false);
 
   const iconColor =
@@ -38,8 +42,29 @@ export default function Index() {
     setIsStarred((prevState) => !prevState);
   };
 
+  const dateOnChange = (event, selectedDate) => {
+    const currentDate = selectedDate;
+    setDate(currentDate);
+  };
+
+  const handleDatePress = () => {
+    DateTimePickerAndroid.open({
+      value: date,
+      onChange: dateOnChange,
+      mode: "date",
+      is24Hour: true,
+      display: "calendar",
+    });
+  };
+
   const handleDescriptionPress = () => {
     setIsDescriptionVisible((prevState) => !prevState);
+  };
+
+  const handleAddTasks = () => {
+    sheetRef.current?.close();
+    console.log(title);
+    console.log(description);
   };
 
   return (
@@ -118,7 +143,7 @@ export default function Index() {
           setTimeout(() => {
             setDescription("");
             setTitle("");
-          }, 200);
+          }, 250);
         }}
         ref={sheetRef}
         height={isDescriptionVisible ? "50%" : "25%"}
@@ -162,6 +187,17 @@ export default function Index() {
                 }
               />
             </ThemedPressableOpacity>
+            <ThemedPressableOpacity onPress={handleDatePress}>
+              <MaterialIcons
+                name="date-range"
+                size={24}
+                color={
+                  theme == "dark"
+                    ? Colors.Text_Dark.Default
+                    : Colors.Text_Light.Default
+                }
+              />
+            </ThemedPressableOpacity>
             <ThemedPressableOpacity onPress={handleStarredPress}>
               {isStarred ? (
                 <FontAwesome name="star-o" size={24} color={iconColor} />
@@ -171,9 +207,7 @@ export default function Index() {
             </ThemedPressableOpacity>
           </View>
           <Pressable
-            onPress={() => {
-              sheetRef.current?.open();
-            }}
+            onPress={handleAddTasks}
             style={({ pressed }) => [
               {
                 backgroundColor: Colors[palette][600],
