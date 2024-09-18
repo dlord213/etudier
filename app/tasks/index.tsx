@@ -1,9 +1,9 @@
-import { useContext, useRef, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { Pressable, useWindowDimensions, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { BottomSheetMethods } from "@devvie/bottom-sheet";
 import { StatusBar } from "expo-status-bar";
-import { DateTimePickerAndroid } from "@react-native-community/datetimepicker";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 import ThemedText from "@/components/ThemedText";
 import Colors from "@/constants/Colors";
@@ -15,6 +15,7 @@ import Ionicons from "@expo/vector-icons/Ionicons";
 import ThemedBottomSheetModal from "@/components/ThemedBottomSheetModal";
 import Octicons from "@expo/vector-icons/Octicons";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
+import { DateTimePickerAndroid } from "@react-native-community/datetimepicker";
 
 import styles from "@/styles/tasks";
 import ThemedModalTextInput from "@/components/ThemedModalTextInput";
@@ -32,6 +33,8 @@ export default function Index() {
     date: new Date(),
     isStarred: false,
   });
+
+  const [storedTasks, setStoredTasks] = useState(null);
 
   const handleTitleChange = (newTitle) => {
     setTask((prevTask) => ({
@@ -87,13 +90,29 @@ export default function Index() {
     setIsDescriptionVisible((prevState) => !prevState);
   };
 
-  const handleAddTasks = () => {
+  const handleAddTasks = async () => {
     sheetRef.current?.close();
-    console.log(task.title);
-    console.log(task.description);
-    console.log(task.date);
-    console.log(task.isStarred);
+
+    const tasksString = await AsyncStorage.getItem("@tasks");
+    let tasks = tasksString !== null ? JSON.parse(tasksString) : [];
+
+    tasks.push(task);
+    await AsyncStorage.setItem("@tasks", JSON.stringify(tasks));
+    console.log("Task added successfully!", tasks);
   };
+
+  useEffect(() => {
+    const getStoredTasks = async () => {
+      let result = await AsyncStorage.getItem("@tasks");
+      if (result) {
+        setStoredTasks(JSON.parse(result));
+      }
+    };
+
+    if (storedTasks == null) {
+      getStoredTasks();
+    }
+  }, [task]);
 
   return (
     <SafeAreaView style={styleState.safeAreaView}>
@@ -166,6 +185,27 @@ export default function Index() {
       >
         <FontAwesome6 name="add" size={16} color={Colors.Text_Dark.Default} />
       </Pressable>
+      {storedTasks != null
+        ? storedTasks.map((obj) => (
+            <View>
+              <ThemedText
+                text={obj.title}
+                style={{ fontFamily: "WorkSans_700Bold", fontSize: 16 }}
+              />
+              <ThemedText
+                text={obj.description}
+                style={{
+                  fontFamily: "WorkSans_400Regular",
+                  display: obj.description ? "flex" : "none",
+                  color:
+                    theme == "dark"
+                      ? Colors.Text_Dark.Secondary
+                      : Colors.Text_Light.Secondary,
+                }}
+              />
+            </View>
+          ))
+        : null}
       <ThemedBottomSheetModal
         onClose={() => {
           setTimeout(() => {
