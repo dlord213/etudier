@@ -32,6 +32,7 @@ export default function Index() {
     description: "",
     date: new Date(),
     isStarred: false,
+    isCompleted: false,
   });
 
   const [storedTasks, setStoredTasks] = useState(null);
@@ -60,7 +61,7 @@ export default function Index() {
   const handleDateChange = (newDate) => {
     setTask((prevTask) => ({
       ...prevTask,
-      date: newDate,
+      date: newDate.toLocaleDateString(),
     }));
   };
 
@@ -112,7 +113,7 @@ export default function Index() {
     if (storedTasks == null) {
       getStoredTasks();
     }
-  }, [task]);
+  }, []);
 
   return (
     <SafeAreaView style={styleState.safeAreaView}>
@@ -156,7 +157,21 @@ export default function Index() {
           children={
             <>
               <ThemedText
-                text="Tasks"
+                text="Done"
+                style={{
+                  fontFamily: "WorkSans_400Regular",
+                  color: Colors[palette][600],
+                }}
+              />
+            </>
+          }
+          backgroundColor={Colors[palette][200]}
+        />
+        <ThemedPressable
+          children={
+            <>
+              <ThemedText
+                text="Not yet done"
                 style={{
                   fontFamily: "WorkSans_400Regular",
                   color: Colors[palette][600],
@@ -186,8 +201,8 @@ export default function Index() {
         <FontAwesome6 name="add" size={16} color={Colors.Text_Dark.Default} />
       </Pressable>
       {storedTasks != null
-        ? storedTasks.map((obj) => (
-            <View>
+        ? storedTasks.map((obj, index) => (
+            <View key={index}>
               <ThemedText
                 text={obj.title}
                 style={{ fontFamily: "WorkSans_700Bold", fontSize: 16 }}
@@ -214,6 +229,7 @@ export default function Index() {
               description: "",
               date: new Date(),
               isStarred: false,
+              isCompleted: false,
             });
             setIsDescriptionVisible(false);
           }, 250);
