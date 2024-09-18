@@ -49,12 +49,15 @@ export default function useTaskManager() {
     const tasksString = await AsyncStorage.getItem("@tasks");
     let tasks = tasksString !== null ? JSON.parse(tasksString) : [];
 
-    tasks[taskIndex].isCompleted = true;
+    if (tasks[taskIndex].isCompleted == true) {
+      tasks[taskIndex].isCompleted = false;
+    } else {
+      tasks[taskIndex].isCompleted = true;
+    }
 
     await AsyncStorage.setItem("@tasks", JSON.stringify(tasks));
 
     setStoredTasks([...tasks]);
-    console.log("Task marked as completed:", tasks[taskIndex]);
   };
 
   const handleStarredTask = async (taskIndex) => {

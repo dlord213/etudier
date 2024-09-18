@@ -29,6 +29,8 @@ export default function Index() {
   const iconColor =
     theme == "dark" ? Colors.Text_Dark.Default : Colors.Text_Light.Default;
 
+  const dateToday = new Date().toLocaleDateString();
+
   const [task, setTask] = useState({
     title: "",
     description: "",
@@ -79,13 +81,15 @@ export default function Index() {
     const tasksString = await AsyncStorage.getItem("@tasks");
     let tasks = tasksString !== null ? JSON.parse(tasksString) : [];
 
-    tasks[taskIndex].isCompleted = true;
+    if (tasks[taskIndex].isCompleted == true) {
+      tasks[taskIndex].isCompleted = false;
+    } else {
+      tasks[taskIndex].isCompleted = true;
+    }
 
     await AsyncStorage.setItem("@tasks", JSON.stringify(tasks));
 
     setStoredTasks([...tasks]);
-
-    console.log("Task marked as completed:", tasks[taskIndex]);
   };
 
   const handleStarredTask = async (taskIndex) => {
@@ -129,8 +133,6 @@ export default function Index() {
     await AsyncStorage.setItem("@tasks", JSON.stringify(tasks));
 
     setStoredTasks(tasks);
-
-    console.log("Task added successfully!", tasks);
   };
 
   useEffect(() => {
@@ -138,7 +140,6 @@ export default function Index() {
       let result = await AsyncStorage.getItem("@tasks");
       if (result) {
         setStoredTasks(JSON.parse(result));
-        console.log(result);
       }
     };
 
@@ -232,57 +233,77 @@ export default function Index() {
       >
         <FontAwesome6 name="add" size={16} color={Colors.Text_Dark.Default} />
       </Pressable>
+      <ThemedText
+        text="Today"
+        style={{
+          fontFamily: "WorkSans_400Regular",
+          color:
+            theme == "dark"
+              ? Colors.Text_Dark.Secondary
+              : Colors.Text_Light.Secondary,
+        }}
+      />
       {storedTasks != null
-        ? storedTasks.map((obj, index) => (
-            <View
-              key={index}
-              style={{
-                flexDirection: "row",
-                justifyContent: "space-between",
-                alignItems: "center",
-              }}
-            >
+        ? storedTasks
+            .filter((task) => task.date === dateToday)
+            .map((obj, index) => (
               <View
-                style={{ flexDirection: "row", gap: 16, alignItems: "center" }}
+                key={index}
+                style={{
+                  flexDirection: "row",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                }}
               >
-                <ThemedPressableOpacity
-                  onPress={() => handleCompleteTask(index)}
+                <View
+                  style={{
+                    flexDirection: "row",
+                    gap: 16,
+                    alignItems: "center",
+                  }}
                 >
-                  <MaterialIcons
-                    name={
-                      obj.isCompleted ? "check-circle" : "check-circle-outline"
-                    }
-                    size={24}
-                    color={iconColor}
-                  />
-                </ThemedPressableOpacity>
-                <View>
-                  <ThemedText
-                    text={obj.title}
-                    style={{ fontFamily: "WorkSans_700Bold", fontSize: 16 }}
-                  />
-                  <ThemedText
-                    text={obj.description}
-                    style={{
-                      fontFamily: "WorkSans_400Regular",
-                      display: obj.description ? "flex" : "none",
-                      color:
-                        theme == "dark"
-                          ? Colors.Text_Dark.Tertiary
-                          : Colors.Text_Light.Tertiary,
-                    }}
-                  />
+                  <ThemedPressableOpacity
+                    onPress={() => handleCompleteTask(index)}
+                  >
+                    <MaterialIcons
+                      name={
+                        obj.isCompleted
+                          ? "check-circle"
+                          : "check-circle-outline"
+                      }
+                      size={24}
+                      color={iconColor}
+                    />
+                  </ThemedPressableOpacity>
+                  <View>
+                    <ThemedText
+                      text={obj.title}
+                      style={{ fontFamily: "WorkSans_700Bold", fontSize: 16 }}
+                    />
+                    <ThemedText
+                      text={obj.description}
+                      style={{
+                        fontFamily: "WorkSans_400Regular",
+                        display: obj.description ? "flex" : "none",
+                        color:
+                          theme == "dark"
+                            ? Colors.Text_Dark.Tertiary
+                            : Colors.Text_Light.Tertiary,
+                      }}
+                    />
+                  </View>
                 </View>
+                <ThemedPressableOpacity
+                  onPress={() => handleStarredTask(index)}
+                >
+                  {!obj.isStarred ? (
+                    <FontAwesome name="star-o" size={24} color={iconColor} />
+                  ) : (
+                    <FontAwesome name="star" size={24} color={iconColor} />
+                  )}
+                </ThemedPressableOpacity>
               </View>
-              <ThemedPressableOpacity onPress={() => handleStarredTask(index)}>
-                {!obj.isStarred ? (
-                  <FontAwesome name="star-o" size={24} color={iconColor} />
-                ) : (
-                  <FontAwesome name="star" size={24} color={iconColor} />
-                )}
-              </ThemedPressableOpacity>
-            </View>
-          ))
+            ))
         : null}
       <ThemedBottomSheetModal
         onClose={() => {
