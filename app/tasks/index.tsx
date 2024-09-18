@@ -26,6 +26,8 @@ export default function Index() {
   const { palette, theme } = useContext(ThemeContext);
   const styleState = styles(theme);
   const { height: screenHeight } = useWindowDimensions();
+  const iconColor =
+    theme == "dark" ? Colors.Text_Dark.Default : Colors.Text_Light.Default;
 
   const [task, setTask] = useState({
     title: "",
@@ -36,6 +38,9 @@ export default function Index() {
   });
 
   const [storedTasks, setStoredTasks] = useState(null);
+  const [isDescriptionVisible, setIsDescriptionVisible] = useState(false);
+
+  const sheetRef = useRef<BottomSheetMethods>(null);
 
   const handleTitleChange = (newTitle) => {
     setTask((prevTask) => ({
@@ -65,16 +70,37 @@ export default function Index() {
     }));
   };
 
-  const [isDescriptionVisible, setIsDescriptionVisible] = useState(false);
-
-  const iconColor =
-    theme == "dark" ? Colors.Text_Dark.Default : Colors.Text_Light.Default;
-
-  const sheetRef = useRef<BottomSheetMethods>(null);
-
   const dateOnChange = (event, selectedDate) => {
     const currentDate = selectedDate;
     handleDateChange(selectedDate);
+  };
+
+  const handleCompleteTask = async (taskIndex) => {
+    const tasksString = await AsyncStorage.getItem("@tasks");
+    let tasks = tasksString !== null ? JSON.parse(tasksString) : [];
+
+    tasks[taskIndex].isCompleted = true;
+
+    await AsyncStorage.setItem("@tasks", JSON.stringify(tasks));
+
+    setStoredTasks([...tasks]);
+
+    console.log("Task marked as completed:", tasks[taskIndex]);
+  };
+
+  const handleStarredTask = async (taskIndex) => {
+    const tasksString = await AsyncStorage.getItem("@tasks");
+    let tasks = tasksString !== null ? JSON.parse(tasksString) : [];
+
+    if (tasks[taskIndex].isStarred == true) {
+      tasks[taskIndex].isStarred = false;
+    } else {
+      tasks[taskIndex].isStarred = true;
+    }
+
+    await AsyncStorage.setItem("@tasks", JSON.stringify(tasks));
+
+    setStoredTasks([...tasks]);
   };
 
   const handleDatePress = () => {
@@ -208,7 +234,7 @@ export default function Index() {
       </Pressable>
       {storedTasks != null
         ? storedTasks.map((obj, index) => (
-            <ThemedPressableOpacity
+            <View
               key={index}
               style={{
                 flexDirection: "row",
@@ -216,31 +242,46 @@ export default function Index() {
                 alignItems: "center",
               }}
             >
-              <View>
-                <ThemedText
-                  text={obj.title}
-                  style={{ fontFamily: "WorkSans_700Bold", fontSize: 16 }}
-                />
-                <ThemedText
-                  text={obj.description}
-                  style={{
-                    fontFamily: "WorkSans_400Regular",
-                    display: obj.description ? "flex" : "none",
-                    color:
-                      theme == "dark"
-                        ? Colors.Text_Dark.Tertiary
-                        : Colors.Text_Light.Tertiary,
-                  }}
-                />
+              <View
+                style={{ flexDirection: "row", gap: 16, alignItems: "center" }}
+              >
+                <ThemedPressableOpacity
+                  onPress={() => handleCompleteTask(index)}
+                >
+                  <MaterialIcons
+                    name={
+                      obj.isCompleted ? "check-circle" : "check-circle-outline"
+                    }
+                    size={24}
+                    color={iconColor}
+                  />
+                </ThemedPressableOpacity>
+                <View>
+                  <ThemedText
+                    text={obj.title}
+                    style={{ fontFamily: "WorkSans_700Bold", fontSize: 16 }}
+                  />
+                  <ThemedText
+                    text={obj.description}
+                    style={{
+                      fontFamily: "WorkSans_400Regular",
+                      display: obj.description ? "flex" : "none",
+                      color:
+                        theme == "dark"
+                          ? Colors.Text_Dark.Tertiary
+                          : Colors.Text_Light.Tertiary,
+                    }}
+                  />
+                </View>
               </View>
-              <ThemedPressableOpacity onPress={toggleIsStarred}>
+              <ThemedPressableOpacity onPress={() => handleStarredTask(index)}>
                 {!obj.isStarred ? (
                   <FontAwesome name="star-o" size={24} color={iconColor} />
                 ) : (
                   <FontAwesome name="star" size={24} color={iconColor} />
                 )}
               </ThemedPressableOpacity>
-            </ThemedPressableOpacity>
+            </View>
           ))
         : null}
       <ThemedBottomSheetModal
