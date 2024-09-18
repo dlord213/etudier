@@ -107,6 +107,7 @@ export default function Index() {
       let result = await AsyncStorage.getItem("@tasks");
       if (result) {
         setStoredTasks(JSON.parse(result));
+        console.log(result);
       }
     };
 
@@ -202,22 +203,38 @@ export default function Index() {
       </Pressable>
       {storedTasks != null
         ? storedTasks.map((obj, index) => (
-            <View key={index}>
-              <ThemedText
-                text={obj.title}
-                style={{ fontFamily: "WorkSans_700Bold", fontSize: 16 }}
-              />
-              <ThemedText
-                text={obj.description}
-                style={{
-                  fontFamily: "WorkSans_400Regular",
-                  display: obj.description ? "flex" : "none",
-                  color:
-                    theme == "dark"
-                      ? Colors.Text_Dark.Secondary
-                      : Colors.Text_Light.Secondary,
-                }}
-              />
+            <View
+              key={index}
+              style={{
+                flexDirection: "row",
+                justifyContent: "space-between",
+                alignItems: "center",
+              }}
+            >
+              <View>
+                <ThemedText
+                  text={obj.title}
+                  style={{ fontFamily: "WorkSans_700Bold", fontSize: 16 }}
+                />
+                <ThemedText
+                  text={obj.description}
+                  style={{
+                    fontFamily: "WorkSans_400Regular",
+                    display: obj.description ? "flex" : "none",
+                    color:
+                      theme == "dark"
+                        ? Colors.Text_Dark.Tertiary
+                        : Colors.Text_Light.Tertiary,
+                  }}
+                />
+              </View>
+              <ThemedPressableOpacity onPress={toggleIsStarred}>
+                {!obj.isStarred ? (
+                  <FontAwesome name="star-o" size={24} color={iconColor} />
+                ) : (
+                  <FontAwesome name="star" size={24} color={iconColor} />
+                )}
+              </ThemedPressableOpacity>
             </View>
           ))
         : null}
