@@ -193,7 +193,7 @@ export default function Index() {
           </Pressable>
         </View>
       </ThemedBottomSheetModal>
-      <StatusBar style={theme == "dark" ? "dark" : "inverted"} />
+      <StatusBar style={theme == "dark" ? "light" : "inverted"} />
     </SafeAreaView>
   );
 }

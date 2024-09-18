@@ -93,7 +93,7 @@ export default function Page() {
           style={{ fontFamily: "WorkSans_400Regular" }}
         />
       </ThemedPressableOpacity>
-      <StatusBar style={theme == "dark" ? "dark" : "inverted"} />
+      <StatusBar style={theme == "dark" ? "light" : "inverted"} />
     </SafeAreaView>
   );
 }

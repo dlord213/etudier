@@ -123,7 +123,7 @@ export default function Page() {
           }}
         />
       </View>
-      <StatusBar style={theme == "dark" ? "dark" : "inverted"} />
+      <StatusBar style={theme == "dark" ? "light" : "inverted"} />
     </SafeAreaView>
   );
 }

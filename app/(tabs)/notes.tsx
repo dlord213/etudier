@@ -153,7 +153,7 @@ export default function Page() {
           </Pressable>
         </View>
       </ThemedBottomSheetModal>
-      <StatusBar style={theme == "dark" ? "dark" : "inverted"} />
+      <StatusBar style={theme == "dark" ? "light" : "inverted"} />
     </SafeAreaView>
   );
 }
