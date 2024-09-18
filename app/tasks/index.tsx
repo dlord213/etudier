@@ -28,6 +28,9 @@ export default function Index() {
   const [isStarred, setIsStarred] = useState(false);
   const [isDescriptionVisible, setIsDescriptionVisible] = useState(false);
 
+  const iconColor =
+    theme == "dark" ? Colors.Text_Dark.Default : Colors.Text_Light.Default;
+
   const sheetRef = useRef<BottomSheetMethods>(null);
 
   const handleStarredPress = () => {
@@ -154,22 +157,18 @@ export default function Index() {
               <Octicons
                 name="note"
                 size={24}
-                color={Colors.Text_Dark.Default}
+                color={
+                  theme == "dark"
+                    ? Colors.Text_Dark.Default
+                    : Colors.Text_Light.Default
+                }
               />
             </ThemedPressableOpacity>
             <ThemedPressableOpacity onPress={handleStarredPress}>
               {isStarred ? (
-                <FontAwesome
-                  name="star-o"
-                  size={24}
-                  color={Colors.Text_Dark.Default}
-                />
+                <FontAwesome name="star-o" size={24} color={iconColor} />
               ) : (
-                <FontAwesome
-                  name="star"
-                  size={24}
-                  color={Colors.Text_Dark.Default}
-                />
+                <FontAwesome name="star" size={24} color={iconColor} />
               )}
             </ThemedPressableOpacity>
           </View>

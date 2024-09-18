@@ -6,7 +6,7 @@ const styles = (context: any) =>
     safeAreaView: {
       flex: 1,
       backgroundColor:
-        context[0] != "light"
+        context != "light"
           ? Colors.Backgrounds_Dark.Brand
           : Colors.Backgrounds_Light.Brand,
       padding: 16,
