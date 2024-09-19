@@ -181,6 +181,7 @@ export default function Index() {
                   flexDirection: "row",
                   justifyContent: "space-between",
                   alignItems: "center",
+                  gap: 16,
                 }}
               >
                 <View
@@ -188,6 +189,7 @@ export default function Index() {
                     flexDirection: "row",
                     gap: 16,
                     alignItems: "center",
+                    flex: 1,
                   }}
                 >
                   <ThemedPressableOpacity
@@ -203,20 +205,26 @@ export default function Index() {
                       color={iconColor}
                     />
                   </ThemedPressableOpacity>
-                  <View>
+                  <View style={{ flex: 1 }}>
                     <ThemedText
                       text={obj.title}
-                      style={{ fontFamily: "WorkSans_700Bold", fontSize: 16 }}
+                      style={{
+                        fontFamily: "WorkSans_700Bold",
+                        fontSize: 16,
+                        flexWrap: "wrap",
+                        flexShrink: 1,
+                      }}
                     />
                     <ThemedText
                       text={obj.description}
                       style={{
                         fontFamily: "WorkSans_400Regular",
-                        display: obj.description ? "flex" : "none",
                         color:
                           theme == "dark"
                             ? Colors.Text_Dark.Tertiary
                             : Colors.Text_Light.Tertiary,
+                        flexWrap: "wrap",
+                        flexShrink: 1,
                       }}
                     />
                   </View>
