@@ -120,7 +120,6 @@ export default function useTaskManager() {
     await AsyncStorage.setItem("@tasks", JSON.stringify(tasks));
 
     setStoredTasks([...tasks]);
-    console.log("Task added successfully!", tasks);
   };
 
   useEffect(() => {
