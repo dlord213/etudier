@@ -215,18 +215,20 @@ export default function Index() {
                         flexShrink: 1,
                       }}
                     />
-                    <ThemedText
-                      text={obj.description}
-                      style={{
-                        fontFamily: "WorkSans_400Regular",
-                        color:
-                          theme == "dark"
-                            ? Colors.Text_Dark.Tertiary
-                            : Colors.Text_Light.Tertiary,
-                        flexWrap: "wrap",
-                        flexShrink: 1,
-                      }}
-                    />
+                    {obj.description ? (
+                      <ThemedText
+                        text={obj.description}
+                        style={{
+                          fontFamily: "WorkSans_400Regular",
+                          color:
+                            theme == "dark"
+                              ? Colors.Text_Dark.Tertiary
+                              : Colors.Text_Light.Tertiary,
+                          flexWrap: "wrap",
+                          flexShrink: 1,
+                        }}
+                      />
+                    ) : null}
                   </View>
                 </View>
                 <View style={{ flexDirection: "row", gap: 16 }}>
