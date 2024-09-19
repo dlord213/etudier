@@ -41,14 +41,18 @@ export default function useTaskManager() {
   };
 
   const handleDateChange = (newDate: any) => {
+    const formattedDate = newDate instanceof Date ? newDate : new Date(newDate);
+
     setTask((prevTask) => ({
       ...prevTask,
-      date: newDate.toLocaleDateString(),
+      date: formattedDate,
     }));
   };
 
   const dateOnChange = (event: any, selectedDate: any) => {
-    handleDateChange(selectedDate);
+    if (selectedDate) {
+      handleDateChange(selectedDate);
+    }
   };
 
   const handleDeleteTask = async (taskIndex: any) => {
@@ -103,11 +107,19 @@ export default function useTaskManager() {
     const tasksString = await AsyncStorage.getItem("@tasks");
     let tasks = tasksString !== null ? JSON.parse(tasksString) : [];
 
-    tasks.push(task);
+    const formattedTask = {
+      ...task,
+      date:
+        task.date instanceof Date
+          ? task.date.toLocaleDateString()
+          : new Date(task.date).toLocaleDateString(),
+    };
+
+    tasks.push(formattedTask);
 
     await AsyncStorage.setItem("@tasks", JSON.stringify(tasks));
 
-    setStoredTasks(tasks);
+    setStoredTasks([...tasks]);
     console.log("Task added successfully!", tasks);
   };
 
@@ -137,6 +149,7 @@ export default function useTaskManager() {
     handleStarredTask,
     handleDatePress,
     handleAddTasks,
+    setIsDescriptionVisible,
     isDescriptionVisible,
     handleDescriptionPress,
   };
