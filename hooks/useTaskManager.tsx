@@ -12,6 +12,7 @@ export default function useTaskManager() {
   });
 
   const [storedTasks, setStoredTasks] = useState(null);
+  const [tasksCompletedLength, setTasksCompletedLength] = useState(null);
 
   const [isDescriptionVisible, setIsDescriptionVisible] = useState(false);
 
@@ -135,10 +136,19 @@ export default function useTaskManager() {
     }
   }, [storedTasks]);
 
+  useEffect(() => {
+    if (storedTasks) {
+      setTasksCompletedLength(
+        storedTasks.filter((task: any) => task.isCompleted === true).length
+      );
+    }
+  }, [storedTasks]);
+
   return {
     task,
-    setTask,
     storedTasks,
+    tasksCompletedLength,
+    isDescriptionVisible,
     handleTitleChange,
     handleDescriptionChange,
     toggleIsStarred,
@@ -147,9 +157,9 @@ export default function useTaskManager() {
     handleCompleteTask,
     handleStarredTask,
     handleDatePress,
+    handleDescriptionPress,
     handleAddTasks,
     setIsDescriptionVisible,
-    isDescriptionVisible,
-    handleDescriptionPress,
+    setTask,
   };
 }

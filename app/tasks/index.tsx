@@ -1,5 +1,10 @@
-import { useContext, useRef } from "react";
-import { Pressable, useWindowDimensions, View } from "react-native";
+import { useContext, useEffect, useRef, useState } from "react";
+import {
+  ActivityIndicator,
+  Pressable,
+  useWindowDimensions,
+  View,
+} from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { BottomSheetMethods } from "@devvie/bottom-sheet";
 import { StatusBar } from "expo-status-bar";
@@ -39,6 +44,7 @@ export default function Index() {
     task,
     setTask,
     storedTasks,
+    tasksCompletedLength,
     handleTitleChange,
     handleDescriptionChange,
     toggleIsStarred,
@@ -53,6 +59,14 @@ export default function Index() {
   } = useTaskManager();
 
   const sheetRef = useRef<BottomSheetMethods>(null);
+
+  if (!storedTasks) {
+    return (
+      <SafeAreaView style={styleState.safeAreaView}>
+        <ActivityIndicator color={Colors[palette][600]} />
+      </SafeAreaView>
+    );
+  }
 
   return (
     <SafeAreaView style={styleState.safeAreaView}>
@@ -73,7 +87,10 @@ export default function Index() {
             text="Number of tasks completed"
             style={styleState.cardBodyTextStyle}
           />
-          <ThemedText text="0" style={styleState.cardHeadingTextStyle} />
+          <ThemedText
+            text={tasksCompletedLength}
+            style={styleState.cardHeadingTextStyle}
+          />
         </View>
 
         <FontAwesome5
@@ -149,17 +166,15 @@ export default function Index() {
               : Colors.Text_Light.Secondary,
         }}
       />
-      {storedTasks ? (
-        <TaskList
-          text={"No tasks for today."}
-          tasks={storedTasks.filter(
-            (task: any) => task.date === dateToday.toLocaleDateString()
-          )}
-          handleCompleteTask={handleCompleteTask}
-          handleDeleteTask={handleDeleteTask}
-          handleStarredTask={handleStarredTask}
-        />
-      ) : null}
+      <TaskList
+        text={"No tasks for today."}
+        tasks={storedTasks.filter(
+          (task: any) => task.date === dateToday.toLocaleDateString()
+        )}
+        handleCompleteTask={handleCompleteTask}
+        handleDeleteTask={handleDeleteTask}
+        handleStarredTask={handleStarredTask}
+      />
       <ThemedText
         text="Tomorrow"
         style={{
@@ -170,17 +185,15 @@ export default function Index() {
               : Colors.Text_Light.Secondary,
         }}
       />
-      {storedTasks ? (
-        <TaskList
-          text={"No tasks for tomorrow."}
-          tasks={storedTasks.filter(
-            (task: any) => task.date === dateTomorrow.toLocaleDateString()
-          )}
-          handleCompleteTask={handleCompleteTask}
-          handleDeleteTask={handleDeleteTask}
-          handleStarredTask={handleStarredTask}
-        />
-      ) : null}
+      <TaskList
+        text={"No tasks for tomorrow."}
+        tasks={storedTasks.filter(
+          (task: any) => task.date === dateTomorrow.toLocaleDateString()
+        )}
+        handleCompleteTask={handleCompleteTask}
+        handleDeleteTask={handleDeleteTask}
+        handleStarredTask={handleStarredTask}
+      />
       <ThemedText
         text="Upcoming tasks"
         style={{
@@ -191,19 +204,17 @@ export default function Index() {
               : Colors.Text_Light.Secondary,
         }}
       />
-      {storedTasks ? (
-        <TaskList
-          text={"No upcoming tasks."}
-          tasks={storedTasks.filter(
-            (task: any) =>
-              task.date !== dateTomorrow.toLocaleDateString() &&
-              task.date !== dateToday.toLocaleDateString()
-          )}
-          handleCompleteTask={handleCompleteTask}
-          handleDeleteTask={handleDeleteTask}
-          handleStarredTask={handleStarredTask}
-        />
-      ) : null}
+      <TaskList
+        text={"No upcoming tasks."}
+        tasks={storedTasks.filter(
+          (task: any) =>
+            task.date !== dateTomorrow.toLocaleDateString() &&
+            task.date !== dateToday.toLocaleDateString()
+        )}
+        handleCompleteTask={handleCompleteTask}
+        handleDeleteTask={handleDeleteTask}
+        handleStarredTask={handleStarredTask}
+      />
       <ThemedBottomSheetModal
         onClose={() => {
           setTimeout(() => {
