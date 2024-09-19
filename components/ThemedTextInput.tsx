@@ -1,14 +1,9 @@
-import { TextInput, TextInputProps } from "react-native";
-import Colors from "@/constants/Colors";
+import { TextInput } from "react-native";
 import { useContext } from "react";
-import ThemeContext from "@/contexts/ThemeContext";
 
-interface ThemedTextInputProps extends TextInputProps {
-  onChangeText: (text: string) => void;
-  value: string;
-  placeholder: string;
-  style?: any;
-}
+import Colors from "@/constants/Colors";
+import ThemeContext from "@/contexts/ThemeContext";
+import ThemedTextInputProps from "@/constants/ThemedTextInputProps";
 
 export default function ThemedTextInput({
   onChangeText,

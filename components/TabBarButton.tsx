@@ -9,13 +9,7 @@ import Animated, {
 
 import ThemeContext from "@/contexts/ThemeContext";
 import Colors from "@/constants/Colors";
-
-interface TabBarButtonProps {
-  isFocused: boolean;
-  onPress: () => void;
-  onLongPress: () => void;
-  icon: (props: any) => JSX.Element;
-}
+import TabBarButtonProps from "@/constants/TabBarButtonProps";
 
 export default function TabBarButton({
   isFocused,

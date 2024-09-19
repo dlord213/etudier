@@ -1,15 +1,9 @@
 import BottomSheet, { BottomSheetMethods } from "@devvie/bottom-sheet";
 import { forwardRef, useContext } from "react";
+
 import ThemeContext from "@/contexts/ThemeContext";
 import Colors from "@/constants/Colors";
-
-interface ThemedBottomSheetModalProps {
-  ref: React.RefObject<BottomSheetMethods>;
-  onOpen?: Function | undefined;
-  onClose?: Function | undefined;
-  children: React.ReactNode;
-  height?: string | number;
-}
+import ThemedBottomSheetModalProps from "@/constants/ThemedBottomSheetModalProps";
 
 const ThemedBottomSheetModal = forwardRef<
   BottomSheetMethods,

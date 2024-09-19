@@ -1,12 +1,6 @@
-import { Pressable, PressableProps, ViewStyle } from "react-native";
+import { Pressable } from "react-native";
 import { forwardRef } from "react";
-
-interface ThemedPressableOpacityProps extends PressableProps {
-  children: React.ReactNode;
-  backgroundColor?: string;
-  color?: string;
-  style?: ViewStyle;
-}
+import ThemedPressableOpacityProps from "@/constants/ThemedPressableOpacityProps";
 
 const ThemedPressableOpacity = forwardRef<any, ThemedPressableOpacityProps>(
   (props, ref) => {

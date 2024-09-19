@@ -1,10 +1,11 @@
+import { useContext } from "react";
+import { View, StyleSheet } from "react-native";
+
+import TabBarButton from "./TabBarButton";
 import Colors from "@/constants/Colors";
 import ThemeContext from "@/contexts/ThemeContext";
-import { useContext } from "react";
-import { View, StyleSheet, Pressable } from "react-native";
 
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
-import TabBarButton from "./TabBarButton";
 
 function CustomTabBar({ state, descriptors, navigation, isTabBarVisible }) {
   const { palette, theme } = useContext(ThemeContext);

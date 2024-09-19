@@ -1,14 +1,14 @@
 import { View } from "react-native";
+import { useContext } from "react";
 
 import ThemedPressableOpacity from "./ThemedPressableOpacity";
 import ThemedText from "./ThemedText";
 import Colors from "@/constants/Colors";
+import ThemeContext from "@/contexts/ThemeContext";
+import TaskProps from "@/constants/TaskProps";
 
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
-import { useContext } from "react";
-import ThemeContext from "@/contexts/ThemeContext";
-import TaskProps from "@/constants/TaskProps";
 
 interface TaskListProps {
   tasks: TaskProps[];
