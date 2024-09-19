@@ -21,6 +21,7 @@ import ThemedText from "@/components/ThemedText";
 import Colors from "@/constants/Colors";
 
 import useTaskManager from "@/hooks/useTaskManager";
+import TaskList from "@/components/TaskList";
 
 export default function Index() {
   const { palette, theme } = useContext(ThemeContext);
@@ -51,25 +52,7 @@ export default function Index() {
     handleDescriptionPress,
   } = useTaskManager();
 
-  const [todayTasksLength, setTodayTasksLength] = useState(null);
-  const [tomorrowTasksLength, setTomorrowTasksLength] = useState(null);
-
   const sheetRef = useRef<BottomSheetMethods>(null);
-
-  useEffect(() => {
-    if (storedTasks != null) {
-      setTodayTasksLength(
-        storedTasks.filter(
-          (task) => task.date === dateToday.toLocaleDateString()
-        ).length
-      );
-      setTomorrowTasksLength(
-        storedTasks.filter(
-          (task) => task.date === dateTomorrow.toLocaleDateString()
-        ).length
-      );
-    }
-  }, [storedTasks, dateToday, dateTomorrow]);
 
   return (
     <SafeAreaView style={styleState.safeAreaView}>
@@ -166,96 +149,17 @@ export default function Index() {
               : Colors.Text_Light.Secondary,
         }}
       />
-      {todayTasksLength >= 1 ? (
-        storedTasks
-          .filter((task: any) => task.date === dateToday.toLocaleDateString())
-          .map((obj: any) => {
-            1;
-            const originalIndex = storedTasks.findIndex(
-              (task: any) => task.title === obj.title && task.date === obj.date
-            );
-            return (
-              <View
-                key={originalIndex}
-                style={{
-                  flexDirection: "row",
-                  justifyContent: "space-between",
-                  alignItems: "center",
-                  gap: 16,
-                }}
-              >
-                <View
-                  style={{
-                    flexDirection: "row",
-                    gap: 16,
-                    alignItems: "center",
-                    flex: 1,
-                  }}
-                >
-                  <ThemedPressableOpacity
-                    onPress={() => handleCompleteTask(originalIndex)}
-                  >
-                    <MaterialIcons
-                      name={
-                        obj.isCompleted
-                          ? "check-circle"
-                          : "check-circle-outline"
-                      }
-                      size={24}
-                      color={iconColor}
-                    />
-                  </ThemedPressableOpacity>
-                  <View style={{ flex: 1 }}>
-                    <ThemedText
-                      text={obj.title}
-                      style={{
-                        fontFamily: "WorkSans_700Bold",
-                        fontSize: 16,
-                        flexWrap: "wrap",
-                        flexShrink: 1,
-                      }}
-                    />
-                    {obj.description ? (
-                      <ThemedText
-                        text={obj.description}
-                        style={{
-                          fontFamily: "WorkSans_400Regular",
-                          color:
-                            theme == "dark"
-                              ? Colors.Text_Dark.Tertiary
-                              : Colors.Text_Light.Tertiary,
-                          flexWrap: "wrap",
-                          flexShrink: 1,
-                        }}
-                      />
-                    ) : null}
-                  </View>
-                </View>
-                <View style={{ flexDirection: "row", gap: 16 }}>
-                  <ThemedPressableOpacity
-                    onPress={() => handleStarredTask(originalIndex)}
-                  >
-                    {!obj.isStarred ? (
-                      <FontAwesome name="star-o" size={24} color={iconColor} />
-                    ) : (
-                      <FontAwesome name="star" size={24} color={iconColor} />
-                    )}
-                  </ThemedPressableOpacity>
-                  <ThemedPressableOpacity
-                    onPress={() => handleDeleteTask(originalIndex)}
-                  >
-                    <MaterialIcons name="delete" size={24} color={iconColor} />
-                  </ThemedPressableOpacity>
-                </View>
-              </View>
-            );
-          })
-      ) : (
-        <ThemedText
-          text="No tasks for today."
-          style={{ fontFamily: "WorkSans_400Regular" }}
+      {storedTasks ? (
+        <TaskList
+          text={"No tasks for today."}
+          tasks={storedTasks.filter(
+            (task: any) => task.date === dateToday.toLocaleDateString()
+          )}
+          handleCompleteTask={handleCompleteTask}
+          handleDeleteTask={handleDeleteTask}
+          handleStarredTask={handleStarredTask}
         />
-      )}
+      ) : null}
       <ThemedText
         text="Tomorrow"
         style={{
@@ -266,89 +170,17 @@ export default function Index() {
               : Colors.Text_Light.Secondary,
         }}
       />
-      {tomorrowTasksLength >= 1 ? (
-        storedTasks
-          .filter(
+      {storedTasks ? (
+        <TaskList
+          text={"No tasks for tomorrow."}
+          tasks={storedTasks.filter(
             (task: any) => task.date === dateTomorrow.toLocaleDateString()
-          )
-          .map((obj: any) => {
-            1;
-            const originalIndex = storedTasks.findIndex(
-              (task: any) => task.title === obj.title && task.date === obj.date
-            );
-            return (
-              <View
-                key={originalIndex}
-                style={{
-                  flexDirection: "row",
-                  justifyContent: "space-between",
-                  alignItems: "center",
-                }}
-              >
-                <View
-                  style={{
-                    flexDirection: "row",
-                    gap: 16,
-                    alignItems: "center",
-                  }}
-                >
-                  <ThemedPressableOpacity
-                    onPress={() => handleCompleteTask(originalIndex)}
-                  >
-                    <MaterialIcons
-                      name={
-                        obj.isCompleted
-                          ? "check-circle"
-                          : "check-circle-outline"
-                      }
-                      size={24}
-                      color={iconColor}
-                    />
-                  </ThemedPressableOpacity>
-                  <View>
-                    <ThemedText
-                      text={obj.title}
-                      style={{ fontFamily: "WorkSans_700Bold", fontSize: 16 }}
-                    />
-                    <ThemedText
-                      text={obj.description}
-                      numberOfLines={1}
-                      style={{
-                        fontFamily: "WorkSans_400Regular",
-                        display: obj.description ? "flex" : "none",
-                        color:
-                          theme == "dark"
-                            ? Colors.Text_Dark.Tertiary
-                            : Colors.Text_Light.Tertiary,
-                      }}
-                    />
-                  </View>
-                </View>
-                <View style={{ flexDirection: "row", gap: 16 }}>
-                  <ThemedPressableOpacity
-                    onPress={() => handleStarredTask(originalIndex)}
-                  >
-                    {!obj.isStarred ? (
-                      <FontAwesome name="star-o" size={24} color={iconColor} />
-                    ) : (
-                      <FontAwesome name="star" size={24} color={iconColor} />
-                    )}
-                  </ThemedPressableOpacity>
-                  <ThemedPressableOpacity
-                    onPress={() => handleDeleteTask(originalIndex)}
-                  >
-                    <MaterialIcons name="delete" size={24} color={iconColor} />
-                  </ThemedPressableOpacity>
-                </View>
-              </View>
-            );
-          })
-      ) : (
-        <ThemedText
-          text="No tasks for tomorrow."
-          style={{ fontFamily: "WorkSans_400Regular" }}
+          )}
+          handleCompleteTask={handleCompleteTask}
+          handleDeleteTask={handleDeleteTask}
+          handleStarredTask={handleStarredTask}
         />
-      )}
+      ) : null}
       <ThemedText
         text="Upcoming tasks"
         style={{
@@ -359,96 +191,19 @@ export default function Index() {
               : Colors.Text_Light.Secondary,
         }}
       />
-      {storedTasks &&
-      storedTasks.filter(
-        (task: any) =>
-          task.date !== dateTomorrow.toLocaleDateString() &&
-          task.date !== dateToday.toLocaleDateString()
-      ).length > 0 ? (
-        storedTasks
-          .filter(
+      {storedTasks ? (
+        <TaskList
+          text={"No upcoming tasks."}
+          tasks={storedTasks.filter(
             (task: any) =>
               task.date !== dateTomorrow.toLocaleDateString() &&
               task.date !== dateToday.toLocaleDateString()
-          )
-          .map((obj: any) => {
-            1;
-            const originalIndex = storedTasks.findIndex(
-              (task: any) => task.title === obj.title && task.date === obj.date
-            );
-            return (
-              <View
-                key={originalIndex}
-                style={{
-                  flexDirection: "row",
-                  justifyContent: "space-between",
-                  alignItems: "center",
-                }}
-              >
-                <View
-                  style={{
-                    flexDirection: "row",
-                    gap: 16,
-                    alignItems: "center",
-                  }}
-                >
-                  <ThemedPressableOpacity
-                    onPress={() => handleCompleteTask(originalIndex)}
-                  >
-                    <MaterialIcons
-                      name={
-                        obj.isCompleted
-                          ? "check-circle"
-                          : "check-circle-outline"
-                      }
-                      size={24}
-                      color={iconColor}
-                    />
-                  </ThemedPressableOpacity>
-                  <View>
-                    <ThemedText
-                      text={obj.title}
-                      style={{ fontFamily: "WorkSans_700Bold", fontSize: 16 }}
-                    />
-                    <ThemedText
-                      text={obj.description}
-                      numberOfLines={1}
-                      style={{
-                        fontFamily: "WorkSans_400Regular",
-                        display: obj.description ? "flex" : "none",
-                        color:
-                          theme == "dark"
-                            ? Colors.Text_Dark.Tertiary
-                            : Colors.Text_Light.Tertiary,
-                      }}
-                    />
-                  </View>
-                </View>
-                <View style={{ flexDirection: "row", gap: 16 }}>
-                  <ThemedPressableOpacity
-                    onPress={() => handleStarredTask(originalIndex)}
-                  >
-                    {!obj.isStarred ? (
-                      <FontAwesome name="star-o" size={24} color={iconColor} />
-                    ) : (
-                      <FontAwesome name="star" size={24} color={iconColor} />
-                    )}
-                  </ThemedPressableOpacity>
-                  <ThemedPressableOpacity
-                    onPress={() => handleDeleteTask(originalIndex)}
-                  >
-                    <MaterialIcons name="delete" size={24} color={iconColor} />
-                  </ThemedPressableOpacity>
-                </View>
-              </View>
-            );
-          })
-      ) : (
-        <ThemedText
-          text="No upcoming tasks."
-          style={{ fontFamily: "WorkSans_400Regular" }}
+          )}
+          handleCompleteTask={handleCompleteTask}
+          handleDeleteTask={handleDeleteTask}
+          handleStarredTask={handleStarredTask}
         />
-      )}
+      ) : null}
       <ThemedBottomSheetModal
         onClose={() => {
           setTimeout(() => {
