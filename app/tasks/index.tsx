@@ -302,6 +302,7 @@ export default function Index() {
                     />
                     <ThemedText
                       text={obj.description}
+                      numberOfLines={1}
                       style={{
                         fontFamily: "WorkSans_400Regular",
                         display: obj.description ? "flex" : "none",
@@ -335,6 +336,101 @@ export default function Index() {
       ) : (
         <ThemedText
           text="No tasks for tomorrow."
+          style={{ fontFamily: "WorkSans_400Regular" }}
+        />
+      )}
+      <ThemedText
+        text="Upcoming tasks"
+        style={{
+          fontFamily: "WorkSans_400Regular",
+          color:
+            theme == "dark"
+              ? Colors.Text_Dark.Secondary
+              : Colors.Text_Light.Secondary,
+        }}
+      />
+      {storedTasks && storedTasks.length > 0 ? (
+        storedTasks
+          .filter(
+            (task: any) =>
+              task.date !== dateTomorrow.toLocaleDateString() &&
+              task.date !== dateToday.toLocaleDateString()
+          )
+          .map((obj: any) => {
+            1;
+            const originalIndex = storedTasks.findIndex(
+              (task: any) => task.title === obj.title && task.date === obj.date
+            );
+            return (
+              <View
+                key={originalIndex}
+                style={{
+                  flexDirection: "row",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                }}
+              >
+                <View
+                  style={{
+                    flexDirection: "row",
+                    gap: 16,
+                    alignItems: "center",
+                  }}
+                >
+                  <ThemedPressableOpacity
+                    onPress={() => handleCompleteTask(originalIndex)}
+                  >
+                    <MaterialIcons
+                      name={
+                        obj.isCompleted
+                          ? "check-circle"
+                          : "check-circle-outline"
+                      }
+                      size={24}
+                      color={iconColor}
+                    />
+                  </ThemedPressableOpacity>
+                  <View>
+                    <ThemedText
+                      text={obj.title}
+                      style={{ fontFamily: "WorkSans_700Bold", fontSize: 16 }}
+                    />
+                    <ThemedText
+                      text={obj.description}
+                      numberOfLines={1}
+                      style={{
+                        fontFamily: "WorkSans_400Regular",
+                        display: obj.description ? "flex" : "none",
+                        color:
+                          theme == "dark"
+                            ? Colors.Text_Dark.Tertiary
+                            : Colors.Text_Light.Tertiary,
+                      }}
+                    />
+                  </View>
+                </View>
+                <View style={{ flexDirection: "row", gap: 16 }}>
+                  <ThemedPressableOpacity
+                    onPress={() => handleStarredTask(originalIndex)}
+                  >
+                    {!obj.isStarred ? (
+                      <FontAwesome name="star-o" size={24} color={iconColor} />
+                    ) : (
+                      <FontAwesome name="star" size={24} color={iconColor} />
+                    )}
+                  </ThemedPressableOpacity>
+                  <ThemedPressableOpacity
+                    onPress={() => handleDeleteTask(originalIndex)}
+                  >
+                    <MaterialIcons name="delete" size={24} color={iconColor} />
+                  </ThemedPressableOpacity>
+                </View>
+              </View>
+            );
+          })
+      ) : (
+        <ThemedText
+          text="No upcoming tasks."
           style={{ fontFamily: "WorkSans_400Regular" }}
         />
       )}

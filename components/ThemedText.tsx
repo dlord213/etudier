@@ -1,9 +1,9 @@
-import { Text, TextStyle } from "react-native";
+import { Text, TextProps, TextStyle } from "react-native";
 import Colors from "@/constants/Colors";
 import { useContext } from "react";
 import ThemeContext from "@/contexts/ThemeContext";
 
-interface ThemedTextProps {
+interface ThemedTextProps extends TextProps {
   style: TextStyle;
   text: string;
   id?: any;
