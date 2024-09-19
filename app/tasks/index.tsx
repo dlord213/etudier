@@ -349,7 +349,12 @@ export default function Index() {
               : Colors.Text_Light.Secondary,
         }}
       />
-      {storedTasks && storedTasks.length > 0 ? (
+      {storedTasks &&
+      storedTasks.filter(
+        (task: any) =>
+          task.date !== dateTomorrow.toLocaleDateString() &&
+          task.date !== dateToday.toLocaleDateString()
+      ).length > 0 ? (
         storedTasks
           .filter(
             (task: any) =>
