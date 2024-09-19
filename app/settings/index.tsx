@@ -84,7 +84,7 @@ export default function Page() {
       </ThemedPressableOpacity>
       <ThemedPressableOpacity
         onPress={async () => {
-          await AsyncStorage.clear();
+          await AsyncStorage.setItem("@tasks", "[]");
         }}
         style={{ flexDirection: "row", gap: 16, alignItems: "center" }}
       >

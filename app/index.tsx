@@ -10,6 +10,7 @@ import {
 import { useEffect, useState } from "react";
 import { Redirect, SplashScreen } from "expo-router";
 import * as SecureStore from "expo-secure-store";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -29,6 +30,7 @@ export default function Index() {
     if (result) {
       setIsInitialBoot(false);
     } else {
+      await AsyncStorage.setItem("@tasks", "[]");
       setIsInitialBoot(true);
     }
   }

@@ -1,5 +1,5 @@
 import { View } from "react-native";
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 
 import ThemedPressableOpacity from "./ThemedPressableOpacity";
 import ThemedText from "./ThemedText";
