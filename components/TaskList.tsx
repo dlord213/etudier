@@ -6,20 +6,12 @@ import Colors from "@/constants/Colors";
 
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
-import useTaskManager from "@/hooks/useTaskManager";
 import { useContext } from "react";
 import ThemeContext from "@/contexts/ThemeContext";
-
-interface Task {
-  title: string;
-  description: string;
-  date: string;
-  isCompleted: boolean;
-  isStarred: boolean;
-}
+import TaskProps from "@/constants/TaskProps";
 
 interface TaskListProps {
-  tasks: Task[];
+  tasks: TaskProps[];
   text: any;
   handleCompleteTask: (index: number) => void;
   handleStarredTask: (index: number) => void;
