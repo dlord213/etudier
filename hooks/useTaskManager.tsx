@@ -131,9 +131,7 @@ export default function useTaskManager() {
       }
     };
 
-    if (storedTasks == null) {
-      getStoredTasks();
-    }
+    getStoredTasks();
   }, [storedTasks]);
 
   useEffect(() => {

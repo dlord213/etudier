@@ -90,7 +90,7 @@ export default function Page() {
       >
         <MaterialCommunityIcons
           name="note-remove"
-          size={24}
+          size={20}
           color={iconColor}
         />
         <ThemedText

@@ -15,32 +15,35 @@ import ThemedText from "@/components/ThemedText";
 import ThemedPressableOpacity from "@/components/ThemedPressableOpacity";
 import Colors from "@/constants/Colors";
 import styles from "@/styles/tabs_index";
+import useProfile from "@/hooks/useProfile";
+import useTaskManager from "@/hooks/useTaskManager";
 
 export default function Page() {
   const { palette, theme } = useContext(ThemeContext);
 
-  const styleState = styles([theme, palette]);
-  const [name, setName] = useState<string | null>(null);
+  let dateToday = new Date();
 
+  const styleState = styles([theme, palette]);
   const router = useRouter();
+
+  const { name } = useProfile();
+  const { storedTasks } = useTaskManager();
+  const [tasksLength, setTasksLength] = useState(null);
+
+  useEffect(() => {
+    if (storedTasks) {
+      setTasksLength(
+        storedTasks.filter(
+          (task: any) =>
+            task.date === dateToday.toLocaleDateString() &&
+            task.isCompleted === false
+        ).length
+      );
+    }
+  }, [storedTasks]);
 
   const headingIconColor =
     theme == "dark" ? Colors.Text_Dark.Default : Colors.Text_Light.Default;
-
-  useEffect(() => {
-    const getName = async () => {
-      const storedName = await SecureStore.getItemAsync("name");
-      if (storedName) {
-        setName(storedName);
-      } else {
-        router.replace("/");
-      }
-    };
-
-    if (!name) {
-      getName();
-    }
-  }, [name]);
 
   if (!name) {
     return (
@@ -73,7 +76,13 @@ export default function Page() {
             style={styleState.headingBoldTextStyle}
           />
           <ThemedText
-            text={"Today, you have ? tasks"}
+            text={
+              tasksLength > 0
+                ? tasksLength > 1
+                  ? `Today, you have ${tasksLength} tasks.`
+                  : `Today, you have ${tasksLength} task.`
+                : "You have no tasks today."
+            }
             color="tertiary"
             style={styleState.headingTertiaryTextStyle}
           />
