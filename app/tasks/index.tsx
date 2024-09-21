@@ -156,6 +156,30 @@ export default function Index() {
       >
         <FontAwesome6 name="add" size={16} color={Colors.Text_Dark.Default} />
       </Pressable>
+      {storedTasks.filter(
+        (task: any) => task.date === dateToday.toLocaleDateString()
+      ).length > 0}
+      <ThemedText
+        text="Due tasks"
+        style={{
+          fontFamily: "WorkSans_400Regular",
+          color:
+            theme == "dark"
+              ? Colors.Text_Dark.Secondary
+              : Colors.Text_Light.Secondary,
+        }}
+      />
+      <TaskList
+        text={"No tasks for today."}
+        tasks={storedTasks.filter(
+          (task: any) =>
+            task.date < dateToday.toLocaleDateString() &&
+            task.isCompleted === false
+        )}
+        handleCompleteTask={handleCompleteTask}
+        handleDeleteTask={handleDeleteTask}
+        handleStarredTask={handleStarredTask}
+      />
       <ThemedText
         text="Today"
         style={{
