@@ -12,6 +12,11 @@ const styles = (context: any) =>
       padding: 16,
       gap: 16,
     },
+    scrollView: {
+      flex: 1,
+      padding: 16,
+      gap: 16,
+    },
     headingTextStyle: {
       fontFamily: "WorkSans_700Bold",
       textAlign: "center",

@@ -19,6 +19,7 @@ const ThemedBottomSheetModal = forwardRef<
           theme != "dark"
             ? Colors.Backgrounds_Light.Default
             : Colors.Backgrounds_Dark.Hover,
+        zIndex: 99,
       }}
       ref={ref}
       height={height}

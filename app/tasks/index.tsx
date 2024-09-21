@@ -1,7 +1,8 @@
-import { useContext, useRef } from "react";
+import { useContext, useRef, useState } from "react";
 import {
   ActivityIndicator,
   Pressable,
+  ScrollView,
   useWindowDimensions,
   View,
 } from "react-native";
@@ -58,6 +59,8 @@ export default function Index() {
     handleDescriptionPress,
   } = useTaskManager();
 
+  const [isModalVisible, setIsModalVisible] = useState(false)
+
   const sheetRef = useRef<BottomSheetMethods>(null);
 
   if (!storedTasks) {
@@ -70,175 +73,167 @@ export default function Index() {
 
   return (
     <SafeAreaView style={styleState.safeAreaView}>
-      <View style={{ flexDirection: "row" }}>
-        <ThemedText
-          text="Tasks"
-          style={[styleState.headingTextStyle, { textAlign: "center" }]}
-        />
-      </View>
-      <View
-        style={[
-          styleState.cardStyle,
-          { backgroundColor: Colors[palette][600] },
-        ]}
-      >
-        <View>
+      <ScrollView contentContainerStyle={{ gap: 16 }}>
+        <View style={{ flexDirection: "row", position: "sticky" }}>
           <ThemedText
-            text="Number of tasks completed"
-            style={styleState.cardBodyTextStyle}
+            text="Tasks"
+            style={[styleState.headingTextStyle, { textAlign: "center" }]}
           />
-          <ThemedText
-            text={tasksCompletedLength}
-            style={styleState.cardHeadingTextStyle}
+        </View>
+        <View
+          style={[
+            styleState.cardStyle,
+            { backgroundColor: Colors[palette][600] },
+          ]}
+        >
+          <View>
+            <ThemedText
+              text="Number of tasks completed"
+              style={styleState.cardBodyTextStyle}
+            />
+            <ThemedText
+              text={tasksCompletedLength}
+              style={styleState.cardHeadingTextStyle}
+            />
+          </View>
+
+          <FontAwesome5
+            name="clipboard-check"
+            size={48}
+            color={Colors.Text_Dark.Default}
+          />
+        </View>
+        <View style={{ flexDirection: "row", gap: 8 }}>
+          <ThemedPressable
+            style={{ paddingHorizontal: 24 }}
+            children={
+              <>
+                <FontAwesome
+                  name="star"
+                  size={24}
+                  color={Colors[palette][600]}
+                />
+              </>
+            }
+            backgroundColor={Colors[palette][200]}
+          />
+          <ThemedPressable
+            children={
+              <>
+                <ThemedText
+                  text="Done"
+                  style={{
+                    fontFamily: "WorkSans_400Regular",
+                    color: Colors[palette][600],
+                  }}
+                />
+              </>
+            }
+            backgroundColor={Colors[palette][200]}
+          />
+          <ThemedPressable
+            children={
+              <>
+                <ThemedText
+                  text="Not yet done"
+                  style={{
+                    fontFamily: "WorkSans_400Regular",
+                    color: Colors[palette][600],
+                  }}
+                />
+              </>
+            }
+            backgroundColor={Colors[palette][200]}
           />
         </View>
 
-        <FontAwesome5
-          name="clipboard-check"
-          size={48}
-          color={Colors.Text_Dark.Default}
+        {/* Task Lists */}
+        {storedTasks.filter(
+          (task: any) => task.date < dateToday.toLocaleDateString() && task.isCompleted === false
+        ).length > 0 ? <>
+          <ThemedText
+            text="Due tasks"
+            style={{
+              fontFamily: "WorkSans_400Regular",
+              color:
+                theme == "dark"
+                  ? Colors.Text_Dark.Secondary
+                  : Colors.Text_Light.Secondary,
+            }}
+          />
+          <TaskList
+            text={"No due tasks."}
+            tasks={storedTasks.filter(
+              (task: any) =>
+                task.date < dateToday.toLocaleDateString() &&
+                task.isCompleted === false
+            )}
+            handleCompleteTask={handleCompleteTask}
+            handleDeleteTask={handleDeleteTask}
+            handleStarredTask={handleStarredTask}
+          />
+        </> : null}
+        <ThemedText
+          text="Today"
+          style={{
+            fontFamily: "WorkSans_400Regular",
+            color:
+              theme == "dark"
+                ? Colors.Text_Dark.Secondary
+                : Colors.Text_Light.Secondary,
+          }}
         />
-      </View>
-      <View style={{ flexDirection: "row", gap: 8 }}>
-        <ThemedPressable
-          style={{ paddingHorizontal: 24 }}
-          children={
-            <>
-              <FontAwesome name="star" size={24} color={Colors[palette][600]} />
-            </>
-          }
-          backgroundColor={Colors[palette][200]}
+        <TaskList
+          text={"No tasks for today."}
+          tasks={storedTasks.filter(
+            (task: any) => task.date === dateToday.toLocaleDateString()
+          )}
+          handleCompleteTask={handleCompleteTask}
+          handleDeleteTask={handleDeleteTask}
+          handleStarredTask={handleStarredTask}
         />
-        <ThemedPressable
-          children={
-            <>
-              <ThemedText
-                text="Done"
-                style={{
-                  fontFamily: "WorkSans_400Regular",
-                  color: Colors[palette][600],
-                }}
-              />
-            </>
-          }
-          backgroundColor={Colors[palette][200]}
+        <ThemedText
+          text="Tomorrow"
+          style={{
+            fontFamily: "WorkSans_400Regular",
+            color:
+              theme == "dark"
+                ? Colors.Text_Dark.Secondary
+                : Colors.Text_Light.Secondary,
+          }}
         />
-        <ThemedPressable
-          children={
-            <>
-              <ThemedText
-                text="Not yet done"
-                style={{
-                  fontFamily: "WorkSans_400Regular",
-                  color: Colors[palette][600],
-                }}
-              />
-            </>
-          }
-          backgroundColor={Colors[palette][200]}
+        <TaskList
+          text={"No tasks for tomorrow."}
+          tasks={storedTasks.filter(
+            (task: any) => task.date === dateTomorrow.toLocaleDateString()
+          )}
+          handleCompleteTask={handleCompleteTask}
+          handleDeleteTask={handleDeleteTask}
+          handleStarredTask={handleStarredTask}
         />
-      </View>
-      <Pressable
-        onPress={() => {
-          sheetRef.current?.open();
-        }}
-        style={({ pressed }) => [
-          {
-            bottom: 25,
-            position: "absolute",
-            right: 25,
-            backgroundColor: Colors[palette][600],
-            padding: 16,
-            borderRadius: 8,
-            opacity: pressed ? 0.8 : 1,
-          },
-        ]}
-      >
-        <FontAwesome6 name="add" size={16} color={Colors.Text_Dark.Default} />
-      </Pressable>
-      {storedTasks.filter(
-        (task: any) => task.date === dateToday.toLocaleDateString()
-      ).length > 0}
-      <ThemedText
-        text="Due tasks"
-        style={{
-          fontFamily: "WorkSans_400Regular",
-          color:
-            theme == "dark"
-              ? Colors.Text_Dark.Secondary
-              : Colors.Text_Light.Secondary,
-        }}
-      />
-      <TaskList
-        text={"No tasks for today."}
-        tasks={storedTasks.filter(
-          (task: any) =>
-            task.date < dateToday.toLocaleDateString() &&
-            task.isCompleted === false
-        )}
-        handleCompleteTask={handleCompleteTask}
-        handleDeleteTask={handleDeleteTask}
-        handleStarredTask={handleStarredTask}
-      />
-      <ThemedText
-        text="Today"
-        style={{
-          fontFamily: "WorkSans_400Regular",
-          color:
-            theme == "dark"
-              ? Colors.Text_Dark.Secondary
-              : Colors.Text_Light.Secondary,
-        }}
-      />
-      <TaskList
-        text={"No tasks for today."}
-        tasks={storedTasks.filter(
-          (task: any) => task.date === dateToday.toLocaleDateString()
-        )}
-        handleCompleteTask={handleCompleteTask}
-        handleDeleteTask={handleDeleteTask}
-        handleStarredTask={handleStarredTask}
-      />
-      <ThemedText
-        text="Tomorrow"
-        style={{
-          fontFamily: "WorkSans_400Regular",
-          color:
-            theme == "dark"
-              ? Colors.Text_Dark.Secondary
-              : Colors.Text_Light.Secondary,
-        }}
-      />
-      <TaskList
-        text={"No tasks for tomorrow."}
-        tasks={storedTasks.filter(
-          (task: any) => task.date === dateTomorrow.toLocaleDateString()
-        )}
-        handleCompleteTask={handleCompleteTask}
-        handleDeleteTask={handleDeleteTask}
-        handleStarredTask={handleStarredTask}
-      />
-      <ThemedText
-        text="Upcoming tasks"
-        style={{
-          fontFamily: "WorkSans_400Regular",
-          color:
-            theme == "dark"
-              ? Colors.Text_Dark.Secondary
-              : Colors.Text_Light.Secondary,
-        }}
-      />
-      <TaskList
-        text={"No upcoming tasks."}
-        tasks={storedTasks.filter(
-          (task: any) =>
-            task.date !== dateTomorrow.toLocaleDateString() &&
-            task.date !== dateToday.toLocaleDateString()
-        )}
-        handleCompleteTask={handleCompleteTask}
-        handleDeleteTask={handleDeleteTask}
-        handleStarredTask={handleStarredTask}
-      />
+        <ThemedText
+          text="Upcoming tasks"
+          style={{
+            fontFamily: "WorkSans_400Regular",
+            color:
+              theme == "dark"
+                ? Colors.Text_Dark.Secondary
+                : Colors.Text_Light.Secondary,
+          }}
+        />
+        <TaskList
+          text={"No upcoming tasks."}
+          tasks={storedTasks.filter(
+            (task: any) =>
+              task.date > dateTomorrow.toLocaleDateString() &&
+              task.date > dateToday.toLocaleDateString()
+          )}
+          handleCompleteTask={handleCompleteTask}
+          handleDeleteTask={handleDeleteTask}
+          handleStarredTask={handleStarredTask}
+        />
+        {/* Task Lists */}
+      </ScrollView>
       <ThemedBottomSheetModal
         onClose={() => {
           setTimeout(() => {
@@ -250,6 +245,7 @@ export default function Index() {
               isCompleted: false,
             });
             setIsDescriptionVisible(false);
+            setIsModalVisible(false)
           }, 250);
         }}
         ref={sheetRef}
@@ -335,6 +331,26 @@ export default function Index() {
           </Pressable>
         </View>
       </ThemedBottomSheetModal>
+      <Pressable
+        onPress={() => {
+          sheetRef.current?.open();
+          setIsModalVisible(true)
+        }}
+        style={({ pressed }) => [
+          {
+            bottom: 25,
+            position: "absolute",
+            right: 25,
+            backgroundColor: Colors[palette][600],
+            padding: 16,
+            borderRadius: 8,
+            opacity: pressed ? 0.8 : 1,
+            display: isModalVisible ? "none" : "flex"
+          },
+        ]}
+      >
+        <FontAwesome6 name="add" size={16} color={Colors.Text_Dark.Default} />
+      </Pressable>
       <StatusBar style={theme == "dark" ? "light" : "inverted"} />
     </SafeAreaView>
   );
