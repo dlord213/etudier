@@ -1,5 +1,5 @@
 import { View } from "react-native";
-import { useContext, useEffect } from "react";
+import { useContext } from "react";
 
 import ThemedPressableOpacity from "./ThemedPressableOpacity";
 import ThemedText from "./ThemedText";
@@ -17,6 +17,10 @@ interface TaskListProps {
   handleCompleteTask: (index: number) => void;
   handleStarredTask: (index: number) => void;
   handleDeleteTask: (index: number) => void;
+  bottomSheetRef: any;
+  openedTaskState?: any;
+  openedTaskSetState?: any;
+  isEditingSetState: any;
 }
 
 const TaskList: React.FC<TaskListProps> = ({
@@ -25,6 +29,9 @@ const TaskList: React.FC<TaskListProps> = ({
   handleCompleteTask,
   handleStarredTask,
   handleDeleteTask,
+  bottomSheetRef,
+  openedTaskSetState,
+  isEditingSetState,
 }) => {
   const { theme } = useContext(ThemeContext);
   const { storedTasks } = useTaskManager();
@@ -34,12 +41,24 @@ const TaskList: React.FC<TaskListProps> = ({
   if (storedTasks) {
     return tasks.length > 0 ? (
       tasks.map((task) => {
-        const index = storedTasks.findIndex(
-          (obj: any) => task.title === obj.title && task.date === obj.date
-        );
+        const index = storedTasks.findIndex((obj: any) => task.id === obj.id);
         return (
-          <View
+          <ThemedPressableOpacity
             key={index}
+            onPress={() => {
+              if (bottomSheetRef) {
+                bottomSheetRef.current?.open();
+                openedTaskSetState({
+                  id: task.id,
+                  title: task.title,
+                  description: task.description,
+                  date: task.date,
+                  isStarred: task.isStarred,
+                  isCompleted: task.isCompleted,
+                });
+                isEditingSetState(true);
+              }
+            }}
             style={{
               flexDirection: "row",
               justifyContent: "space-between",
@@ -88,6 +107,20 @@ const TaskList: React.FC<TaskListProps> = ({
                     }}
                   />
                 ) : null}
+                {task.date ? (
+                  <ThemedText
+                    text={task.date}
+                    style={{
+                      fontFamily: "WorkSans_400Regular",
+                      color:
+                        theme == "dark"
+                          ? Colors.Text_Dark.Tertiary
+                          : Colors.Text_Light.Tertiary,
+                      flexWrap: "wrap",
+                      flexShrink: 1,
+                    }}
+                  />
+                ) : null}
               </View>
             </View>
             <View style={{ flexDirection: "row", gap: 16 }}>
@@ -102,7 +135,7 @@ const TaskList: React.FC<TaskListProps> = ({
                 <MaterialIcons name="delete" size={24} color={iconColor} />
               </ThemedPressableOpacity>
             </View>
-          </View>
+          </ThemedPressableOpacity>
         );
       })
     ) : (

@@ -4,6 +4,7 @@ import { DateTimePickerAndroid } from "@react-native-community/datetimepicker";
 
 export default function useTaskManager() {
   const [task, setTask] = useState({
+    id: 0,
     title: "",
     description: "",
     date: new Date(),
@@ -62,9 +63,8 @@ export default function useTaskManager() {
 
     tasks.splice(taskIndex, 1);
 
-    await AsyncStorage.setItem("@tasks", JSON.stringify(tasks));
-
     setStoredTasks([...tasks]);
+    await AsyncStorage.setItem("@tasks", JSON.stringify(tasks));
   };
 
   const handleCompleteTask = async (taskIndex: any) => {
@@ -77,9 +77,27 @@ export default function useTaskManager() {
       tasks[taskIndex].isCompleted = true;
     }
 
+    setStoredTasks([...tasks]);
     await AsyncStorage.setItem("@tasks", JSON.stringify(tasks));
+  };
+
+  const handleEditTask = async (taskIndex: any) => {
+    const tasksString = await AsyncStorage.getItem("@tasks");
+    let tasks = tasksString !== null ? JSON.parse(tasksString) : [];
+
+    if (taskIndex !== -1) {
+      tasks[taskIndex] = {
+        ...tasks[taskIndex],
+        title: task.title,
+        description: task.description,
+        date: task.date,
+        isStarred: task.isStarred,
+        isCompleted: task.isCompleted,
+      };
+    }
 
     setStoredTasks([...tasks]);
+    await AsyncStorage.setItem("@tasks", JSON.stringify(tasks));
   };
 
   const handleStarredTask = async (taskIndex: any) => {
@@ -88,9 +106,8 @@ export default function useTaskManager() {
 
     tasks[taskIndex].isStarred = !tasks[taskIndex].isStarred;
 
-    await AsyncStorage.setItem("@tasks", JSON.stringify(tasks));
-
     setStoredTasks([...tasks]);
+    await AsyncStorage.setItem("@tasks", JSON.stringify(tasks));
   };
 
   const handleDatePress = () => {
@@ -110,6 +127,7 @@ export default function useTaskManager() {
 
     const formattedTask = {
       ...task,
+      id: Date.now(),
       date:
         task.date instanceof Date
           ? task.date.toLocaleDateString()
@@ -118,9 +136,8 @@ export default function useTaskManager() {
 
     tasks.push(formattedTask);
 
-    await AsyncStorage.setItem("@tasks", JSON.stringify(tasks));
-
     setStoredTasks([...tasks]);
+    await AsyncStorage.setItem("@tasks", JSON.stringify(tasks));
   };
 
   useEffect(() => {
@@ -151,7 +168,6 @@ export default function useTaskManager() {
     isDescriptionVisible,
     handleTitleChange,
     handleDescriptionChange,
-    toggleIsStarred,
     handleDateChange,
     handleDeleteTask,
     handleCompleteTask,
@@ -159,6 +175,8 @@ export default function useTaskManager() {
     handleDatePress,
     handleDescriptionPress,
     handleAddTasks,
+    handleEditTask,
+    toggleIsStarred,
     setIsDescriptionVisible,
     setTask,
   };
