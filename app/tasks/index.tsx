@@ -71,11 +71,7 @@ export default function Index() {
   const views = [
     <>
       {storedTasks ? (
-        <ScrollView
-          contentContainerStyle={{ gap: 16 }}
-          showsHorizontalScrollIndicator={false}
-          showsVerticalScrollIndicator={false}
-        >
+        <>
           {storedTasks.filter(
             (task: any) =>
               task.date < dateToday.toLocaleDateString() &&
@@ -174,16 +170,12 @@ export default function Index() {
             openedTaskSetState={setTask}
           />
           {/* Task Lists */}
-        </ScrollView>
+        </>
       ) : null}
     </>,
     <>
       {storedTasks ? (
-        <ScrollView
-          contentContainerStyle={{ gap: 16 }}
-          showsHorizontalScrollIndicator={false}
-          showsVerticalScrollIndicator={false}
-        >
+        <>
           <ThemedText
             text="Starred"
             style={{
@@ -204,16 +196,12 @@ export default function Index() {
             isEditingSetState={setIsEditing}
             openedTaskSetState={setTask}
           />
-        </ScrollView>
+        </>
       ) : null}
     </>,
     <>
       {storedTasks ? (
-        <ScrollView
-          contentContainerStyle={{ gap: 16 }}
-          showsHorizontalScrollIndicator={false}
-          showsVerticalScrollIndicator={false}
-        >
+        <>
           <ThemedText
             text="Done"
             style={{
@@ -234,16 +222,12 @@ export default function Index() {
             isEditingSetState={setIsEditing}
             openedTaskSetState={setTask}
           />
-        </ScrollView>
+        </>
       ) : null}
     </>,
     <>
       {storedTasks ? (
-        <ScrollView
-          contentContainerStyle={{ gap: 16 }}
-          showsHorizontalScrollIndicator={false}
-          showsVerticalScrollIndicator={false}
-        >
+        <>
           <ThemedText
             text="Not yet done"
             style={{
@@ -268,7 +252,7 @@ export default function Index() {
             isEditingSetState={setIsEditing}
             openedTaskSetState={setTask}
           />
-        </ScrollView>
+        </>
       ) : null}
     </>,
     <></>,
@@ -314,64 +298,94 @@ export default function Index() {
           color={Colors.Text_Dark.Default}
         />
       </View>
-      <View style={{ flexDirection: "row", gap: 8 }}>
-        <ThemedPressable
-          onPress={() => setViewIndex(0)}
-          children={
-            <>
-              <ThemedText
-                text="All"
-                style={{
-                  fontFamily: "WorkSans_400Regular",
-                  color: Colors[palette][600],
-                }}
-              />
-            </>
-          }
-          backgroundColor={Colors[palette][200]}
-        />
-        <ThemedPressable
-          onPress={() => setViewIndex(1)}
-          style={{ paddingHorizontal: 24 }}
-          children={
-            <>
-              <FontAwesome name="star" size={24} color={Colors[palette][600]} />
-            </>
-          }
-          backgroundColor={Colors[palette][200]}
-        />
-        <ThemedPressable
-          onPress={() => setViewIndex(2)}
-          children={
-            <>
-              <ThemedText
-                text="Done"
-                style={{
-                  fontFamily: "WorkSans_400Regular",
-                  color: Colors[palette][600],
-                }}
-              />
-            </>
-          }
-          backgroundColor={Colors[palette][200]}
-        />
-        <ThemedPressable
-          onPress={() => setViewIndex(3)}
-          children={
-            <>
-              <ThemedText
-                text="Not yet done"
-                style={{
-                  fontFamily: "WorkSans_400Regular",
-                  color: Colors[palette][600],
-                }}
-              />
-            </>
-          }
-          backgroundColor={Colors[palette][200]}
-        />
-      </View>
-      {views[viewIndex]}
+      <ScrollView
+        contentContainerStyle={{ gap: 16 }}
+        showsHorizontalScrollIndicator={false}
+        showsVerticalScrollIndicator={false}
+      >
+        <ScrollView
+          contentContainerStyle={{ gap: 8 }}
+          showsHorizontalScrollIndicator={false}
+          showsVerticalScrollIndicator={false}
+          horizontal
+        >
+          <ThemedPressable
+            onPress={() => setViewIndex(0)}
+            children={
+              <>
+                <ThemedText
+                  text="All"
+                  style={{
+                    fontFamily: "WorkSans_400Regular",
+                    color: Colors[palette][600],
+                  }}
+                />
+              </>
+            }
+            backgroundColor={Colors[palette][200]}
+          />
+          <ThemedPressable
+            onPress={() => setViewIndex(1)}
+            style={{ paddingHorizontal: 24 }}
+            children={
+              <>
+                <FontAwesome
+                  name="star"
+                  size={24}
+                  color={Colors[palette][600]}
+                />
+              </>
+            }
+            backgroundColor={Colors[palette][200]}
+          />
+          <ThemedPressable
+            onPress={() => setViewIndex(2)}
+            children={
+              <>
+                <ThemedText
+                  text="Done"
+                  style={{
+                    fontFamily: "WorkSans_400Regular",
+                    color: Colors[palette][600],
+                  }}
+                />
+              </>
+            }
+            backgroundColor={Colors[palette][200]}
+          />
+          <ThemedPressable
+            onPress={() => setViewIndex(3)}
+            children={
+              <>
+                <ThemedText
+                  text="Not yet done"
+                  style={{
+                    fontFamily: "WorkSans_400Regular",
+                    color: Colors[palette][600],
+                  }}
+                />
+              </>
+            }
+            backgroundColor={Colors[palette][200]}
+          />
+          <ThemedPressable
+            onPress={() => setViewIndex(4)}
+            children={
+              <>
+                <ThemedText
+                  text="Dues"
+                  style={{
+                    fontFamily: "WorkSans_400Regular",
+                    color: Colors[palette][600],
+                  }}
+                />
+              </>
+            }
+            backgroundColor={Colors[palette][200]}
+          />
+        </ScrollView>
+        {views[viewIndex]}
+      </ScrollView>
       <ThemedBottomSheetModal
         onOpen={() => {
           setIsModalVisible(true);
