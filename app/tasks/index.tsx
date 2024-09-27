@@ -255,7 +255,36 @@ export default function Index() {
         </>
       ) : null}
     </>,
-    <></>,
+    <>
+      {storedTasks ? (
+        <>
+          <ThemedText
+            text="Dues"
+            style={{
+              fontFamily: "WorkSans_400Regular",
+              color:
+                theme == "dark"
+                  ? Colors.Text_Dark.Secondary
+                  : Colors.Text_Light.Secondary,
+            }}
+          />
+          <TaskList
+            text={"No due tasks."}
+            tasks={storedTasks.filter(
+              (task: any) =>
+                task.isCompleted === false &&
+                task.date < dateToday.toLocaleDateString()
+            )}
+            handleCompleteTask={handleCompleteTask}
+            handleDeleteTask={handleDeleteTask}
+            handleStarredTask={handleStarredTask}
+            bottomSheetRef={sheetRef}
+            isEditingSetState={setIsEditing}
+            openedTaskSetState={setTask}
+          />
+        </>
+      ) : null}
+    </>,
     <></>,
   ]; // 0 - all | 1 - starred | 2 - Done | 3 - Not yet done | 4 - Dues | 5 - Placeholder for storedTasks update
 
