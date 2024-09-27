@@ -272,8 +272,7 @@ export default function Index() {
       ) : null}
     </>,
     <></>,
-    <>
-    </>,
+    <></>,
   ]; // 0 - all | 1 - starred | 2 - Done | 3 - Not yet done | 4 - Dues | 5 - Placeholder for storedTasks update
 
   if (!storedTasks) {
@@ -385,8 +384,8 @@ export default function Index() {
               storedTasks.findIndex((obj: any) => task.id === obj.id)
             );
           }
-          setViewIndex(lastSelectedViewIndex);
           setTimeout(() => {
+            setViewIndex(lastSelectedViewIndex);
             setTask({
               date: new Date(),
               description: "",
