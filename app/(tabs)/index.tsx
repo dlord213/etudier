@@ -1,9 +1,9 @@
 import { ActivityIndicator, Pressable, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import * as SecureStore from "expo-secure-store";
-import { useContext, useEffect, useState } from "react";
-import { useRouter } from "expo-router";
+import { useCallback, useContext, useEffect, useState } from "react";
+import { useFocusEffect, useRouter } from "expo-router";
 import { StatusBar } from "expo-status-bar";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 import Ionicons from "@expo/vector-icons/Ionicons";
 import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
@@ -27,7 +27,7 @@ export default function Page() {
   const router = useRouter();
 
   const { name } = useProfile();
-  const { storedTasks } = useTaskManager();
+  const { storedTasks, setStoredTasks } = useTaskManager();
   const [tasksLength, setTasksLength] = useState(null);
 
   useEffect(() => {
@@ -41,6 +41,18 @@ export default function Page() {
       );
     }
   }, [storedTasks]);
+
+  useFocusEffect(
+    useCallback(() => {
+      const fetchTasks = async () => {
+        const tasksString = await AsyncStorage.getItem("@tasks");
+        let tasks = tasksString !== null ? JSON.parse(tasksString) : [];
+        setStoredTasks(tasks);
+      };
+
+      fetchTasks();
+    }, [])
+  );
 
   const headingIconColor =
     theme == "dark" ? Colors.Text_Dark.Default : Colors.Text_Light.Default;
@@ -128,28 +140,64 @@ export default function Page() {
           <FontAwesome6 name="add" size={20} color={headingIconColor} />
         </ThemedPressableOpacity>
       </View>
-      <ThemedPressableOpacity
-        onPress={() => {
-          router.push("/tasks");
-        }}
-      >
-        <View
+      {tasksLength && tasksLength > 0 ? (
+        <ThemedPressableOpacity
+          onPress={() => {
+            router.push("/tasks");
+          }}
           style={[
             styleState.cardStyle,
             { backgroundColor: Colors[palette][600] },
           ]}
         >
-          <ThemedText
-            text="No tasks."
-            style={styleState.cardHeadingTextStyle}
-          />
+          <View>
+            <ThemedText
+              text="Number of tasks completed today"
+              style={styleState.cardBodyTextStyle}
+            />
+            <ThemedText
+              text={
+                storedTasks
+                  ? storedTasks.filter(
+                      (task: any) =>
+                        task.date === dateToday.toLocaleDateString() &&
+                        task.isCompleted === true
+                    ).length
+                  : "-"
+              }
+              style={styleState.cardHeadingTextStyle}
+            />
+          </View>
           <FontAwesome5
-            name="clipboard"
+            name="clipboard-check"
             size={48}
             color={Colors.Text_Dark.Default}
           />
-        </View>
-      </ThemedPressableOpacity>
+        </ThemedPressableOpacity>
+      ) : (
+        <ThemedPressableOpacity
+          onPress={() => {
+            router.push("/tasks");
+          }}
+        >
+          <View
+            style={[
+              styleState.cardStyle,
+              { backgroundColor: Colors[palette][600] },
+            ]}
+          >
+            <ThemedText
+              text="No tasks."
+              style={styleState.cardHeadingTextStyle}
+            />
+            <FontAwesome5
+              name="clipboard"
+              size={48}
+              color={Colors.Text_Dark.Default}
+            />
+          </View>
+        </ThemedPressableOpacity>
+      )}
       <View
         style={{
           flexDirection: "row",

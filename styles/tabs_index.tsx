@@ -25,6 +25,11 @@ const styles = (context: any) =>
       fontFamily: "WorkSans_700Bold",
       fontSize: 24,
     },
+    cardBodyTextStyle: {
+      color: Colors.Text_Dark.Default,
+      fontFamily: "WorkSans_400Regular",
+      fontSize: 12,
+    },
     cardStyle: {
       flexDirection: "row",
       padding: 16,

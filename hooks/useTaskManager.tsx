@@ -164,6 +164,7 @@ export default function useTaskManager() {
   return {
     task,
     storedTasks,
+    setStoredTasks,
     tasksCompletedLength,
     isDescriptionVisible,
     handleTitleChange,
