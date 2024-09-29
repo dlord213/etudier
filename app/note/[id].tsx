@@ -1,7 +1,12 @@
-import { useLocalSearchParams } from "expo-router";
-import { useContext, useEffect, useState } from "react";
+import {
+  useFocusEffect,
+  useLocalSearchParams,
+  useNavigation,
+} from "expo-router";
+import { useCallback, useContext, useEffect, useState } from "react";
 import {
   ActivityIndicator,
+  Alert,
   ScrollView,
   StyleSheet,
   TextInput,
@@ -17,6 +22,7 @@ import ThemedTextInput from "@/components/ThemedTextInput";
 export default function Page() {
   const { theme, palette } = useContext(ThemeContext);
   const { storedNotes } = useNoteManager();
+  const navigation = useNavigation();
 
   const { id: noteId } = useLocalSearchParams();
 
@@ -58,6 +64,26 @@ export default function Page() {
     }
   }, [noteId, storedNotes]);
 
+  useFocusEffect(
+    useCallback(() => {
+      const unsubscribe = navigation.addListener("beforeRemove", (e) => {
+        e.preventDefault();
+
+        Alert.alert("Unsaved changes", "Save changes in your note?", [
+          { text: "Cancel", style: "cancel", onPress: () => {} },
+          { text: "No", style: "cancel", onPress: () => {} },
+          {
+            text: "Yes",
+            style: "destructive",
+            onPress: () => navigation.dispatch(e.data.action),
+          },
+        ]);
+      });
+
+      return unsubscribe;
+    }, [navigation])
+  );
+
   if (!noteForm.id) {
     return (
       <SafeAreaView style={styleState.safeAreaView}>
@@ -77,7 +103,9 @@ export default function Page() {
         }}
       />
       <ScrollView>
-        <TextInput>{noteForm.description}</TextInput>
+        <TextInput multiline style={{ fontFamily: "WorkSans_400Regular" }}>
+          {noteForm.description}
+        </TextInput>
       </ScrollView>
     </SafeAreaView>
   );
