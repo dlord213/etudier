@@ -31,6 +31,7 @@ export default function Index() {
       setIsInitialBoot(false);
     } else {
       await AsyncStorage.setItem("@tasks", "[]");
+      await AsyncStorage.setItem("@notes", "[]");
       setIsInitialBoot(true);
     }
   }

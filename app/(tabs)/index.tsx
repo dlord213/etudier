@@ -82,7 +82,7 @@ export default function Page() {
           justifyContent: "space-between",
         }}
       >
-        <View>
+        <View style={{ flex: 1, maxWidth: "70%" }}>
           <ThemedText
             text={"Welcome, " + name}
             style={styleState.headingBoldTextStyle}
