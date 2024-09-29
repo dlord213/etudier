@@ -85,6 +85,7 @@ export default function Page() {
       <ThemedPressableOpacity
         onPress={async () => {
           await AsyncStorage.setItem("@tasks", "[]");
+          await AsyncStorage.setItem("@notes", "[]");
         }}
         style={{ flexDirection: "row", gap: 16, alignItems: "center" }}
       >
@@ -94,7 +95,7 @@ export default function Page() {
           color={iconColor}
         />
         <ThemedText
-          text="Clear all tasks & logs"
+          text="Clear all tasks/notes & logs"
           style={{ fontFamily: "WorkSans_400Regular" }}
         />
       </ThemedPressableOpacity>

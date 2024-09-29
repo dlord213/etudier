@@ -9,6 +9,7 @@ import NoteProps from "@/constants/NoteProps";
 
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import useNoteManager from "@/hooks/useNoteManager";
+import { router } from "expo-router";
 
 interface NoteListProps {
   notes: NoteProps[];
@@ -33,7 +34,12 @@ const NoteList: React.FC<NoteListProps> = ({
         return (
           <ThemedPressableOpacity
             key={note.id}
-            onPress={() => {}}
+            onPress={() => {
+              router.push({
+                pathname: "/note/[id]",
+                params: { id: note.id },
+              });
+            }}
             style={{
               flexDirection: "row",
               justifyContent: "space-between",

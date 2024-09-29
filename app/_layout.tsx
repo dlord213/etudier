@@ -40,6 +40,10 @@ export default function RootLayout() {
           name="tasks/index"
           options={{ animation: "fade_from_bottom" }}
         />
+        <Stack.Screen
+          name="note/[id]"
+          options={{ animation: "fade_from_bottom" }}
+        />
       </Stack>
     </ThemeContext.Provider>
   );
