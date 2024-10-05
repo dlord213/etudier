@@ -41,8 +41,6 @@ export default function useNoteManager() {
 
     notes.push(notesForm);
 
-    console.log(notes);
-
     setStoredNotes([...notes]);
     await AsyncStorage.setItem("@notes", JSON.stringify(notes));
   };

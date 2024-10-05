@@ -88,8 +88,6 @@ export default function Page() {
             isPriority: note.isPriority,
             date: note.date,
           });
-        } else {
-          console.log("No note found with ID:", noteId);
         }
       }
     };

@@ -38,7 +38,7 @@ const NoteList: React.FC<NoteListProps> = ({
             key={note.id}
             onPress={() => {
               router.push({
-                pathname: "/note/[id]",
+                pathname: "/(notes)/[id]",
                 params: { id: note.id },
               });
             }}

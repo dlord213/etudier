@@ -209,7 +209,7 @@ export default function Page() {
           text="Schedule overview"
           style={{ fontFamily: "WorkSans_400Regular" }}
         />
-        <Pressable>
+        <Pressable onPress={() => router.push("/schedule")}>
           <Entypo
             name="list"
             size={24}
@@ -221,7 +221,7 @@ export default function Page() {
           />
         </Pressable>
       </View>
-      <ThemedPressableOpacity>
+      <ThemedPressableOpacity onPress={() => router.push("/schedule")}>
         <View
           style={[
             styleState.cardStyle,

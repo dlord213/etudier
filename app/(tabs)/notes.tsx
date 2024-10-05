@@ -11,7 +11,7 @@ import Checkbox from "expo-checkbox";
 import { BottomSheetMethods } from "@devvie/bottom-sheet";
 import { StatusBar } from "expo-status-bar";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { useFocusEffect } from "expo-router";
+import { router, useFocusEffect } from "expo-router";
 
 import useNoteManager from "@/hooks/useNoteManager";
 import NoteList from "@/components/NoteList";
@@ -28,11 +28,15 @@ import TabBarVisibilityContext from "@/contexts/TabBarVisibilityContext";
 
 import Colors from "@/constants/Colors";
 import styles from "@/styles/tabs_notes";
+import ThemedPressableOpacity from "@/components/ThemedPressableOpacity";
 
 export default function Page() {
   const { palette, theme } = useContext(ThemeContext);
   const { setIsTabBarVisible } = useContext(TabBarVisibilityContext);
   const { height: screenHeight } = useWindowDimensions();
+
+  const headingIconColor =
+    theme == "dark" ? Colors.Text_Dark.Default : Colors.Text_Light.Default;
 
   const {
     notesForm,
@@ -97,7 +101,26 @@ export default function Page() {
 
   return (
     <SafeAreaView style={styleState.safeAreaView}>
-      <ThemedText text="Notes" style={styleState.headingTextStyle} />
+      <View
+        style={{
+          flexDirection: "row",
+          justifyContent: "space-between",
+          alignItems: "center",
+        }}
+      >
+        <ThemedText text="Notes" style={styleState.headingTextStyle} />
+        <ThemedPressableOpacity
+          onPress={() => {
+            router.push("/(notes)/settings");
+          }}
+        >
+          <Ionicons
+            name="settings-outline"
+            size={20}
+            color={headingIconColor}
+          />
+        </ThemedPressableOpacity>
+      </View>
       <View style={{ flexDirection: "row", gap: 8 }}>
         <ThemedPressable
           onPress={() => {

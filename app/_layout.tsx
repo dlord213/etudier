@@ -41,7 +41,15 @@ export default function RootLayout() {
           options={{ animation: "fade_from_bottom" }}
         />
         <Stack.Screen
-          name="note/[id]"
+          name="schedule/index"
+          options={{ animation: "fade_from_bottom" }}
+        />
+        <Stack.Screen
+          name="(notes)/[id]"
+          options={{ animation: "fade_from_bottom" }}
+        />
+        <Stack.Screen
+          name="(notes)/settings"
           options={{ animation: "fade_from_bottom" }}
         />
       </Stack>
