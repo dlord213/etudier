@@ -6,23 +6,25 @@ import {
 import { useCallback, useContext, useEffect, useRef, useState } from "react";
 import {
   ActivityIndicator,
-  ScrollView,
-  StyleSheet,
   ToastAndroid,
   useWindowDimensions,
   View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { BottomSheetMethods } from "@devvie/bottom-sheet";
 
-import ThemeContext from "@/contexts/ThemeContext";
-import useNoteManager from "@/hooks/useNoteManager";
-import Colors from "@/constants/Colors";
-import ThemedOpaqueTextInput from "@/components/ThemedOpaqueTextInput";
 import AntDesign from "@expo/vector-icons/AntDesign";
+
+import useNoteManager from "@/hooks/useNoteManager";
+import ThemeContext from "@/contexts/ThemeContext";
+import Colors from "@/constants/Colors";
+
+import ThemedOpaqueTextInput from "@/components/ThemedOpaqueTextInput";
 import ThemedBottomSheetModal from "@/components/ThemedBottomSheetModal";
 import ThemedText from "@/components/ThemedText";
-import { BottomSheetMethods } from "@devvie/bottom-sheet";
 import ThemedPressable from "@/components/ThemedPressable";
+
+import styles from "@/styles/note";
 
 export default function Page() {
   const { theme, palette } = useContext(ThemeContext);
@@ -217,16 +219,3 @@ export default function Page() {
     </SafeAreaView>
   );
 }
-
-const styles = (context: any) =>
-  StyleSheet.create({
-    safeAreaView: {
-      flex: 1,
-      backgroundColor:
-        context != "light"
-          ? Colors.Backgrounds_Dark.Brand
-          : Colors.Backgrounds_Light.Brand,
-      padding: 16,
-      gap: 16,
-    },
-  });
