@@ -1,4 +1,4 @@
-import { TextProps } from "react-native";
+import { TextProps, TextStyle } from "react-native";
 
 interface ThemedTextProps extends TextProps {
   style: TextStyle;

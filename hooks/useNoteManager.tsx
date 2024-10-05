@@ -57,6 +57,23 @@ export default function useNoteManager() {
     await AsyncStorage.setItem("@notes", JSON.stringify(notes));
   };
 
+  const handleEditNote = async (noteIndex: any) => {
+    const notesString = await AsyncStorage.getItem("@notes");
+    let notes = notesString !== null ? JSON.parse(notesString) : [];
+
+    if (noteIndex !== -1) {
+      notes[noteIndex] = {
+        ...notes[noteIndex],
+        title: notesForm.title,
+        description: notesForm.description,
+        isPriority: notesForm.isPriority,
+      };
+    }
+
+    setStoredNotes([...notes]);
+    await AsyncStorage.setItem("@notes", JSON.stringify(notes));
+  };
+
   useEffect(() => {
     const getStoredNotes = async () => {
       let result = await AsyncStorage.getItem("@notes");
@@ -77,6 +94,7 @@ export default function useNoteManager() {
     setStoredNotes,
     handleAddNotes,
     handleDeleteNote,
+    handleEditNote,
     handleTitleChange,
     handleDescriptionChange,
     toggleIsPriority,

@@ -31,6 +31,8 @@ const NoteList: React.FC<NoteListProps> = ({
   if (storedNotes) {
     return notes.length > 0 ? (
       notes.map((note) => {
+        const index = storedNotes.findIndex((obj: any) => note.id === obj.id);
+
         return (
           <ThemedPressableOpacity
             key={note.id}
