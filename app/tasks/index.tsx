@@ -243,7 +243,7 @@ export default function Index() {
             tasks={storedTasks.filter(
               (task: any) =>
                 task.isCompleted === false &&
-                task.date > dateToday.toLocaleDateString()
+                task.date >= dateToday.toLocaleDateString()
             )}
             handleCompleteTask={handleCompleteTask}
             handleDeleteTask={handleDeleteTask}
