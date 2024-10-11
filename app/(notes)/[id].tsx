@@ -25,6 +25,7 @@ import ThemedText from "@/components/ThemedText";
 import ThemedPressable from "@/components/ThemedPressable";
 
 import styles from "@/styles/note";
+import useSettings from "@/hooks/useSettings";
 
 export default function Page() {
   const { theme, palette } = useContext(ThemeContext);
@@ -32,6 +33,8 @@ export default function Page() {
   const { notesForm, setNotesForm, storedNotes, handleEditNote } =
     useNoteManager();
   const navigation = useNavigation();
+  const { noteSettings } = useSettings();
+
   const sheetRef = useRef<BottomSheetMethods>(null);
   const eventRef = useRef(null);
   const { id: noteId } = useLocalSearchParams();
@@ -99,21 +102,30 @@ export default function Page() {
 
   useFocusEffect(
     useCallback(() => {
-      const unsubscribe = navigation.addListener("beforeRemove", (e) => {
-        if (
+      const unsubscribe = navigation.addListener("beforeRemove", async (e) => {
+        e.preventDefault();
+
+        const hasUnsavedChanges =
           notesForm.title !== noteData.title ||
-          notesForm.description !== noteData.description
-        ) {
-          e.preventDefault();
+          notesForm.description !== noteData.description;
 
-          eventRef.current = e;
-
-          sheetRef.current?.open();
+        if (hasUnsavedChanges) {
+          if (noteSettings.autoSaveOnClose) {
+            if (noteIndex !== -1) {
+              await handleEditNote(noteIndex);
+            }
+            navigation.dispatch(e.data.action);
+          } else {
+            eventRef.current = e;
+            sheetRef.current?.open();
+          }
+        } else {
+          navigation.dispatch(e.data.action);
         }
       });
 
       return unsubscribe;
-    }, [navigation, notesForm, noteData])
+    }, [navigation, notesForm, noteData, noteIndex, noteSettings])
   );
 
   if (!noteData.id) {
