@@ -1,10 +1,9 @@
 import ThemedText from "@/components/ThemedText";
 import Colors from "@/constants/Colors";
 import ThemeContext from "@/contexts/ThemeContext";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect } from "react";
 import { ActivityIndicator, StyleSheet, Switch, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useNavigation } from "expo-router";
 import useSettings from "@/hooks/useSettings";
 
