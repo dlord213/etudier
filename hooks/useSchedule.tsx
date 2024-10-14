@@ -129,6 +129,7 @@ export default function useSchedule() {
       endDate: new Date(),
       endTime: new Date(),
     });
+    setIsEndTimeEnabled(false);
   };
 
   return {

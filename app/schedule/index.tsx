@@ -180,6 +180,7 @@ export default function Page() {
         }}
         onClose={() => {}}
         ref={sheetRef}
+        height={screenHeight / 3}
       >
         <View style={{ marginBottom: 8 }}>
           <ThemedModalTextInput
