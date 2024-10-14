@@ -75,7 +75,7 @@ export default function useSchedule() {
 
     setScheduleForm((prevSched: any) => ({
       ...prevSched,
-      enDate: formattedDate,
+      endDate: formattedDate,
     }));
   };
 
