@@ -6,6 +6,7 @@ import {
 import { useCallback, useContext, useEffect, useRef, useState } from "react";
 import {
   ActivityIndicator,
+  ScrollView,
   ToastAndroid,
   useWindowDimensions,
   View,
@@ -158,13 +159,16 @@ export default function Page() {
           placeholder="Title"
         />
       </View>
-      <ThemedOpaqueTextInput
-        multiline={true}
-        value={notesForm.description}
-        onChangeText={handleDescriptionChange}
-        placeholder=""
-      />
-      <View></View>
+      <ScrollView>
+        <ThemedOpaqueTextInput
+          multiline={true}
+          value={notesForm.description}
+          onChangeText={handleDescriptionChange}
+          placeholder=""
+          scrollEnabled
+          style={{ minHeight: screenHeight / 2 }}
+        />
+      </ScrollView>
       <ThemedBottomSheetModal ref={sheetRef} height={screenHeight / 6}>
         <View
           style={{

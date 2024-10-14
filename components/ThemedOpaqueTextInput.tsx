@@ -17,6 +17,7 @@ export default function ThemedOpaqueTextInput({
 
   return (
     <TextInput
+      scrollEnabled={true}
       multiline={multiline}
       onChangeText={onChangeText}
       keyboardType={keyboardType}
@@ -34,6 +35,7 @@ export default function ThemedOpaqueTextInput({
             theme != "light"
               ? Colors.Text_Dark.Default
               : Colors.Text_Light.Default,
+          textAlignVertical: "top",
         },
         style,
       ]}
