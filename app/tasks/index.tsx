@@ -1,4 +1,4 @@
-import { useContext, useRef, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import {
   ActivityIndicator,
   Pressable,
@@ -26,8 +26,10 @@ import ThemedBottomSheetModal from "@/components/ThemedBottomSheetModal";
 import ThemedText from "@/components/ThemedText";
 import Colors from "@/constants/Colors";
 
-import useTaskManager from "@/hooks/useTaskManager";
+import useTaskManager from "@/hooks/useTaskManager_Zustand";
 import TaskList from "@/components/TaskList";
+
+import { useShallow } from "zustand/react/shallow";
 
 export default function Index() {
   const { palette, theme } = useContext(ThemeContext);
@@ -42,23 +44,30 @@ export default function Index() {
   dateTomorrow.setDate(dateToday.getDate() + 1);
 
   const {
-    task,
-    setTask,
+    form,
     storedTasks,
-    tasksCompletedLength,
-    handleTitleChange,
-    handleDescriptionChange,
-    handleDeleteTask,
-    handleCompleteTask,
-    handleStarredTask,
-    handleDatePress,
-    handleAddTasks,
-    handleDescriptionPress,
-    handleEditTask,
-    setIsDescriptionVisible,
     isDescriptionVisible,
-    toggleIsStarred,
+    tasksCompleted,
+    addTask,
+    completeTask,
+    deleteTask,
+    editTask,
+    starTask,
+    setDescriptionVisibility,
+    setStoredTasks,
+    setTask,
+    toggleDescriptionVisibility,
+    updateDate,
+    updateDescription,
+    updateIsStarred,
+    updateTitle,
+    resetTask,
+    loadStoredTasks,
   } = useTaskManager();
+
+  useEffect(() => {
+    loadStoredTasks();
+  }, []);
 
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
@@ -95,9 +104,9 @@ export default function Index() {
                     task.date < dateToday.toLocaleDateString() &&
                     task.isCompleted === false
                 )}
-                handleCompleteTask={handleCompleteTask}
-                handleDeleteTask={handleDeleteTask}
-                handleStarredTask={handleStarredTask}
+                handleCompleteTask={completeTask}
+                handleDeleteTask={deleteTask}
+                handleStarredTask={starTask}
               />
             </>
           ) : null}
@@ -116,9 +125,9 @@ export default function Index() {
             tasks={storedTasks.filter(
               (task: any) => task.date === dateToday.toLocaleDateString()
             )}
-            handleCompleteTask={handleCompleteTask}
-            handleDeleteTask={handleDeleteTask}
-            handleStarredTask={handleStarredTask}
+            handleCompleteTask={completeTask}
+            handleDeleteTask={deleteTask}
+            handleStarredTask={updateIsStarred}
             bottomSheetRef={sheetRef}
             isEditingSetState={setIsEditing}
             openedTaskSetState={setTask}
@@ -138,9 +147,9 @@ export default function Index() {
             tasks={storedTasks.filter(
               (task: any) => task.date === dateTomorrow.toLocaleDateString()
             )}
-            handleCompleteTask={handleCompleteTask}
-            handleDeleteTask={handleDeleteTask}
-            handleStarredTask={handleStarredTask}
+            handleCompleteTask={completeTask}
+            handleDeleteTask={deleteTask}
+            handleStarredTask={updateIsStarred}
             bottomSheetRef={sheetRef}
             isEditingSetState={setIsEditing}
             openedTaskSetState={setTask}
@@ -162,9 +171,9 @@ export default function Index() {
                 task.date > dateTomorrow.toLocaleDateString() &&
                 task.date > dateToday.toLocaleDateString()
             )}
-            handleCompleteTask={handleCompleteTask}
-            handleDeleteTask={handleDeleteTask}
-            handleStarredTask={handleStarredTask}
+            handleCompleteTask={completeTask}
+            handleDeleteTask={deleteTask}
+            handleStarredTask={updateIsStarred}
             bottomSheetRef={sheetRef}
             isEditingSetState={setIsEditing}
             openedTaskSetState={setTask}
@@ -189,9 +198,9 @@ export default function Index() {
           <TaskList
             text={"No starred tasks."}
             tasks={storedTasks.filter((task: any) => task.isStarred === true)}
-            handleCompleteTask={handleCompleteTask}
-            handleDeleteTask={handleDeleteTask}
-            handleStarredTask={handleStarredTask}
+            handleCompleteTask={completeTask}
+            handleDeleteTask={deleteTask}
+            handleStarredTask={updateIsStarred}
             bottomSheetRef={sheetRef}
             isEditingSetState={setIsEditing}
             openedTaskSetState={setTask}
@@ -215,9 +224,9 @@ export default function Index() {
           <TaskList
             text={"No completed tasks."}
             tasks={storedTasks.filter((task: any) => task.isCompleted === true)}
-            handleCompleteTask={handleCompleteTask}
-            handleDeleteTask={handleDeleteTask}
-            handleStarredTask={handleStarredTask}
+            handleCompleteTask={completeTask}
+            handleDeleteTask={deleteTask}
+            handleStarredTask={updateIsStarred}
             bottomSheetRef={sheetRef}
             isEditingSetState={setIsEditing}
             openedTaskSetState={setTask}
@@ -245,9 +254,9 @@ export default function Index() {
                 task.isCompleted === false &&
                 task.date >= dateToday.toLocaleDateString()
             )}
-            handleCompleteTask={handleCompleteTask}
-            handleDeleteTask={handleDeleteTask}
-            handleStarredTask={handleStarredTask}
+            handleCompleteTask={completeTask}
+            handleDeleteTask={deleteTask}
+            handleStarredTask={updateIsStarred}
             bottomSheetRef={sheetRef}
             isEditingSetState={setIsEditing}
             openedTaskSetState={setTask}
@@ -275,9 +284,9 @@ export default function Index() {
                 task.isCompleted === false &&
                 task.date < dateToday.toLocaleDateString()
             )}
-            handleCompleteTask={handleCompleteTask}
-            handleDeleteTask={handleDeleteTask}
-            handleStarredTask={handleStarredTask}
+            handleCompleteTask={completeTask}
+            handleDeleteTask={deleteTask}
+            handleStarredTask={updateIsStarred}
             bottomSheetRef={sheetRef}
             isEditingSetState={setIsEditing}
             openedTaskSetState={setTask}
@@ -290,8 +299,13 @@ export default function Index() {
 
   if (!storedTasks) {
     return (
-      <SafeAreaView style={styleState.safeAreaView}>
-        <ActivityIndicator color={Colors[palette][600]} />
+      <SafeAreaView
+        style={[
+          styleState.safeAreaView,
+          { justifyContent: "center", alignItems: "center" },
+        ]}
+      >
+        <ActivityIndicator color={Colors[palette][600]} size={64} />
       </SafeAreaView>
     );
   }
@@ -316,7 +330,7 @@ export default function Index() {
             style={styleState.cardBodyTextStyle}
           />
           <ThemedText
-            text={tasksCompletedLength}
+            text={tasksCompleted}
             style={styleState.cardHeadingTextStyle}
           />
         </View>
@@ -423,22 +437,13 @@ export default function Index() {
         }}
         onClose={() => {
           if (isEditing) {
-            handleEditTask(
-              storedTasks.findIndex((obj: any) => task.id === obj.id)
-            );
+            editTask(storedTasks.findIndex((obj: any) => form.id === obj.id));
           }
           setTimeout(() => {
             setViewIndex(lastSelectedViewIndex);
-            setTask({
-              date: new Date(),
-              description: "",
-              id: Date.now(),
-              isCompleted: false,
-              isStarred: false,
-              title: "",
-            });
+            resetTask();
             setIsEditing(false);
-            setIsDescriptionVisible(false);
+            setDescriptionVisibility(false);
             setIsModalVisible(false);
           }, 250);
         }}
@@ -447,15 +452,15 @@ export default function Index() {
       >
         <View style={{ marginBottom: 8 }}>
           <ThemedModalTextInput
-            onChangeText={handleTitleChange}
-            value={task.title}
+            onChangeText={updateTitle}
+            value={form.title}
             placeholder="Title"
             multiline={false}
             style={{ fontSize: 24 }}
           />
           <ThemedModalTextInput
-            onChangeText={handleDescriptionChange}
-            value={task.description}
+            onChangeText={updateDescription}
+            value={form.description}
             placeholder="Description"
             style={{
               fontFamily: "WorkSans_400Regular",
@@ -473,7 +478,7 @@ export default function Index() {
           }}
         >
           <View style={{ flexDirection: "row", gap: 16 }}>
-            <ThemedPressableOpacity onPress={handleDescriptionPress}>
+            <ThemedPressableOpacity onPress={toggleDescriptionVisibility}>
               <Octicons
                 name="note"
                 size={24}
@@ -484,7 +489,7 @@ export default function Index() {
                 }
               />
             </ThemedPressableOpacity>
-            <ThemedPressableOpacity onPress={handleDatePress}>
+            <ThemedPressableOpacity onPress={updateDate}>
               <MaterialIcons
                 name="date-range"
                 size={24}
@@ -496,8 +501,8 @@ export default function Index() {
                 }
               />
             </ThemedPressableOpacity>
-            <ThemedPressableOpacity onPress={toggleIsStarred}>
-              {!task.isStarred ? (
+            <ThemedPressableOpacity onPress={updateIsStarred}>
+              {!form.isStarred ? (
                 <FontAwesome name="star-o" size={24} color={iconColor} />
               ) : (
                 <FontAwesome name="star" size={24} color={iconColor} />
@@ -506,7 +511,7 @@ export default function Index() {
           </View>
           <Pressable
             onPress={() => {
-              handleAddTasks();
+              addTask();
               sheetRef.current?.close();
             }}
             style={({ pressed }) => [
@@ -518,7 +523,7 @@ export default function Index() {
                 flexDirection: "row",
                 alignItems: "center",
                 justifyContent: "space-between",
-                display: !task.title || isEditing ? "none" : "flex",
+                display: !form.title || isEditing ? "none" : "flex",
               },
             ]}
           >
