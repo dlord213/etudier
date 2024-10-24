@@ -18,8 +18,6 @@ export default function Layout() {
         tabBarStyle: {
           backgroundColor: Colors[palette][600],
           height: screenHeight / 12,
-          borderTopLeftRadius: 16,
-          borderTopRightRadius: 16,
           display: isModalOpen ? "none" : "flex",
         },
         tabBarActiveTintColor: Colors.Text_Dark.Default,

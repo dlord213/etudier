@@ -3,15 +3,33 @@ import PocketBase from "pocketbase";
 import { ToastAndroid } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-interface AuthForm {
+interface AuthFormInterface {
   email: string;
   password: string;
   name?: string;
 }
 
+interface SessionInterface {
+  record: {
+    avatar: string;
+    collectionId: string;
+    collectionName: string;
+    created: string;
+    email: string;
+    emailVisibility: boolean;
+    id: string;
+    name: string;
+    updated: string;
+    username: string;
+    verified: boolean;
+  };
+  token: string;
+}
+
 interface AuthStoreInterface {
   client_instance: PocketBase;
-  form: AuthForm;
+  form: AuthFormInterface;
+  session: SessionInterface;
   loadStoredSession: () => Promise<void>;
   clearStoredSession: () => Promise<void>;
   handleLogin: () => Promise<void>;
@@ -32,12 +50,30 @@ const useAuthStore = create<AuthStoreInterface>()((set, get) => ({
     password: "",
     name: "",
   },
+  session: {
+    record: {
+      avatar: "",
+      collectionId: "",
+      collectionName: "",
+      created: "",
+      email: "",
+      emailVisibility: false,
+      id: "",
+      name: "",
+      updated: "",
+      username: "",
+      verified: false,
+    },
+    token: "",
+  },
   loadStoredSession: async () => {
     try {
       let session = await AsyncStorage.getItem("@session");
       if (session) {
         set({ isAuthing: true });
         let parsedSession = JSON.parse(session);
+        set({ session: parsedSession });
+        console.log(get().session.record.email);
         get().client_instance.authStore.save(parsedSession.token);
         if (get().client_instance.authStore.isValid) {
           set({ isAuthing: false });

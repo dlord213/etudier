@@ -32,9 +32,10 @@ export default function Page() {
     : Colors.Text_Dark.Default;
 
   const taskModalRef = useRef<BottomSheetMethods>(null);
+  const styleState = styles(isDarkMode);
 
   return (
-    <SafeAreaView style={styles.safeAreaView}>
+    <SafeAreaView style={styleState.safeAreaView}>
       <View
         style={{
           flexDirection: "row",
@@ -61,17 +62,20 @@ export default function Page() {
         }}
       >
         <View>
-          <ThemedText text="Number of tasks completed" inverted={true} />
+          <ThemedText
+            text="Number of tasks completed"
+            inverted={isDarkMode ? false : true}
+          />
           <ThemedText
             text="XXXX"
             style={{ fontFamily: "WorkSans_700Bold", fontSize: 28 }}
-            inverted={true}
+            inverted={isDarkMode ? false : true}
           />
         </View>
         <MaterialCommunityIcons
           name="clipboard-check-multiple-outline"
           size={48}
-          color={invertedIconColor}
+          color={Colors.Text_Dark.Default}
         />
       </Pressable>
       <View
@@ -117,7 +121,7 @@ export default function Page() {
         }}
         style={{
           padding: 16,
-          backgroundColor: Colors.Backgrounds_Light.Brand,
+          backgroundColor: isDarkMode ? Colors.Text_Dark.Secondary : "#F4F4F4",
           borderRadius: 16,
           position: "absolute",
           bottom: 12,
@@ -167,10 +171,14 @@ export default function Page() {
   );
 }
 
-const styles = StyleSheet.create({
-  safeAreaView: {
-    flex: 1,
-    padding: 16,
-    gap: 8,
-  },
-});
+const styles = (isDarkMode: boolean) =>
+  StyleSheet.create({
+    safeAreaView: {
+      backgroundColor: isDarkMode
+        ? Colors.Backgrounds_Dark.Brand
+        : Colors.Backgrounds_Light.Brand,
+      flex: 1,
+      padding: 16,
+      gap: 8,
+    },
+  });

@@ -9,16 +9,21 @@ import Ionicons from "@expo/vector-icons/Ionicons";
 import { router } from "expo-router";
 import ThemedText from "@/components/ThemedText";
 import useThemeStore from "@/hooks/useThemeStore";
+import useAuthStore from "@/hooks/useAuthStore";
 
 export default function Page() {
   const { isDarkMode, palette } = useThemeStore();
+
+  const { session } = useAuthStore();
 
   const iconColor = isDarkMode
     ? Colors.Text_Dark.Default
     : Colors.Text_Light.Default;
 
+  const styleState = styles(isDarkMode);
+
   return (
-    <SafeAreaView style={styles.safeAreaView}>
+    <SafeAreaView style={styleState.safeAreaView}>
       <View
         style={{
           flexDirection: "row",
@@ -59,14 +64,14 @@ export default function Page() {
           ></View>
           <View>
             <ThemedText
-              text="Name"
+              text={session.record.name != "" ? session.record.name : "No name"}
               style={{
                 fontFamily: "WorkSans_700Bold",
                 color: Colors[palette][600],
                 fontSize: 24,
               }}
             />
-            <ThemedText text="(email)" color="Tertiary" />
+            <ThemedText text={session.record.email} color="Tertiary" />
           </View>
         </View>
         <ThemedText
@@ -95,10 +100,14 @@ export default function Page() {
   );
 }
 
-const styles = StyleSheet.create({
-  safeAreaView: {
-    flex: 1,
-    padding: 16,
-    gap: 8,
-  },
-});
+const styles = (isDarkMode: boolean) =>
+  StyleSheet.create({
+    safeAreaView: {
+      backgroundColor: isDarkMode
+        ? Colors.Backgrounds_Dark.Brand
+        : Colors.Backgrounds_Light.Brand,
+      flex: 1,
+      paddingHorizontal: 16,
+      gap: 8,
+    },
+  });
