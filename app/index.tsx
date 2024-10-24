@@ -17,14 +17,16 @@ import {
   WorkSans_900Black,
 } from "@expo-google-fonts/work-sans";
 import { useEffect, useRef, useState } from "react";
-import { router, SplashScreen } from "expo-router";
+import { Redirect, router, SplashScreen } from "expo-router";
 import BottomSheet, { BottomSheetMethods } from "@devvie/bottom-sheet";
+import React from "react";
+import LottieView from "lottie-react-native";
 
 import Colors from "@/constants/Colors";
 import useThemeStore from "@/hooks/useThemeStore";
 import ThemedText from "@/components/ThemedText";
 import LandingPageStrings from "@/constants/LandingPageStrings";
-import React from "react";
+import useAuthStore from "@/hooks/useAuthStore";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -43,7 +45,29 @@ export default function Index() {
   const loginRef = useRef<BottomSheetMethods>(null);
   const carouselRef = useRef(null);
 
-  const { palette } = useThemeStore();
+  const { palette, isDarkMode } = useThemeStore();
+  const {
+    form,
+    loadStoredSession,
+    handleLogin,
+    handleRegister,
+    setEmail,
+    setName,
+    setPassword,
+    resetForm,
+    isAuthing,
+    isLoggedIn,
+    toggleIsAuthing,
+  } = useAuthStore();
+
+  useEffect(() => {
+    loadStoredSession();
+  }, []);
+
+  const styleState = styles(isDarkMode);
+  const btnColor = isDarkMode
+    ? Colors.Backgrounds_Dark.Brand
+    : Colors.Backgrounds_Light.Brand;
 
   useEffect(() => {
     if (loaded || error) {
@@ -55,8 +79,26 @@ export default function Index() {
     return null;
   }
 
+  if (isAuthing) {
+    return (
+      <SafeAreaView
+        style={[styleState.safeAreaView, { justifyContent: "center" }]}
+      >
+        <LottieView
+          source={require("../assets/animations/loading.json")}
+          style={{ height: screenHeight / 2, width: screenHeight / 2 }}
+          autoPlay
+        />
+      </SafeAreaView>
+    );
+  }
+
+  if (isLoggedIn) {
+    return <Redirect href="/(dashboard)" />;
+  }
+
   return (
-    <SafeAreaView style={styles.safeAreaView}>
+    <SafeAreaView style={styleState.safeAreaView}>
       <View
         style={{
           flexDirection: "row",
@@ -188,7 +230,7 @@ export default function Index() {
             style={{
               borderWidth: dotIndex == 3 ? 0 : 1,
               borderColor: Colors[palette][600],
-              backgroundColor: dotIndex == 3 ? Colors[palette][600] : "#f4f4f4",
+              backgroundColor: dotIndex == 3 ? Colors[palette][600] : btnColor,
               paddingVertical: 8,
               paddingHorizontal: 16,
               borderRadius: 16,
@@ -215,9 +257,9 @@ export default function Index() {
           onPress={() => {
             if (dotIndex == 3) {
               setDotIndex((prevIndex) => prevIndex - 1);
-              carouselRef.current.scrollToPrev();
+              carouselRef.current?.scrollToPrev();
             } else {
-              carouselRef.current.scrollToNext();
+              carouselRef.current?.scrollToNext();
               setDotIndex((prevIndex) => prevIndex + 1);
             }
           }}
@@ -238,26 +280,24 @@ export default function Index() {
         disableDragHandlePanning
         disableBodyPanning
         disableKeyboardHandling
+        style={{
+          backgroundColor: isDarkMode
+            ? Colors.Backgrounds_Dark.Brand
+            : Colors.Backgrounds_Light,
+        }}
+        onClose={() => {
+          setTimeout(() => {
+            resetForm();
+          }, 300);
+        }}
       >
         <View style={{ padding: 16 }}>
           <View>
-            <Text
-              style={{
-                fontFamily: "WorkSans_900Black",
-                color: Colors.Text_Light.Default,
-                fontSize: 36,
-              }}
-            >
-              Login
-            </Text>
-            <Text
-              style={{
-                fontFamily: "WorkSans_400Regular",
-                color: Colors.Text_Light.Tertiary,
-              }}
-            >
-              Pick up where you left off.
-            </Text>
+            <ThemedText
+              text="Login"
+              style={{ fontFamily: "WorkSans_900Black", fontSize: 36 }}
+            />
+            <ThemedText text="Pick up where you left off." color="Tertiary" />
           </View>
           <View style={{ gap: 8, marginVertical: 16 }}>
             <TextInput
@@ -269,6 +309,11 @@ export default function Index() {
                 paddingHorizontal: 16,
               }}
               placeholder="Email Address"
+              cursorColor={Colors[palette][600]}
+              selectionColor={Colors[palette][600]}
+              selectionHandleColor={Colors[palette][600]}
+              value={form.email}
+              onChangeText={setEmail}
             />
             <TextInput
               style={{
@@ -279,6 +324,12 @@ export default function Index() {
                 paddingHorizontal: 16,
               }}
               placeholder="Password"
+              cursorColor={Colors[palette][600]}
+              selectionColor={Colors[palette][600]}
+              selectionHandleColor={Colors[palette][600]}
+              value={form.password}
+              onChangeText={setPassword}
+              secureTextEntry={true}
             />
           </View>
           <Pressable
@@ -287,7 +338,10 @@ export default function Index() {
               padding: 16,
               borderRadius: 16,
             }}
-            onPress={() => router.replace("/(dashboard)")}
+            onPress={() => {
+              toggleIsAuthing();
+              handleLogin();
+            }}
           >
             <Text
               style={{
@@ -307,26 +361,27 @@ export default function Index() {
         disableDragHandlePanning
         disableBodyPanning
         disableKeyboardHandling
+        style={{
+          backgroundColor: isDarkMode
+            ? Colors.Backgrounds_Dark.Brand
+            : Colors.Backgrounds_Light,
+        }}
+        onClose={() => {
+          setTimeout(() => {
+            resetForm();
+          }, 300);
+        }}
       >
         <View style={{ padding: 16 }}>
           <View>
-            <Text
-              style={{
-                fontFamily: "WorkSans_900Black",
-                color: Colors.Text_Light.Default,
-                fontSize: 36,
-              }}
-            >
-              Register
-            </Text>
-            <Text
-              style={{
-                fontFamily: "WorkSans_400Regular",
-                color: Colors.Text_Light.Tertiary,
-              }}
-            >
-              Your personalized study journey starts here!
-            </Text>
+            <ThemedText
+              text="Register"
+              style={{ fontFamily: "WorkSans_900Black", fontSize: 36 }}
+            />
+            <ThemedText
+              text="Your personalized study journey starts here!"
+              color="Tertiary"
+            />
           </View>
           <View style={{ gap: 8, marginVertical: 16 }}>
             <TextInput
@@ -338,6 +393,11 @@ export default function Index() {
                 paddingHorizontal: 16,
               }}
               placeholder="Name"
+              cursorColor={Colors[palette][600]}
+              selectionColor={Colors[palette][600]}
+              selectionHandleColor={Colors[palette][600]}
+              value={form.name}
+              onChangeText={setName}
             />
             <TextInput
               style={{
@@ -348,6 +408,11 @@ export default function Index() {
                 paddingHorizontal: 16,
               }}
               placeholder="Email Address"
+              cursorColor={Colors[palette][600]}
+              selectionColor={Colors[palette][600]}
+              selectionHandleColor={Colors[palette][600]}
+              value={form.email}
+              onChangeText={setEmail}
             />
             <TextInput
               style={{
@@ -358,6 +423,12 @@ export default function Index() {
                 paddingHorizontal: 16,
               }}
               placeholder="Password"
+              cursorColor={Colors[palette][600]}
+              selectionColor={Colors[palette][600]}
+              selectionHandleColor={Colors[palette][600]}
+              value={form.password}
+              onChangeText={setPassword}
+              secureTextEntry={true}
             />
           </View>
           <Pressable
@@ -366,7 +437,10 @@ export default function Index() {
               padding: 16,
               borderRadius: 16,
             }}
-            onPress={() => router.replace("/(dashboard)")}
+            onPress={() => {
+              toggleIsAuthing();
+              handleRegister();
+            }}
           >
             <Text
               style={{
@@ -384,10 +458,14 @@ export default function Index() {
   );
 }
 
-const styles = StyleSheet.create({
-  safeAreaView: {
-    flex: 1,
-    alignItems: "center",
-    justifyContent: "space-between",
-  },
-});
+const styles = (isDarkMode: boolean) =>
+  StyleSheet.create({
+    safeAreaView: {
+      backgroundColor: isDarkMode
+        ? Colors.Backgrounds_Dark.Brand
+        : Colors.Backgrounds_Light.Brand,
+      flex: 1,
+      alignItems: "center",
+      justifyContent: "space-between",
+    },
+  });

@@ -10,7 +10,7 @@ interface ThemeStoreInterface {
 
 const useThemeStore = create<ThemeStoreInterface>()((set, get) => ({
   palette: "Victoria",
-  isDarkMode: false,
+  isDarkMode: true,
   setPalette: (newPalette: string) => set({ palette: newPalette }),
   toggleDarkMode: () => set({ isDarkMode: !get().isDarkMode }),
 }));
