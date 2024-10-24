@@ -2,7 +2,6 @@ import Colors from "@/constants/Colors";
 import {
   Pressable,
   StyleSheet,
-  Text,
   TextInput,
   useWindowDimensions,
   View,
@@ -15,9 +14,22 @@ import FontAwesome from "@expo/vector-icons/FontAwesome";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import { router } from "expo-router";
+import useThemeStore from "@/hooks/useThemeStore";
+import ThemedText from "@/components/ThemedText";
+import useModalSheetStore from "@/hooks/useModalSheetStore";
 
 export default function Page() {
+  const { palette, isDarkMode } = useThemeStore();
+  const { setIsModalOpen } = useModalSheetStore();
   const { height: screenHeight, width: screenWidth } = useWindowDimensions();
+
+  const iconColor = isDarkMode
+    ? Colors.Text_Dark.Default
+    : Colors.Text_Light.Default;
+
+  const invertedIconColor = isDarkMode
+    ? Colors.Text_Light.Default
+    : Colors.Text_Dark.Default;
 
   const taskModalRef = useRef<BottomSheetMethods>(null);
 
@@ -30,26 +42,17 @@ export default function Page() {
           alignItems: "center",
         }}
       >
-        <Text
-          style={{
-            fontFamily: "WorkSans_900Black",
-            fontSize: 32,
-            color: Colors.Text_Light.Default,
-          }}
-        >
-          Tasks
-        </Text>
+        <ThemedText
+          style={{ fontFamily: "WorkSans_900Black", fontSize: 32 }}
+          text="Tasks"
+        />
         <Pressable onPress={() => router.push("/user")}>
-          <FontAwesome
-            name="user-circle-o"
-            size={24}
-            color={Colors.Text_Light.Default}
-          />
+          <FontAwesome name="user-circle-o" size={24} color={iconColor} />
         </Pressable>
       </View>
       <Pressable
         style={{
-          backgroundColor: Colors.Wewak[600],
+          backgroundColor: Colors[palette][600],
           padding: 16,
           borderRadius: 8,
           flexDirection: "row",
@@ -58,28 +61,17 @@ export default function Page() {
         }}
       >
         <View>
-          <Text
-            style={{
-              fontFamily: "WorkSans_400Regular",
-              color: Colors.Text_Dark.Default,
-            }}
-          >
-            Number of tasks completed
-          </Text>
-          <Text
-            style={{
-              fontFamily: "WorkSans_700Bold",
-              color: Colors.Text_Dark.Default,
-              fontSize: 28,
-            }}
-          >
-            1000
-          </Text>
+          <ThemedText text="Number of tasks completed" inverted={true} />
+          <ThemedText
+            text="XXXX"
+            style={{ fontFamily: "WorkSans_700Bold", fontSize: 28 }}
+            inverted={true}
+          />
         </View>
         <MaterialCommunityIcons
           name="clipboard-check-multiple-outline"
           size={48}
-          color={Colors.Text_Dark.Default}
+          color={invertedIconColor}
         />
       </Pressable>
       <View
@@ -89,15 +81,10 @@ export default function Page() {
           alignItems: "center",
         }}
       >
-        <Text
-          style={{
-            fontFamily: "WorkSans_700Bold",
-            fontSize: 24,
-            color: Colors.Text_Light.Default,
-          }}
-        >
-          Today
-        </Text>
+        <ThemedText
+          text="Today"
+          style={{ fontFamily: "WorkSans_700Bold", fontSize: 24 }}
+        />
       </View>
       <View
         style={{
@@ -106,15 +93,10 @@ export default function Page() {
           alignItems: "center",
         }}
       >
-        <Text
-          style={{
-            fontFamily: "WorkSans_700Bold",
-            fontSize: 24,
-            color: Colors.Text_Light.Default,
-          }}
-        >
-          Tomorrow
-        </Text>
+        <ThemedText
+          text="Tomorrow"
+          style={{ fontFamily: "WorkSans_700Bold", fontSize: 24 }}
+        />
       </View>
       <View
         style={{
@@ -123,19 +105,15 @@ export default function Page() {
           alignItems: "center",
         }}
       >
-        <Text
-          style={{
-            fontFamily: "WorkSans_700Bold",
-            fontSize: 24,
-            color: Colors.Text_Light.Default,
-          }}
-        >
-          Upcoming
-        </Text>
+        <ThemedText
+          text="Upcoming"
+          style={{ fontFamily: "WorkSans_700Bold", fontSize: 24 }}
+        />
       </View>
       <Pressable
         onPress={() => {
           taskModalRef.current?.open();
+          setIsModalOpen();
         }}
         style={{
           padding: 16,
@@ -143,28 +121,25 @@ export default function Page() {
           borderRadius: 16,
           position: "absolute",
           bottom: 12,
-          left: 12,
+          left: 8,
           width: screenWidth - 24,
         }}
       >
-        <Text
-          style={{
-            fontFamily: "WorkSans_400Regular",
-            color: Colors.Text_Light.Tertiary,
-          }}
-        >
-          I want to...
-        </Text>
+        <ThemedText text="I want to..." color="Tertiary" />
       </Pressable>
       <BottomSheet
         ref={taskModalRef}
         height={screenHeight / 4}
         disableKeyboardHandling
+        onClose={setIsModalOpen}
       >
         <View style={{ paddingVertical: 8, paddingHorizontal: 16, gap: 12 }}>
           <TextInput
             placeholder="Title"
             style={{ fontFamily: "WorkSans_700Bold", fontSize: 32 }}
+            cursorColor={Colors[palette][600]}
+            selectionColor={Colors[palette][600]}
+            selectionHandleColor={Colors[palette][600]}
           />
           <View
             style={{
@@ -179,12 +154,12 @@ export default function Page() {
               alignItems: "center",
             }}
           >
+            <AntDesign name="calendar" size={28} color={iconColor} />
             <AntDesign
-              name="calendar"
-              size={28}
-              color={Colors.Text_Light.Default}
+              name="plussquare"
+              size={32}
+              color={Colors[palette][600]}
             />
-            <AntDesign name="plussquare" size={32} color={Colors.Wewak[600]} />
           </View>
         </View>
       </BottomSheet>

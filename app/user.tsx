@@ -1,5 +1,5 @@
 import Colors from "@/constants/Colors";
-import { Pressable, StyleSheet, Text, View } from "react-native";
+import { StyleSheet, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 import AntDesign from "@expo/vector-icons/AntDesign";
@@ -7,8 +7,16 @@ import FontAwesome from "@expo/vector-icons/FontAwesome";
 import Ionicons from "@expo/vector-icons/Ionicons";
 
 import { router } from "expo-router";
+import ThemedText from "@/components/ThemedText";
+import useThemeStore from "@/hooks/useThemeStore";
 
 export default function Page() {
+  const { isDarkMode, palette } = useThemeStore();
+
+  const iconColor = isDarkMode
+    ? Colors.Text_Dark.Default
+    : Colors.Text_Light.Default;
+
   return (
     <SafeAreaView style={styles.safeAreaView}>
       <View
@@ -22,25 +30,20 @@ export default function Page() {
           <AntDesign
             name="arrowleft"
             size={28}
-            color={Colors.Text_Light.Default}
+            color={iconColor}
+            onPress={() => router.back()}
           />
-          <Text
-            style={{
-              fontFamily: "WorkSans_700Bold",
-              fontSize: 36,
-              color: Colors.Text_Light.Default,
-            }}
-          >
-            Profile
-          </Text>
+          <ThemedText
+            text="Profile"
+            style={{ fontFamily: "WorkSans_700Bold", fontSize: 36 }}
+          />
         </View>
-        <Pressable onPress={() => router.push("/settings")}>
-          <FontAwesome
-            name="gear"
-            size={28}
-            color={Colors.Text_Light.Default}
-          />
-        </Pressable>
+        <FontAwesome
+          name="gear"
+          size={28}
+          color={iconColor}
+          onPress={() => router.push("/settings")}
+        />
       </View>
       <View style={{ gap: 16, marginBottom: 8 }}>
         <View style={{ flexDirection: "row", gap: 16, alignItems: "center" }}>
@@ -48,64 +51,44 @@ export default function Page() {
             style={{
               width: 64,
               height: 64,
-              backgroundColor: Colors.Backgrounds_Light.Brand,
+              backgroundColor: isDarkMode
+                ? Colors.Backgrounds_Dark.Brand
+                : Colors.Backgrounds_Light.Brand,
               borderRadius: 999,
             }}
           ></View>
           <View>
-            <Text
+            <ThemedText
+              text="Name"
               style={{
                 fontFamily: "WorkSans_700Bold",
-                color: Colors.Wewak[600],
+                color: Colors[palette][600],
                 fontSize: 24,
               }}
-            >
-              Name
-            </Text>
-            <Text
-              style={{
-                fontFamily: "WorkSans_400Regular",
-                color: Colors.Text_Light.Tertiary,
-              }}
-            >
-              (email)
-            </Text>
+            />
+            <ThemedText text="(email)" color="Tertiary" />
           </View>
         </View>
-        <Text
+        <ThemedText
+          text="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+          eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad
+          minim veniam. (BIO)"
           style={{
             fontFamily: "WorkSans_400Regular",
-            color: Colors.Wewak[500],
+            color: Colors[palette][500],
           }}
-        >
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-          eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad
-          minim veniam. (BIO)
-        </Text>
+        />
       </View>
       <View style={{ gap: 16 }}>
-        <Text
+        <ThemedText
+          text="General"
           style={{
             fontFamily: "WorkSans_700Bold",
-            color: Colors.Text_Light.Tertiary,
           }}
-        >
-          General
-        </Text>
+        />
         <View style={{ flexDirection: "row", gap: 16, alignItems: "center" }}>
-          <Ionicons
-            name="bar-chart-outline"
-            size={24}
-            color={Colors.Text_Light.Default}
-          />
-          <Text
-            style={{
-              fontFamily: "WorkSans_400Regular",
-              color: Colors.Text_Light.Default,
-            }}
-          >
-            Activity Log
-          </Text>
+          <Ionicons name="bar-chart-outline" size={24} color={iconColor} />
+          <ThemedText text="Activity Log" />
         </View>
       </View>
     </SafeAreaView>

@@ -1,4 +1,4 @@
-interface Palettes {
+export interface Palettes {
   50: string;
   100: string;
   200: string;
@@ -12,13 +12,13 @@ interface Palettes {
   950: string;
 }
 
-interface TextPalettes {
+export interface TextPalettes {
   Default: string;
   Secondary: string;
   Tertiary: string;
 }
 
-interface BackgroundPalettes {
+export interface BackgroundPalettes {
   Default?: string;
   Brand: string;
   Neutral?: string;
@@ -26,7 +26,7 @@ interface BackgroundPalettes {
   Hover?: string;
 }
 
-interface ColorProps {
+export interface ColorProps {
   Backgrounds_Light: BackgroundPalettes;
   Backgrounds_Dark: BackgroundPalettes;
   Text_Light: TextPalettes;

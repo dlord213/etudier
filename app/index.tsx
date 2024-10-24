@@ -21,6 +21,10 @@ import { router, SplashScreen } from "expo-router";
 import BottomSheet, { BottomSheetMethods } from "@devvie/bottom-sheet";
 
 import Colors from "@/constants/Colors";
+import useThemeStore from "@/hooks/useThemeStore";
+import ThemedText from "@/components/ThemedText";
+import LandingPageStrings from "@/constants/LandingPageStrings";
+import React from "react";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -38,6 +42,8 @@ export default function Index() {
   const signUpRef = useRef<BottomSheetMethods>(null);
   const loginRef = useRef<BottomSheetMethods>(null);
   const carouselRef = useRef(null);
+
+  const { palette } = useThemeStore();
 
   useEffect(() => {
     if (loaded || error) {
@@ -57,7 +63,7 @@ export default function Index() {
           gap: 8,
           marginVertical: 8,
           justifyContent: "center",
-          alignItems: "centerA",
+          alignItems: "center",
         }}
       >
         <View
@@ -65,7 +71,7 @@ export default function Index() {
             width: 12,
             height: 12,
             backgroundColor:
-              dotIndex == 0 ? Colors.Wewak[600] : Colors.Text_Light.Tertiary,
+              dotIndex == 0 ? Colors[palette][600] : Colors.Text_Light.Tertiary,
             borderRadius: 999,
           }}
         ></View>
@@ -74,7 +80,7 @@ export default function Index() {
             width: 12,
             height: 12,
             backgroundColor:
-              dotIndex == 1 ? Colors.Wewak[600] : Colors.Text_Light.Tertiary,
+              dotIndex == 1 ? Colors[palette][600] : Colors.Text_Light.Tertiary,
 
             borderRadius: 999,
           }}
@@ -84,7 +90,7 @@ export default function Index() {
             width: 12,
             height: 12,
             backgroundColor:
-              dotIndex == 2 ? Colors.Wewak[600] : Colors.Text_Light.Tertiary,
+              dotIndex == 2 ? Colors[palette][600] : Colors.Text_Light.Tertiary,
 
             borderRadius: 999,
           }}
@@ -94,7 +100,7 @@ export default function Index() {
             width: 12,
             height: 12,
             backgroundColor:
-              dotIndex == 3 ? Colors.Wewak[600] : Colors.Text_Light.Tertiary,
+              dotIndex == 3 ? Colors[palette][600] : Colors.Text_Light.Tertiary,
 
             borderRadius: 999,
           }}
@@ -110,146 +116,39 @@ export default function Index() {
         }}
         loop={false}
       >
-        <View
-          style={{
-            flex: 1,
-            justifyContent: "center",
-            alignItems: "center",
-            padding: 16,
-          }}
-        >
-          {/* SEP */}
-          <View>
-            <Text
-              style={{
-                fontSize: 16,
-                fontFamily: "WorkSans_700Bold",
-                color: Colors.Text_Light.Default,
-                textAlign: "center",
-              }}
-            >
-              Ace Your Studies, One Task at a Time!
-            </Text>
-            <Text
-              style={{
-                fontSize: 14,
-                fontFamily: "WorkSans_400Regular",
-                color: Colors.Text_Light.Tertiary,
-                textAlign: "center",
-              }}
-            >
-              Manage your assignments, projects, and deadlines effortlessly.
-              Stay ahead with our easy-to-use task management system designed to
-              help you keep track of every responsibility.
-            </Text>
+        {LandingPageStrings.map((obj) => (
+          <View
+            style={{
+              flex: 1,
+              justifyContent: "center",
+              alignItems: "center",
+              padding: 16,
+            }}
+            key={obj.title}
+          >
+            {/* SEP */}
+            <View>
+              <ThemedText
+                text={obj.title}
+                style={{
+                  fontSize: 20,
+                  fontFamily: "WorkSans_700Bold",
+                  textAlign: "center",
+                }}
+              />
+              <ThemedText
+                text={obj.description}
+                color="Tertiary"
+                style={{
+                  fontSize: 14,
+                  fontFamily: "WorkSans_400Regular",
+                  textAlign: "center",
+                }}
+              />
+            </View>
+            {/* SEP */}
           </View>
-          {/* SEP */}
-        </View>
-        <View
-          style={{
-            flex: 1,
-            justifyContent: "center",
-            alignItems: "center",
-            padding: 16,
-          }}
-        >
-          {/* SEP */}
-          <View>
-            <Text
-              style={{
-                fontSize: 16,
-                fontFamily: "WorkSans_700Bold",
-                color: Colors.Text_Light.Default,
-                textAlign: "center",
-              }}
-            >
-              Your Personalized Study Companion!
-            </Text>
-            <Text
-              style={{
-                fontSize: 14,
-                fontFamily: "WorkSans_400Regular",
-                color: Colors.Text_Light.Tertiary,
-                textAlign: "center",
-              }}
-            >
-              Tailor your study sessions, schedules, and tasks to match your
-              unique learning style. Our app adapts to you, so you can achieve
-              more in less time, with features built for your academic success.
-            </Text>
-          </View>
-          {/* SEP */}
-        </View>
-        <View
-          style={{
-            flex: 1,
-            justifyContent: "center",
-            alignItems: "center",
-            padding: 16,
-          }}
-        >
-          {/* SEP */}
-          <View>
-            <Text
-              style={{
-                fontSize: 16,
-                fontFamily: "WorkSans_700Bold",
-                color: Colors.Text_Light.Default,
-                textAlign: "center",
-              }}
-            >
-              Master Your Time, Achieve Your Goals!
-            </Text>
-            <Text
-              style={{
-                fontSize: 14,
-                fontFamily: "WorkSans_400Regular",
-                color: Colors.Text_Light.Tertiary,
-                textAlign: "center",
-              }}
-            >
-              Boost your productivity with built-in time management tools like
-              the Pomodoro timer and smart scheduling. Hit your academic
-              milestones faster and more effectively.
-            </Text>
-          </View>
-          {/* SEP */}
-        </View>
-        <View
-          style={{
-            flex: 1,
-            justifyContent: "center",
-            alignItems: "center",
-            padding: 16,
-          }}
-        >
-          {/* SEP */}
-          <View>
-            <Text
-              style={{
-                fontSize: 16,
-                fontFamily: "WorkSans_700Bold",
-                color: Colors.Text_Light.Default,
-                textAlign: "center",
-              }}
-            >
-              Organize. Focus. Succeed.
-            </Text>
-            <Text
-              style={{
-                fontSize: 14,
-                fontFamily: "WorkSans_400Regular",
-                color: Colors.Text_Light.Tertiary,
-                textAlign: "center",
-              }}
-            >
-              Stay on top of your academic life with an app that helps you
-              organize tasks, focus on your studies, and achieve your academic
-              goals through simple, yet powerful tools.
-            </Text>
-          </View>
-          {/* SEP */}
-        </View>
+        ))}
       </Carousel>
       <View
         style={{
@@ -267,7 +166,7 @@ export default function Index() {
             }}
             style={{
               borderWidth: 1,
-              borderColor: Colors.Wewak[600],
+              borderColor: Colors[palette][600],
               paddingVertical: 8,
               paddingHorizontal: 16,
               borderRadius: 16,
@@ -276,7 +175,7 @@ export default function Index() {
             <Text
               style={{
                 fontFamily: "WorkSans_400Regular",
-                color: Colors.Wewak[600],
+                color: Colors[palette][600],
               }}
             >
               Sign-up
@@ -288,8 +187,8 @@ export default function Index() {
             }}
             style={{
               borderWidth: dotIndex == 3 ? 0 : 1,
-              borderColor: Colors.Wewak[600],
-              backgroundColor: dotIndex == 3 ? Colors.Wewak[600] : "#fafafa",
+              borderColor: Colors[palette][600],
+              backgroundColor: dotIndex == 3 ? Colors[palette][600] : "#f4f4f4",
               paddingVertical: 8,
               paddingHorizontal: 16,
               borderRadius: 16,
@@ -298,7 +197,7 @@ export default function Index() {
             <Text
               style={{
                 fontFamily: "WorkSans_400Regular",
-                color: dotIndex == 3 ? "#FAFAFA" : Colors.Wewak[600],
+                color: dotIndex == 3 ? "#FAFAFA" : Colors[palette][600],
               }}
             >
               Login
@@ -307,7 +206,7 @@ export default function Index() {
         </View>
         <Pressable
           style={{
-            backgroundColor: Colors.Wewak[600],
+            backgroundColor: Colors[palette][600],
             paddingVertical: 8,
             paddingHorizontal: 16,
             borderRadius: 16,
@@ -384,7 +283,7 @@ export default function Index() {
           </View>
           <Pressable
             style={{
-              backgroundColor: Colors.Wewak[600],
+              backgroundColor: Colors[palette][600],
               padding: 16,
               borderRadius: 16,
             }}
@@ -463,7 +362,7 @@ export default function Index() {
           </View>
           <Pressable
             style={{
-              backgroundColor: Colors.Wewak[600],
+              backgroundColor: Colors[palette][600],
               padding: 16,
               borderRadius: 16,
             }}
