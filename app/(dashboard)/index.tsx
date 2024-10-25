@@ -1,38 +1,73 @@
 import Colors from "@/constants/Colors";
-import {
-  Pressable,
-  StyleSheet,
-  TextInput,
-  useWindowDimensions,
-  View,
-} from "react-native";
+import { Pressable, StyleSheet, useWindowDimensions, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { useRef } from "react";
+import { useCallback, useRef } from "react";
 import BottomSheet, { BottomSheetMethods } from "@devvie/bottom-sheet";
+import { router, useFocusEffect } from "expo-router";
+import { parseISO, isSameDay, addDays, isAfter } from "date-fns";
 
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import AntDesign from "@expo/vector-icons/AntDesign";
-import { router } from "expo-router";
+import Ionicons from "@expo/vector-icons/Ionicons";
+
 import useThemeStore from "@/hooks/useThemeStore";
-import ThemedText from "@/components/ThemedText";
 import useModalSheetStore from "@/hooks/useModalSheetStore";
+import useTaskStore from "@/hooks/useTaskStore";
+import ThemedText from "@/components/ThemedText";
+import ThemedTextInput from "@/components/ThemedTextInput";
 
 export default function Page() {
   const { palette, isDarkMode } = useThemeStore();
   const { setIsModalOpen } = useModalSheetStore();
   const { height: screenHeight, width: screenWidth } = useWindowDimensions();
 
+  const {
+    storedTasks,
+    isEditingTask,
+    saveStoredStateTasks,
+    form,
+    toggleIsCompleted,
+    updateTitle,
+    updateDate,
+    addTask,
+    loadStoredTasks,
+  } = useTaskStore();
+
   const iconColor = isDarkMode
     ? Colors.Text_Dark.Default
     : Colors.Text_Light.Default;
 
-  const invertedIconColor = isDarkMode
-    ? Colors.Text_Light.Default
-    : Colors.Text_Dark.Default;
-
   const taskModalRef = useRef<BottomSheetMethods>(null);
   const styleState = styles(isDarkMode);
+
+  const tomorrow = addDays(new Date(), 1);
+
+  const todayTasks = storedTasks.filter((task) => {
+    const taskDate =
+      typeof task.date === "string" ? parseISO(task.date) : task.date;
+    return !task.isCompleted && isSameDay(taskDate, new Date());
+  });
+
+  const tomorrowTasks = storedTasks.filter((task) => {
+    const taskDate =
+      typeof task.date === "string" ? parseISO(task.date) : task.date;
+    return !task.isCompleted && isSameDay(taskDate, tomorrow);
+  });
+
+  const upcomingTasks = storedTasks.filter((task) => {
+    const taskDate =
+      typeof task.date === "string" ? parseISO(task.date) : task.date;
+    return !task.isCompleted && isAfter(taskDate, tomorrow);
+  });
+
+  useFocusEffect(
+    useCallback(() => {
+      loadStoredTasks();
+
+      return () => saveStoredStateTasks();
+    }, [])
+  );
 
   return (
     <SafeAreaView style={styleState.safeAreaView}>
@@ -78,42 +113,100 @@ export default function Page() {
           color={Colors.Text_Dark.Default}
         />
       </Pressable>
-      <View
-        style={{
-          flexDirection: "row",
-          justifyContent: "space-between",
-          alignItems: "center",
-        }}
-      >
+
+      {/* TODAY */}
+      <View style={{ gap: 8 }}>
         <ThemedText
           text="Today"
           style={{ fontFamily: "WorkSans_700Bold", fontSize: 24 }}
         />
+        {todayTasks.length > 0 ? (
+          todayTasks.map((task) => (
+            <Pressable style={{ flexDirection: "row", gap: 8 }} key={task.id}>
+              {task.isCompleted ? (
+                <Ionicons
+                  name="checkmark-circle"
+                  size={24}
+                  color={iconColor}
+                  onPress={() => {
+                    toggleIsCompleted(task.id);
+                  }}
+                />
+              ) : (
+                <Ionicons
+                  name="checkmark-circle-outline"
+                  size={24}
+                  color={iconColor}
+                  onPress={() => {
+                    toggleIsCompleted(task.id);
+                  }}
+                />
+              )}
+              <ThemedText text={task.title} />
+            </Pressable>
+          ))
+        ) : (
+          <ThemedText text="No tasks for today." />
+        )}
       </View>
-      <View
-        style={{
-          flexDirection: "row",
-          justifyContent: "space-between",
-          alignItems: "center",
-        }}
-      >
+      {/* TODAY */}
+
+      {/* TOMORROW */}
+      <View style={{ gap: 8 }}>
         <ThemedText
           text="Tomorrow"
           style={{ fontFamily: "WorkSans_700Bold", fontSize: 24 }}
         />
+        {tomorrowTasks.length > 0 ? (
+          tomorrowTasks.map((task) => (
+            <Pressable style={{ flexDirection: "row", gap: 8 }} key={task.id}>
+              <Ionicons
+                name={
+                  task.isCompleted
+                    ? "checkmark-circle"
+                    : "checkmark-circle-outline"
+                }
+                size={24}
+                color={iconColor}
+                onPress={() => toggleIsCompleted(task.id)}
+              />
+              <ThemedText text={task.title} />
+            </Pressable>
+          ))
+        ) : (
+          <ThemedText text="No tasks for tomorrow." />
+        )}
       </View>
-      <View
-        style={{
-          flexDirection: "row",
-          justifyContent: "space-between",
-          alignItems: "center",
-        }}
-      >
+      {/* TOMORROW */}
+
+      {/* UPCOMING */}
+      <View style={{ gap: 8 }}>
         <ThemedText
           text="Upcoming"
           style={{ fontFamily: "WorkSans_700Bold", fontSize: 24 }}
         />
+        {upcomingTasks.length > 0 ? (
+          upcomingTasks.map((task) => (
+            <Pressable style={{ flexDirection: "row", gap: 8 }} key={task.id}>
+              <Ionicons
+                name={
+                  task.isCompleted
+                    ? "checkmark-circle"
+                    : "checkmark-circle-outline"
+                }
+                size={24}
+                color={iconColor}
+                onPress={() => toggleIsCompleted(task.id)}
+              />
+              <ThemedText text={task.title} />
+            </Pressable>
+          ))
+        ) : (
+          <ThemedText text="No upcoming tasks." />
+        )}
       </View>
+      {/* UPCOMING */}
+
       <Pressable
         onPress={() => {
           taskModalRef.current?.open();
@@ -135,19 +228,28 @@ export default function Page() {
         ref={taskModalRef}
         height={screenHeight / 4}
         disableKeyboardHandling
-        onClose={setIsModalOpen}
+        onClose={() => {
+          setIsModalOpen();
+        }}
+        style={{
+          backgroundColor: isDarkMode
+            ? Colors.Backgrounds_Dark.Brand
+            : Colors.Backgrounds_Light,
+        }}
       >
         <View style={{ paddingVertical: 8, paddingHorizontal: 16, gap: 12 }}>
-          <TextInput
-            placeholder="Title"
-            style={{ fontFamily: "WorkSans_700Bold", fontSize: 32 }}
-            cursorColor={Colors[palette][600]}
-            selectionColor={Colors[palette][600]}
-            selectionHandleColor={Colors[palette][600]}
+          <ThemedTextInput
+            style={{
+              fontFamily: "WorkSans_700Bold",
+              fontSize: 32,
+            }}
+            value={form.title}
+            onChangeText={updateTitle}
+            placeholderText="Title"
           />
           <View
             style={{
-              borderWidth: 1,
+              borderWidth: 0.2,
               borderColor: Colors.Backgrounds_Light.Brand,
             }}
           ></View>
@@ -158,11 +260,20 @@ export default function Page() {
               alignItems: "center",
             }}
           >
-            <AntDesign name="calendar" size={28} color={iconColor} />
+            <AntDesign
+              name="calendar"
+              size={28}
+              color={iconColor}
+              onPress={updateDate}
+            />
             <AntDesign
               name="plussquare"
               size={32}
               color={Colors[palette][600]}
+              onPress={() => {
+                addTask();
+                taskModalRef.current?.close();
+              }}
             />
           </View>
         </View>
