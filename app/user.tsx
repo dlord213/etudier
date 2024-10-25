@@ -85,6 +85,7 @@ export default function Page() {
               style={{
                 fontFamily: "WorkSans_700Bold",
               }}
+              color="Tertiary"
             />
             <Pressable
               style={{ flexDirection: "row", gap: 16, alignItems: "center" }}
@@ -101,10 +102,11 @@ export default function Page() {
           </View>
           <View style={{ gap: 16 }}>
             <ThemedText
-              text="General"
+              text="Account"
               style={{
                 fontFamily: "WorkSans_700Bold",
               }}
+              color="Tertiary"
             />
             <Pressable
               style={{ flexDirection: "row", gap: 16, alignItems: "center" }}
