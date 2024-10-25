@@ -1,5 +1,5 @@
 import Colors from "@/constants/Colors";
-import { StyleSheet, View } from "react-native";
+import { Pressable, StyleSheet, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 import AntDesign from "@expo/vector-icons/AntDesign";
@@ -14,7 +14,7 @@ import useAuthStore from "@/hooks/useAuthStore";
 export default function Page() {
   const { isDarkMode, palette } = useThemeStore();
 
-  const { session } = useAuthStore();
+  const { session, handleLogout } = useAuthStore();
 
   const iconColor = isDarkMode
     ? Colors.Text_Dark.Default
@@ -74,27 +74,63 @@ export default function Page() {
             <ThemedText text={session.record.email} color="Tertiary" />
           </View>
         </View>
-        <ThemedText
-          text="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-          eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad
-          minim veniam. (BIO)"
-          style={{
-            fontFamily: "WorkSans_400Regular",
-            color: Colors[palette][500],
-          }}
-        />
       </View>
-      <View style={{ gap: 16 }}>
-        <ThemedText
-          text="General"
-          style={{
-            fontFamily: "WorkSans_700Bold",
-          }}
-        />
-        <View style={{ flexDirection: "row", gap: 16, alignItems: "center" }}>
-          <Ionicons name="bar-chart-outline" size={24} color={iconColor} />
-          <ThemedText text="Activity Log" />
+      <View
+        style={{ justifyContent: "space-between", flex: 1, paddingBottom: 16 }}
+      >
+        <View style={{ gap: 16 }}>
+          <View style={{ gap: 16 }}>
+            <ThemedText
+              text="General"
+              style={{
+                fontFamily: "WorkSans_700Bold",
+              }}
+            />
+            <Pressable
+              style={{ flexDirection: "row", gap: 16, alignItems: "center" }}
+            >
+              <Ionicons name="bar-chart-outline" size={24} color={iconColor} />
+              <ThemedText text="Activity Log" />
+            </Pressable>
+            <Pressable
+              style={{ flexDirection: "row", gap: 16, alignItems: "center" }}
+            >
+              <Ionicons name="pencil-sharp" size={24} color={iconColor} />
+              <ThemedText text="Edit Profile" />
+            </Pressable>
+          </View>
+          <View style={{ gap: 16 }}>
+            <ThemedText
+              text="General"
+              style={{
+                fontFamily: "WorkSans_700Bold",
+              }}
+            />
+            <Pressable
+              style={{ flexDirection: "row", gap: 16, alignItems: "center" }}
+            >
+              <Ionicons name="lock-closed" size={24} color={iconColor} />
+              <ThemedText text="Change password" />
+            </Pressable>
+            <Pressable
+              style={{ flexDirection: "row", gap: 16, alignItems: "center" }}
+            >
+              <Ionicons name="mail-sharp" size={24} color={iconColor} />
+              <ThemedText text="Change email address" />
+            </Pressable>
+          </View>
         </View>
+        <Pressable
+          style={{
+            flexDirection: "row",
+            gap: 16,
+            alignItems: "center",
+          }}
+          onPress={handleLogout}
+        >
+          <Ionicons name="log-out" size={24} color={iconColor} />
+          <ThemedText text="Log-out" />
+        </Pressable>
       </View>
     </SafeAreaView>
   );
@@ -108,6 +144,6 @@ const styles = (isDarkMode: boolean) =>
         : Colors.Backgrounds_Light.Brand,
       flex: 1,
       paddingHorizontal: 16,
-      gap: 8,
+      gap: 12,
     },
   });

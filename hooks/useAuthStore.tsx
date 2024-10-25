@@ -1,7 +1,8 @@
 import { create } from "zustand";
-import PocketBase from "pocketbase";
+import PocketBase, { RecordAuthResponse, RecordModel } from "pocketbase";
 import { ToastAndroid } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { router } from "expo-router";
 
 interface AuthFormInterface {
   email: string;
@@ -29,11 +30,12 @@ interface SessionInterface {
 interface AuthStoreInterface {
   client_instance: PocketBase;
   form: AuthFormInterface;
-  session: SessionInterface;
+  session: RecordAuthResponse<RecordModel> | SessionInterface;
   loadStoredSession: () => Promise<void>;
   clearStoredSession: () => Promise<void>;
   handleLogin: () => Promise<void>;
   handleRegister: () => Promise<void>;
+  handleLogout: () => Promise<void>;
   setEmail: (emailVal: string) => void;
   setPassword: (passwordVal: string) => void;
   setName: (nameVal: string) => void;
@@ -73,7 +75,6 @@ const useAuthStore = create<AuthStoreInterface>()((set, get) => ({
         set({ isAuthing: true });
         let parsedSession = JSON.parse(session);
         set({ session: parsedSession });
-        console.log(get().session.record.email);
         get().client_instance.authStore.save(parsedSession.token);
         if (get().client_instance.authStore.isValid) {
           set({ isAuthing: false });
@@ -122,7 +123,7 @@ const useAuthStore = create<AuthStoreInterface>()((set, get) => ({
       const authData = await get()
         .client_instance.collection("users")
         .authWithPassword(email, password);
-      console.log(authData);
+      set({ session: authData });
       await AsyncStorage.setItem("@session", JSON.stringify(authData));
       set({ isAuthing: false });
       set({ isLoggedIn: true });
@@ -182,7 +183,8 @@ const useAuthStore = create<AuthStoreInterface>()((set, get) => ({
         .client_instance.collection("users")
         .authWithPassword(email, password);
 
-      console.log(authData);
+      set({ session: authData });
+
       await AsyncStorage.setItem("@session", JSON.stringify(authData));
       set({ isAuthing: false });
       set({ isLoggedIn: true });
@@ -190,6 +192,21 @@ const useAuthStore = create<AuthStoreInterface>()((set, get) => ({
       console.error("Login error: ", error);
       set({ isAuthing: false });
       set({ isLoggedIn: false });
+      get().resetForm();
+      ToastAndroid.show(
+        `Login failed: ${error.message || "Unknown error occurred"}`,
+        ToastAndroid.LONG
+      );
+    }
+  },
+  handleLogout: async () => {
+    try {
+      await AsyncStorage.removeItem("@session");
+      await get().client_instance.authStore.clear();
+      set({ isLoggedIn: false });
+      router.replace("/");
+    } catch (error) {
+      console.error("Logout error: ", error);
       get().resetForm();
       ToastAndroid.show(
         `Login failed: ${error.message || "Unknown error occurred"}`,
