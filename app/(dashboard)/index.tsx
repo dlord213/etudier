@@ -22,33 +22,38 @@ import useModalSheetStore from "@/hooks/useModalSheetStore";
 import useTaskStore from "@/hooks/useTaskStore";
 import ThemedText from "@/components/ThemedText";
 import ThemedTextInput from "@/components/ThemedTextInput";
+import TaskList from "@/components/TaskList";
+import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
+import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 
 export default function Page() {
   const { palette, isDarkMode } = useThemeStore();
-  const { setIsModalOpen } = useModalSheetStore();
+  const { toggleModalVisibility } = useModalSheetStore();
   const { height: screenHeight, width: screenWidth } = useWindowDimensions();
 
   const {
     form,
+    toggleIsEditingTask,
     isEditingTask,
     todayTasks,
     tomorrowTasks,
     upcomingTasks,
     completedTasks,
     saveStoredStateTasks,
-    toggleIsCompleted,
     updateTitle,
     updateDate,
+    updateTask,
     addTask,
     loadStoredTasks,
+    resetForm,
   } = useTaskStore();
+
+  const taskModalRef = useRef<BottomSheetMethods>(null);
+  const styleState = styles(isDarkMode);
 
   const iconColor = isDarkMode
     ? Colors.Text_Dark.Default
     : Colors.Text_Light.Default;
-
-  const taskModalRef = useRef<BottomSheetMethods>(null);
-  const styleState = styles(isDarkMode);
 
   useFocusEffect(
     useCallback(() => {
@@ -106,103 +111,14 @@ export default function Page() {
         contentContainerStyle={{ gap: 8, paddingBottom: 24 }}
         showsVerticalScrollIndicator={false}
       >
-        {/* TODAY */}
-        <View style={{ gap: 8 }}>
-          <ThemedText
-            text="Today"
-            style={{ fontFamily: "WorkSans_700Bold", fontSize: 24 }}
-          />
-          {todayTasks.length > 0 ? (
-            todayTasks.map((task) => (
-              <Pressable style={{ flexDirection: "row", gap: 8 }} key={task.id}>
-                {task.isCompleted ? (
-                  <Ionicons
-                    name="checkmark-circle"
-                    size={24}
-                    color={iconColor}
-                    onPress={() => {
-                      toggleIsCompleted(task.id);
-                    }}
-                  />
-                ) : (
-                  <Ionicons
-                    name="checkmark-circle-outline"
-                    size={24}
-                    color={iconColor}
-                    onPress={() => {
-                      toggleIsCompleted(task.id);
-                    }}
-                  />
-                )}
-                <ThemedText text={task.title} />
-              </Pressable>
-            ))
-          ) : (
-            <ThemedText text="No tasks for today." />
-          )}
-        </View>
-        {/* TODAY */}
-
-        {/* TOMORROW */}
-        <View style={{ gap: 8 }}>
-          <ThemedText
-            text="Tomorrow"
-            style={{ fontFamily: "WorkSans_700Bold", fontSize: 24 }}
-          />
-          {tomorrowTasks.length > 0 ? (
-            tomorrowTasks.map((task) => (
-              <Pressable style={{ flexDirection: "row", gap: 8 }} key={task.id}>
-                <Ionicons
-                  name={
-                    task.isCompleted
-                      ? "checkmark-circle"
-                      : "checkmark-circle-outline"
-                  }
-                  size={24}
-                  color={iconColor}
-                  onPress={() => toggleIsCompleted(task.id)}
-                />
-                <ThemedText text={task.title} />
-              </Pressable>
-            ))
-          ) : (
-            <ThemedText text="No tasks for tomorrow." />
-          )}
-        </View>
-        {/* TOMORROW */}
-
-        {/* UPCOMING */}
-        <View style={{ gap: 8 }}>
-          <ThemedText
-            text="Upcoming"
-            style={{ fontFamily: "WorkSans_700Bold", fontSize: 24 }}
-          />
-          {upcomingTasks.length > 0 ? (
-            upcomingTasks.map((task) => (
-              <Pressable style={{ flexDirection: "row", gap: 8 }} key={task.id}>
-                <Ionicons
-                  name={
-                    task.isCompleted
-                      ? "checkmark-circle"
-                      : "checkmark-circle-outline"
-                  }
-                  size={24}
-                  color={iconColor}
-                  onPress={() => toggleIsCompleted(task.id)}
-                />
-                <ThemedText text={task.title} />
-              </Pressable>
-            ))
-          ) : (
-            <ThemedText text="No upcoming tasks." />
-          )}
-        </View>
-        {/* UPCOMING */}
+        <TaskList task={todayTasks} text="Today" modal={taskModalRef} />
+        <TaskList task={tomorrowTasks} text="Tomorrow" modal={taskModalRef} />
+        <TaskList task={upcomingTasks} text="Upcoming" modal={taskModalRef} />
       </ScrollView>
       <Pressable
         onPress={() => {
           taskModalRef.current?.open();
-          setIsModalOpen();
+          toggleModalVisibility();
         }}
         style={{
           padding: 16,
@@ -221,7 +137,11 @@ export default function Page() {
         height={screenHeight / 5}
         disableKeyboardHandling
         onClose={() => {
-          setIsModalOpen();
+          toggleModalVisibility();
+          if (isEditingTask) {
+            toggleIsEditingTask();
+            resetForm();
+          }
         }}
         style={{
           backgroundColor: isDarkMode
@@ -252,17 +172,31 @@ export default function Page() {
               color={iconColor}
               onPress={updateDate}
             />
-            <AntDesign
-              name="plussquare"
-              size={32}
-              color={Colors[palette][600]}
-              onPress={() => {
-                addTask();
-                if (form.title) {
-                  taskModalRef.current?.close();
-                }
-              }}
-            />
+            {isEditingTask ? (
+              <MaterialIcons
+                name="edit-square"
+                size={28}
+                color={Colors[palette][400]}
+                onPress={() => {
+                  updateTask();
+                  if (form.title) {
+                    taskModalRef.current?.close();
+                  }
+                }}
+              />
+            ) : (
+              <AntDesign
+                name="plussquare"
+                size={32}
+                color={Colors[palette][400]}
+                onPress={() => {
+                  addTask();
+                  if (form.title) {
+                    taskModalRef.current?.close();
+                  }
+                }}
+              />
+            )}
           </View>
         </View>
       </BottomSheet>

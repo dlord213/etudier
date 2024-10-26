@@ -7,7 +7,7 @@ import { parseISO, isSameDay, isAfter, addDays } from "date-fns";
 
 const tomorrow = addDays(new Date(), 1);
 
-interface TaskForm {
+export interface TaskForm {
   id: number;
   title: string;
   date: string | Date;
@@ -22,6 +22,7 @@ interface TaskStoreInterface {
   completedTasks: TaskForm[];
   isEditingTask: boolean;
   form: TaskForm;
+  toggleIsEditingTask: () => void;
   loadStoredTasks: () => Promise<void>;
   saveStoredStateTasks: () => Promise<void>;
   getTodayTasks: () => void;
@@ -30,6 +31,7 @@ interface TaskStoreInterface {
   getCompletedTasks: () => void;
   updateTitle: (newTitle: TaskForm["title"]) => void;
   updateDate: () => void;
+  updateTask: () => Promise<void>;
   toggleIsCompleted: (id: number) => Promise<void>;
   addTask: () => Promise<void>;
   resetForm: () => void;
@@ -48,6 +50,9 @@ const useTaskStore = create<TaskStoreInterface>()(
       title: "",
       date: new Date(),
       isCompleted: false,
+    },
+    toggleIsEditingTask: () => {
+      set({ isEditingTask: !get().isEditingTask });
     },
     loadStoredTasks: async () => {
       try {
@@ -129,6 +134,43 @@ const useTaskStore = create<TaskStoreInterface>()(
         display: "calendar",
         minimumDate: new Date(),
       });
+    },
+    updateTask: async () => {
+      if (get().isEditingTask) {
+        if (!get().form.title) {
+          ToastAndroid.show("Title cannot be empty!", ToastAndroid.SHORT);
+          return;
+        }
+
+        const taskId = get().form.id;
+        const taskIndex = get().storedTasks.findIndex(
+          (task) => task.id === taskId
+        );
+
+        if (taskIndex !== -1) {
+          set((state) => {
+            state.storedTasks[taskIndex].title = get().form.title;
+            state.storedTasks[taskIndex].date = get().form.date;
+          });
+        }
+
+        try {
+          get().getTodayTasks();
+          get().getTomorrowTasks();
+          get().getUpcomingTasks();
+          get().getCompletedTasks();
+
+          await AsyncStorage.setItem(
+            "@tasks",
+            JSON.stringify(get().storedTasks)
+          );
+        } catch (error) {
+          ToastAndroid.show(
+            `Error updating task: ${error}`,
+            ToastAndroid.SHORT
+          );
+        }
+      }
     },
     toggleIsCompleted: async (id: number) => {
       set((state) => {

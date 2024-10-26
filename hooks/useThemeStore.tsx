@@ -1,3 +1,4 @@
+import Colors from "@/constants/Colors";
 import { useColorScheme } from "react-native";
 import { create } from "zustand";
 

@@ -2,12 +2,14 @@ import { create } from "zustand";
 
 interface ModalSheetStoreInterface {
   isModalOpen: boolean;
-  setIsModalOpen: () => void;
+  toggleModalVisibility: () => void;
 }
 
 const useModalSheetStore = create<ModalSheetStoreInterface>()((set, get) => ({
   isModalOpen: false,
-  setIsModalOpen: () => set({ isModalOpen: !get().isModalOpen }),
+  toggleModalVisibility: () => {
+    set({ isModalOpen: !get().isModalOpen });
+  },
 }));
 
 export default useModalSheetStore;
