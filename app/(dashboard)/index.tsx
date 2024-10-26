@@ -1,5 +1,11 @@
 import Colors from "@/constants/Colors";
-import { Pressable, StyleSheet, useWindowDimensions, View } from "react-native";
+import {
+  Pressable,
+  ScrollView,
+  StyleSheet,
+  useWindowDimensions,
+  View,
+} from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useCallback, useRef } from "react";
 import BottomSheet, { BottomSheetMethods } from "@devvie/bottom-sheet";
@@ -23,10 +29,13 @@ export default function Page() {
   const { height: screenHeight, width: screenWidth } = useWindowDimensions();
 
   const {
-    storedTasks,
-    isEditingTask,
-    saveStoredStateTasks,
     form,
+    isEditingTask,
+    todayTasks,
+    tomorrowTasks,
+    upcomingTasks,
+    completedTasks,
+    saveStoredStateTasks,
     toggleIsCompleted,
     updateTitle,
     updateDate,
@@ -40,26 +49,6 @@ export default function Page() {
 
   const taskModalRef = useRef<BottomSheetMethods>(null);
   const styleState = styles(isDarkMode);
-
-  const tomorrow = addDays(new Date(), 1);
-
-  const todayTasks = storedTasks.filter((task) => {
-    const taskDate =
-      typeof task.date === "string" ? parseISO(task.date) : task.date;
-    return !task.isCompleted && isSameDay(taskDate, new Date());
-  });
-
-  const tomorrowTasks = storedTasks.filter((task) => {
-    const taskDate =
-      typeof task.date === "string" ? parseISO(task.date) : task.date;
-    return !task.isCompleted && isSameDay(taskDate, tomorrow);
-  });
-
-  const upcomingTasks = storedTasks.filter((task) => {
-    const taskDate =
-      typeof task.date === "string" ? parseISO(task.date) : task.date;
-    return !task.isCompleted && isAfter(taskDate, tomorrow);
-  });
 
   useFocusEffect(
     useCallback(() => {
@@ -102,7 +91,7 @@ export default function Page() {
             inverted={isDarkMode ? false : true}
           />
           <ThemedText
-            text="XXXX"
+            text={completedTasks.length.toString()}
             style={{ fontFamily: "WorkSans_700Bold", fontSize: 28 }}
             inverted={isDarkMode ? false : true}
           />
@@ -113,100 +102,103 @@ export default function Page() {
           color={Colors.Text_Dark.Default}
         />
       </Pressable>
+      <ScrollView
+        contentContainerStyle={{ gap: 8, paddingBottom: 24 }}
+        showsVerticalScrollIndicator={false}
+      >
+        {/* TODAY */}
+        <View style={{ gap: 8 }}>
+          <ThemedText
+            text="Today"
+            style={{ fontFamily: "WorkSans_700Bold", fontSize: 24 }}
+          />
+          {todayTasks.length > 0 ? (
+            todayTasks.map((task) => (
+              <Pressable style={{ flexDirection: "row", gap: 8 }} key={task.id}>
+                {task.isCompleted ? (
+                  <Ionicons
+                    name="checkmark-circle"
+                    size={24}
+                    color={iconColor}
+                    onPress={() => {
+                      toggleIsCompleted(task.id);
+                    }}
+                  />
+                ) : (
+                  <Ionicons
+                    name="checkmark-circle-outline"
+                    size={24}
+                    color={iconColor}
+                    onPress={() => {
+                      toggleIsCompleted(task.id);
+                    }}
+                  />
+                )}
+                <ThemedText text={task.title} />
+              </Pressable>
+            ))
+          ) : (
+            <ThemedText text="No tasks for today." />
+          )}
+        </View>
+        {/* TODAY */}
 
-      {/* TODAY */}
-      <View style={{ gap: 8 }}>
-        <ThemedText
-          text="Today"
-          style={{ fontFamily: "WorkSans_700Bold", fontSize: 24 }}
-        />
-        {todayTasks.length > 0 ? (
-          todayTasks.map((task) => (
-            <Pressable style={{ flexDirection: "row", gap: 8 }} key={task.id}>
-              {task.isCompleted ? (
+        {/* TOMORROW */}
+        <View style={{ gap: 8 }}>
+          <ThemedText
+            text="Tomorrow"
+            style={{ fontFamily: "WorkSans_700Bold", fontSize: 24 }}
+          />
+          {tomorrowTasks.length > 0 ? (
+            tomorrowTasks.map((task) => (
+              <Pressable style={{ flexDirection: "row", gap: 8 }} key={task.id}>
                 <Ionicons
-                  name="checkmark-circle"
+                  name={
+                    task.isCompleted
+                      ? "checkmark-circle"
+                      : "checkmark-circle-outline"
+                  }
                   size={24}
                   color={iconColor}
-                  onPress={() => {
-                    toggleIsCompleted(task.id);
-                  }}
+                  onPress={() => toggleIsCompleted(task.id)}
                 />
-              ) : (
+                <ThemedText text={task.title} />
+              </Pressable>
+            ))
+          ) : (
+            <ThemedText text="No tasks for tomorrow." />
+          )}
+        </View>
+        {/* TOMORROW */}
+
+        {/* UPCOMING */}
+        <View style={{ gap: 8 }}>
+          <ThemedText
+            text="Upcoming"
+            style={{ fontFamily: "WorkSans_700Bold", fontSize: 24 }}
+          />
+          {upcomingTasks.length > 0 ? (
+            upcomingTasks.map((task) => (
+              <Pressable style={{ flexDirection: "row", gap: 8 }} key={task.id}>
                 <Ionicons
-                  name="checkmark-circle-outline"
+                  name={
+                    task.isCompleted
+                      ? "checkmark-circle"
+                      : "checkmark-circle-outline"
+                  }
                   size={24}
                   color={iconColor}
-                  onPress={() => {
-                    toggleIsCompleted(task.id);
-                  }}
+                  onPress={() => toggleIsCompleted(task.id)}
                 />
-              )}
-              <ThemedText text={task.title} />
-            </Pressable>
-          ))
-        ) : (
-          <ThemedText text="No tasks for today." />
-        )}
-      </View>
-      {/* TODAY */}
-
-      {/* TOMORROW */}
-      <View style={{ gap: 8 }}>
-        <ThemedText
-          text="Tomorrow"
-          style={{ fontFamily: "WorkSans_700Bold", fontSize: 24 }}
-        />
-        {tomorrowTasks.length > 0 ? (
-          tomorrowTasks.map((task) => (
-            <Pressable style={{ flexDirection: "row", gap: 8 }} key={task.id}>
-              <Ionicons
-                name={
-                  task.isCompleted
-                    ? "checkmark-circle"
-                    : "checkmark-circle-outline"
-                }
-                size={24}
-                color={iconColor}
-                onPress={() => toggleIsCompleted(task.id)}
-              />
-              <ThemedText text={task.title} />
-            </Pressable>
-          ))
-        ) : (
-          <ThemedText text="No tasks for tomorrow." />
-        )}
-      </View>
-      {/* TOMORROW */}
-
-      {/* UPCOMING */}
-      <View style={{ gap: 8 }}>
-        <ThemedText
-          text="Upcoming"
-          style={{ fontFamily: "WorkSans_700Bold", fontSize: 24 }}
-        />
-        {upcomingTasks.length > 0 ? (
-          upcomingTasks.map((task) => (
-            <Pressable style={{ flexDirection: "row", gap: 8 }} key={task.id}>
-              <Ionicons
-                name={
-                  task.isCompleted
-                    ? "checkmark-circle"
-                    : "checkmark-circle-outline"
-                }
-                size={24}
-                color={iconColor}
-                onPress={() => toggleIsCompleted(task.id)}
-              />
-              <ThemedText text={task.title} />
-            </Pressable>
-          ))
-        ) : (
-          <ThemedText text="No upcoming tasks." />
-        )}
-      </View>
-      {/* UPCOMING */}
-
+                <ThemedText text={task.title} />
+              </Pressable>
+            ))
+          ) : (
+            <ThemedText text="No upcoming tasks." />
+          )}
+        </View>
+        {/* UPCOMING */}
+      </ScrollView>
       <Pressable
         onPress={() => {
           taskModalRef.current?.open();
@@ -226,7 +218,7 @@ export default function Page() {
       </Pressable>
       <BottomSheet
         ref={taskModalRef}
-        height={screenHeight / 4}
+        height={screenHeight / 5}
         disableKeyboardHandling
         onClose={() => {
           setIsModalOpen();
@@ -234,7 +226,7 @@ export default function Page() {
         style={{
           backgroundColor: isDarkMode
             ? Colors.Backgrounds_Dark.Brand
-            : Colors.Backgrounds_Light,
+            : Colors.Backgrounds_Light.Brand,
         }}
       >
         <View style={{ paddingVertical: 8, paddingHorizontal: 16, gap: 12 }}>
@@ -247,12 +239,6 @@ export default function Page() {
             onChangeText={updateTitle}
             placeholderText="Title"
           />
-          <View
-            style={{
-              borderWidth: 0.2,
-              borderColor: Colors.Backgrounds_Light.Brand,
-            }}
-          ></View>
           <View
             style={{
               flexDirection: "row",
@@ -272,7 +258,9 @@ export default function Page() {
               color={Colors[palette][600]}
               onPress={() => {
                 addTask();
-                taskModalRef.current?.close();
+                if (form.title) {
+                  taskModalRef.current?.close();
+                }
               }}
             />
           </View>

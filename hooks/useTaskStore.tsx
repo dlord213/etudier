@@ -3,6 +3,9 @@ import { immer } from "zustand/middleware/immer";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { DateTimePickerAndroid } from "@react-native-community/datetimepicker";
 import { ToastAndroid } from "react-native";
+import { parseISO, isSameDay, isAfter, addDays } from "date-fns";
+
+const tomorrow = addDays(new Date(), 1);
 
 interface TaskForm {
   id: number;
@@ -13,10 +16,18 @@ interface TaskForm {
 
 interface TaskStoreInterface {
   storedTasks: TaskForm[];
+  todayTasks: TaskForm[];
+  tomorrowTasks: TaskForm[];
+  upcomingTasks: TaskForm[];
+  completedTasks: TaskForm[];
   isEditingTask: boolean;
   form: TaskForm;
   loadStoredTasks: () => Promise<void>;
   saveStoredStateTasks: () => Promise<void>;
+  getTodayTasks: () => void;
+  getTomorrowTasks: () => void;
+  getUpcomingTasks: () => void;
+  getCompletedTasks: () => void;
   updateTitle: (newTitle: TaskForm["title"]) => void;
   updateDate: () => void;
   toggleIsCompleted: (id: number) => Promise<void>;
@@ -27,6 +38,10 @@ interface TaskStoreInterface {
 const useTaskStore = create<TaskStoreInterface>()(
   immer((set, get) => ({
     storedTasks: [],
+    todayTasks: [],
+    tomorrowTasks: [],
+    upcomingTasks: [],
+    completedTasks: [],
     isEditingTask: false,
     form: {
       id: Date.now(),
@@ -40,10 +55,48 @@ const useTaskStore = create<TaskStoreInterface>()(
         if (tasks) {
           const parsedTasks = JSON.parse(tasks);
           set({ storedTasks: parsedTasks });
+          get().getTodayTasks();
+          get().getTomorrowTasks();
+          get().getUpcomingTasks();
+          get().getCompletedTasks();
         }
       } catch (error) {
         console.error("Error loading tasks: ", error);
       }
+    },
+    getTodayTasks: () => {
+      set({
+        todayTasks: get().storedTasks.filter((task: any) => {
+          const taskDate =
+            typeof task.date === "string" ? parseISO(task.date) : task.date;
+          return !task.isCompleted && isSameDay(taskDate, new Date());
+        }),
+      });
+    },
+    getTomorrowTasks: () => {
+      set({
+        tomorrowTasks: get().storedTasks.filter((task) => {
+          const taskDate =
+            typeof task.date === "string" ? parseISO(task.date) : task.date;
+          return !task.isCompleted && isSameDay(taskDate, tomorrow);
+        }),
+      });
+    },
+    getUpcomingTasks: () => {
+      set({
+        upcomingTasks: get().storedTasks.filter((task) => {
+          const taskDate =
+            typeof task.date === "string" ? parseISO(task.date) : task.date;
+          return !task.isCompleted && isAfter(taskDate, tomorrow);
+        }),
+      });
+    },
+    getCompletedTasks: () => {
+      set({
+        completedTasks: get().storedTasks.filter(
+          (task) => task.isCompleted === true
+        ),
+      });
     },
     saveStoredStateTasks: async () => {
       try {
@@ -86,17 +139,30 @@ const useTaskStore = create<TaskStoreInterface>()(
         }
       });
       try {
+        get().getTodayTasks();
+        get().getTomorrowTasks();
+        get().getUpcomingTasks();
+        get().getCompletedTasks();
         await AsyncStorage.setItem("@tasks", JSON.stringify(get().storedTasks));
       } catch (error) {
         ToastAndroid.show(`Error changing state: ${error}`, ToastAndroid.SHORT);
       }
     },
     addTask: async () => {
+      if (!get().form.title) {
+        ToastAndroid.show("Title cannot be empty!", ToastAndroid.SHORT);
+        return;
+      }
+
       try {
         const newTask = { ...get().form };
         set((state) => {
           state.storedTasks.push(newTask);
         });
+        get().getTodayTasks();
+        get().getTomorrowTasks();
+        get().getUpcomingTasks();
+        get().getCompletedTasks();
         await AsyncStorage.setItem("@tasks", JSON.stringify(get().storedTasks));
         get().resetForm();
       } catch (error) {
