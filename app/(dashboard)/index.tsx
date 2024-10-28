@@ -8,20 +8,17 @@ import {
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useCallback, useRef } from "react";
-import BottomSheet, { BottomSheetMethods } from "@devvie/bottom-sheet";
 import { router, useFocusEffect } from "expo-router";
 
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
-import AntDesign from "@expo/vector-icons/AntDesign";
 
 import useThemeStore from "@/hooks/useThemeStore";
 import useModalSheetStore from "@/hooks/useModalSheetStore";
 import useTaskStore from "@/hooks/useTaskStore";
 import ThemedText from "@/components/ThemedText";
-import ThemedTextInput from "@/components/ThemedTextInput";
 import TaskList from "@/components/TaskList";
-import MaterialIcons from "@expo/vector-icons/MaterialIcons";
+import { SheetManager } from "react-native-actions-sheet";
 
 export default function Page() {
   const { palette, isDarkMode, isOLEDMode } = useThemeStore();
@@ -29,20 +26,12 @@ export default function Page() {
   const { height: screenHeight, width: screenWidth } = useWindowDimensions();
 
   const {
-    form,
-    toggleIsEditingTask,
-    isEditingTask,
     todayTasks,
     tomorrowTasks,
     upcomingTasks,
     completedTasks,
     saveStoredStateTasks,
-    updateTitle,
-    updateDate,
-    updateTask,
-    addTask,
     loadStoredTasks,
-    resetForm,
   } = useTaskStore();
 
   const taskModalRef = useRef<BottomSheetMethods>(null);
@@ -114,7 +103,7 @@ export default function Page() {
       </ScrollView>
       <Pressable
         onPress={() => {
-          taskModalRef.current?.open();
+          SheetManager.show("task-sheet");
           toggleModalVisibility();
         }}
         style={{
@@ -129,73 +118,6 @@ export default function Page() {
       >
         <ThemedText text="I want to..." color="Tertiary" />
       </Pressable>
-      <BottomSheet
-        ref={taskModalRef}
-        height={screenHeight / 5}
-        onClose={() => {
-          toggleModalVisibility();
-          if (isEditingTask) {
-            toggleIsEditingTask();
-            resetForm();
-          }
-        }}
-        style={{
-          backgroundColor: isDarkMode
-            ? Colors.Backgrounds_Dark.Brand
-            : Colors.Backgrounds_Light.Brand,
-        }}
-      >
-        <View style={{ paddingVertical: 8, paddingHorizontal: 16, gap: 12 }}>
-          <ThemedTextInput
-            style={{
-              fontFamily: "WorkSans_700Bold",
-              fontSize: 32,
-            }}
-            value={form.title}
-            onChangeText={updateTitle}
-            placeholderText="Title"
-          />
-          <View
-            style={{
-              flexDirection: "row",
-              justifyContent: "space-between",
-              alignItems: "center",
-            }}
-          >
-            <AntDesign
-              name="calendar"
-              size={28}
-              color={iconColor}
-              onPress={updateDate}
-            />
-            {isEditingTask ? (
-              <MaterialIcons
-                name="edit-square"
-                size={28}
-                color={Colors[palette][400]}
-                onPress={() => {
-                  updateTask();
-                  if (form.title) {
-                    taskModalRef.current?.close();
-                  }
-                }}
-              />
-            ) : (
-              <AntDesign
-                name="plussquare"
-                size={32}
-                color={Colors[palette][400]}
-                onPress={() => {
-                  addTask();
-                  if (form.title) {
-                    taskModalRef.current?.close();
-                  }
-                }}
-              />
-            )}
-          </View>
-        </View>
-      </BottomSheet>
     </SafeAreaView>
   );
 }

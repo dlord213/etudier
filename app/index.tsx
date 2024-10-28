@@ -3,7 +3,6 @@ import {
   Pressable,
   StyleSheet,
   Text,
-  TextInput,
   useWindowDimensions,
   View,
 } from "react-native";
@@ -19,7 +18,6 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useEffect, useRef, useState } from "react";
 import { Redirect, SplashScreen } from "expo-router";
-import BottomSheet, { BottomSheetMethods } from "@devvie/bottom-sheet";
 import LottieView from "lottie-react-native";
 import Carousel from "pinar";
 
@@ -28,6 +26,8 @@ import useThemeStore from "@/hooks/useThemeStore";
 import ThemedText from "@/components/ThemedText";
 import LandingPageStrings from "@/constants/LandingPageStrings";
 import useAuthStore from "@/hooks/useAuthStore";
+import "./sheets.tsx";
+import { SheetManager } from "react-native-actions-sheet";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -42,23 +42,10 @@ export default function Index() {
   const { height: screenHeight, width: screenWidth } = useWindowDimensions();
   const [dotIndex, setDotIndex] = useState(0);
 
-  const signUpRef = useRef<BottomSheetMethods>(null);
-  const loginRef = useRef<BottomSheetMethods>(null);
   const carouselRef = useRef(null);
 
-  const { palette, isDarkMode, isOLEDMode, loadSettings } = useThemeStore();
-  const {
-    form,
-    handleLogin,
-    handleRegister,
-    setEmail,
-    setName,
-    setPassword,
-    resetForm,
-    isAuthing,
-    isLoggedIn,
-    toggleIsAuthing,
-  } = useAuthStore();
+  const { palette, isDarkMode, isOLEDMode } = useThemeStore();
+  const { isAuthing, isLoggedIn } = useAuthStore();
 
   const styleState = styles(isDarkMode, isOLEDMode);
 
@@ -205,7 +192,7 @@ export default function Index() {
         <View style={{ flexDirection: "row", gap: 8 }}>
           <Pressable
             onPress={() => {
-              signUpRef.current?.open();
+              SheetManager.show("register-sheet");
             }}
             style={{
               backgroundColor: Colors[palette][200],
@@ -225,7 +212,7 @@ export default function Index() {
           </Pressable>
           <Pressable
             onPress={() => {
-              loginRef.current?.open();
+              SheetManager.show("login-sheet");
             }}
             style={{
               backgroundColor:
@@ -273,182 +260,6 @@ export default function Index() {
           </Text>
         </Pressable>
       </View>
-      <BottomSheet
-        ref={loginRef}
-        height={screenHeight}
-        disableDragHandlePanning
-        disableBodyPanning
-        disableKeyboardHandling
-        style={{
-          backgroundColor: isDarkMode
-            ? Colors.Backgrounds_Dark.Brand
-            : Colors.Backgrounds_Light.Brand,
-        }}
-        onClose={() => {
-          resetForm();
-        }}
-      >
-        <View style={{ padding: 16 }}>
-          <View>
-            <ThemedText
-              text="Login"
-              style={{ fontFamily: "WorkSans_900Black", fontSize: 36 }}
-            />
-            <ThemedText text="Pick up where you left off." color="Tertiary" />
-          </View>
-          <View style={{ gap: 8, marginVertical: 16 }}>
-            <TextInput
-              style={{
-                backgroundColor: Colors.Backgrounds_Light.Brand,
-                padding: 8,
-                borderRadius: 8,
-                fontFamily: "WorkSans_400Regular",
-                paddingHorizontal: 16,
-              }}
-              placeholder="Email Address"
-              cursorColor={Colors[palette][600]}
-              selectionColor={Colors[palette][600]}
-              selectionHandleColor={Colors[palette][600]}
-              value={form.email}
-              onChangeText={setEmail}
-            />
-            <TextInput
-              style={{
-                backgroundColor: Colors.Backgrounds_Light.Brand,
-                padding: 8,
-                borderRadius: 8,
-                fontFamily: "WorkSans_400Regular",
-                paddingHorizontal: 16,
-              }}
-              placeholder="Password"
-              cursorColor={Colors[palette][600]}
-              selectionColor={Colors[palette][600]}
-              selectionHandleColor={Colors[palette][600]}
-              value={form.password}
-              onChangeText={setPassword}
-              secureTextEntry={true}
-            />
-          </View>
-          <Pressable
-            style={{
-              backgroundColor: Colors[palette][600],
-              padding: 16,
-              borderRadius: 16,
-            }}
-            onPress={() => {
-              toggleIsAuthing();
-              handleLogin();
-            }}
-          >
-            <Text
-              style={{
-                fontFamily: "WorkSans_400Regular",
-                color: "#FAFAFA",
-                textAlign: "center",
-              }}
-            >
-              Login
-            </Text>
-          </Pressable>
-        </View>
-      </BottomSheet>
-      <BottomSheet
-        ref={signUpRef}
-        height={screenHeight}
-        disableDragHandlePanning
-        disableBodyPanning
-        disableKeyboardHandling
-        style={{
-          backgroundColor: isDarkMode
-            ? Colors.Backgrounds_Dark.Brand
-            : Colors.Backgrounds_Light.Brand,
-        }}
-        onClose={() => {
-          resetForm();
-        }}
-      >
-        <View style={{ padding: 16 }}>
-          <View>
-            <ThemedText
-              text="Register"
-              style={{ fontFamily: "WorkSans_900Black", fontSize: 36 }}
-            />
-            <ThemedText
-              text="Your personalized study journey starts here!"
-              color="Tertiary"
-            />
-          </View>
-          <View style={{ gap: 8, marginVertical: 16 }}>
-            <TextInput
-              style={{
-                backgroundColor: Colors.Backgrounds_Light.Brand,
-                padding: 8,
-                borderRadius: 8,
-                fontFamily: "WorkSans_400Regular",
-                paddingHorizontal: 16,
-              }}
-              placeholder="Name"
-              cursorColor={Colors[palette][600]}
-              selectionColor={Colors[palette][600]}
-              selectionHandleColor={Colors[palette][600]}
-              value={form.name}
-              onChangeText={setName}
-            />
-            <TextInput
-              style={{
-                backgroundColor: Colors.Backgrounds_Light.Brand,
-                padding: 8,
-                borderRadius: 8,
-                fontFamily: "WorkSans_400Regular",
-                paddingHorizontal: 16,
-              }}
-              placeholder="Email Address"
-              cursorColor={Colors[palette][600]}
-              selectionColor={Colors[palette][600]}
-              selectionHandleColor={Colors[palette][600]}
-              value={form.email}
-              onChangeText={setEmail}
-            />
-            <TextInput
-              style={{
-                backgroundColor: Colors.Backgrounds_Light.Brand,
-                padding: 8,
-                borderRadius: 8,
-                fontFamily: "WorkSans_400Regular",
-                paddingHorizontal: 16,
-              }}
-              placeholder="Password"
-              cursorColor={Colors[palette][600]}
-              selectionColor={Colors[palette][600]}
-              selectionHandleColor={Colors[palette][600]}
-              value={form.password}
-              onChangeText={setPassword}
-              secureTextEntry={true}
-            />
-          </View>
-          <Pressable
-            style={{
-              backgroundColor: Colors[palette][600],
-              padding: 16,
-              borderRadius: 16,
-            }}
-            onPress={() => {
-              toggleIsAuthing();
-              handleRegister();
-            }}
-          >
-            <Text
-              style={{
-                fontFamily: "WorkSans_400Regular",
-                color: "#FAFAFA",
-                textAlign: "center",
-              }}
-            >
-              Register
-            </Text>
-          </Pressable>
-        </View>
-      </BottomSheet>
     </SafeAreaView>
   );
 }
