@@ -211,14 +211,15 @@ const useAuthStore = create<AuthStoreInterface>()((set, get) => ({
       set({ session: authData });
 
       await AsyncStorage.setItem("@session", JSON.stringify(authData));
-      set({ isAuthing: false });
-      set({ isLoggedIn: true });
+      set({ isAuthing: false, isLoggedIn: true });
     } catch (error) {
-      set({ isAuthing: false });
-      set({ isLoggedIn: false });
+      set({ isAuthing: false, isLoggedIn: false });
       get().resetForm();
+
       ToastAndroid.show(
-        `Login failed: ${error.message || "Unknown error occurred"}`,
+        `Register failed: ${
+          error.details || error.message || "Unknown error occurred"
+        }`,
         ToastAndroid.LONG
       );
     }
