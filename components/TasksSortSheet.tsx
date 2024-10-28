@@ -1,7 +1,7 @@
 import Colors from "@/constants/Colors";
 import useThemeStore from "@/hooks/useThemeStore";
-import { Pressable, Switch, Text, TextInput, View } from "react-native";
-import ActionSheet, { SheetManager } from "react-native-actions-sheet";
+import { Switch, View } from "react-native";
+import ActionSheet from "react-native-actions-sheet";
 import ThemedText from "./ThemedText";
 import useTaskStore from "@/hooks/useTaskStore";
 
@@ -13,10 +13,13 @@ export default function TaskSortSheet() {
     tomorrowTasksVisible,
     upcomingTasksVisible,
     completedTasksVisible,
+    overdueTasksVisible,
+    toggleOverdueTasksVisible,
     toggleTodayTasksVisible,
     toggleTomorrowTasksVisible,
     toggleUpcomingTasksVisible,
     toggleCompletedTasksVisible,
+    saveSettings,
   } = useTaskStore();
 
   return (
@@ -26,6 +29,9 @@ export default function TaskSortSheet() {
           ? Colors.Backgrounds_Dark.Brand
           : Colors.Backgrounds_Light.Brand,
         padding: 16,
+      }}
+      onClose={() => {
+        saveSettings();
       }}
     >
       <View style={{ padding: 16 }}>
@@ -40,7 +46,28 @@ export default function TaskSortSheet() {
               color="Tertiary"
             />
           </View>
-
+          <View
+            style={{
+              flexDirection: "row",
+              justifyContent: "space-between",
+              alignItems: "center",
+            }}
+          >
+            <ThemedText text="Overdue Tasks" />
+            <Switch
+              value={overdueTasksVisible}
+              onValueChange={toggleOverdueTasksVisible}
+              thumbColor={Colors[palette][600]}
+              trackColor={{
+                false: isDarkMode
+                  ? Colors.Backgrounds_Light.Brand
+                  : Colors.Backgrounds_Dark.Brand,
+                true: isDarkMode
+                  ? Colors.Backgrounds_Light.Brand
+                  : Colors.Backgrounds_Dark.Brand,
+              }}
+            />
+          </View>
           <View
             style={{
               flexDirection: "row",

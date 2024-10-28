@@ -3,7 +3,14 @@ import { immer } from "zustand/middleware/immer";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { DateTimePickerAndroid } from "@react-native-community/datetimepicker";
 import { ToastAndroid } from "react-native";
-import { parseISO, isSameDay, isAfter, addDays } from "date-fns";
+import {
+  parseISO,
+  isSameDay,
+  isAfter,
+  addDays,
+  isBefore,
+  startOfToday,
+} from "date-fns";
 
 const tomorrow = addDays(new Date(), 1);
 
@@ -16,10 +23,12 @@ export interface TaskForm {
 
 interface TaskStoreInterface {
   storedTasks: TaskForm[];
+  overdueTasks: TaskForm[];
   todayTasks: TaskForm[];
   tomorrowTasks: TaskForm[];
   upcomingTasks: TaskForm[];
   completedTasks: TaskForm[];
+  overdueTasksVisible: boolean;
   todayTasksVisible: boolean;
   tomorrowTasksVisible: boolean;
   upcomingTasksVisible: boolean;
@@ -28,6 +37,7 @@ interface TaskStoreInterface {
   form: TaskForm;
   loadStoredTasks: () => Promise<void>;
   saveStoredStateTasks: () => Promise<void>;
+  getOverdueTasks: () => void;
   getTodayTasks: () => void;
   getTomorrowTasks: () => void;
   getUpcomingTasks: () => void;
@@ -37,22 +47,27 @@ interface TaskStoreInterface {
   updateTask: () => Promise<void>;
   toggleIsCompleted: (id: number) => Promise<void>;
   toggleIsEditingTask: () => void;
+  toggleOverdueTasksVisible: () => void;
   toggleTodayTasksVisible: () => void;
   toggleTomorrowTasksVisible: () => void;
   toggleUpcomingTasksVisible: () => void;
   toggleCompletedTasksVisible: () => void;
   addTask: () => Promise<void>;
   resetForm: () => void;
+  saveSettings: () => Promise<void>;
+  loadSettings: () => Promise<void>;
 }
 
 const useTaskStore = create<TaskStoreInterface>()(
   immer((set, get) => ({
     storedTasks: [],
+    overdueTasks: [],
     todayTasks: [],
     tomorrowTasks: [],
     upcomingTasks: [],
     completedTasks: [],
     isEditingTask: false,
+    overdueTasksVisible: true,
     todayTasksVisible: true,
     tomorrowTasksVisible: true,
     upcomingTasksVisible: true,
@@ -69,6 +84,7 @@ const useTaskStore = create<TaskStoreInterface>()(
         if (tasks) {
           const parsedTasks = JSON.parse(tasks);
           set({ storedTasks: parsedTasks });
+          get().getOverdueTasks();
           get().getTodayTasks();
           get().getTomorrowTasks();
           get().getUpcomingTasks();
@@ -77,6 +93,15 @@ const useTaskStore = create<TaskStoreInterface>()(
       } catch (error) {
         console.error("Error loading tasks: ", error);
       }
+    },
+    getOverdueTasks: () => {
+      set({
+        overdueTasks: get().storedTasks.filter((task: any) => {
+          const taskDate =
+            typeof task.date === "string" ? parseISO(task.date) : task.date;
+          return !task.isCompleted && isBefore(taskDate, startOfToday());
+        }),
+      });
     },
     getTodayTasks: () => {
       set({
@@ -190,6 +215,7 @@ const useTaskStore = create<TaskStoreInterface>()(
         }
       });
       try {
+        get().getOverdueTasks();
         get().getTodayTasks();
         get().getTomorrowTasks();
         get().getUpcomingTasks();
@@ -201,6 +227,9 @@ const useTaskStore = create<TaskStoreInterface>()(
     },
     toggleIsEditingTask: () => {
       set({ isEditingTask: !get().isEditingTask });
+    },
+    toggleOverdueTasksVisible: () => {
+      set({ overdueTasksVisible: !get().overdueTasksVisible });
     },
     toggleTodayTasksVisible: () => {
       set({ todayTasksVisible: !get().todayTasksVisible });
@@ -244,6 +273,31 @@ const useTaskStore = create<TaskStoreInterface>()(
           isCompleted: false,
         },
       });
+    },
+    saveSettings: async () => {
+      await AsyncStorage.setItem(
+        "@tasks_settings",
+        JSON.stringify({
+          overdueTasksVisible: get().overdueTasksVisible,
+          todayTasksVisible: get().todayTasksVisible,
+          tomorrowTasksVisible: get().tomorrowTasksVisible,
+          upcomingTasksVisible: get().upcomingTasksVisible,
+          completedTasksVisible: get().completedTasksVisible,
+        })
+      );
+    },
+    loadSettings: async () => {
+      const taskSettings = await AsyncStorage.getItem("@tasks_settings");
+      if (taskSettings) {
+        const settings = JSON.parse(taskSettings);
+        set({
+          overdueTasksVisible: settings.overdueTasksVisible,
+          todayTasksVisible: settings.todayTasksVisible,
+          tomorrowTasksVisible: settings.tomorrowTasksVisible,
+          upcomingTasksVisible: settings.upcomingTasksVisible,
+          completedTasksVisible: settings.completedTasksVisible,
+        });
+      }
     },
   }))
 );

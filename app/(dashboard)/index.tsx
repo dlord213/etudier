@@ -1,13 +1,7 @@
 import Colors from "@/constants/Colors";
-import {
-  Pressable,
-  ScrollView,
-  StyleSheet,
-  useWindowDimensions,
-  View,
-} from "react-native";
+import { Pressable, ScrollView, StyleSheet, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { useCallback, useRef } from "react";
+import { useCallback } from "react";
 import { router, useFocusEffect } from "expo-router";
 
 import FontAwesome from "@expo/vector-icons/FontAwesome";
@@ -24,13 +18,14 @@ import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 export default function Page() {
   const { palette, isDarkMode, isOLEDMode } = useThemeStore();
   const { toggleModalVisibility } = useModalSheetStore();
-  const { height: screenHeight, width: screenWidth } = useWindowDimensions();
 
   const {
+    overdueTasks,
     todayTasks,
     tomorrowTasks,
     upcomingTasks,
     completedTasks,
+    overdueTasksVisible,
     todayTasksVisible,
     tomorrowTasksVisible,
     upcomingTasksVisible,
@@ -106,6 +101,12 @@ export default function Page() {
         contentContainerStyle={{ gap: 8, paddingBottom: 16 }}
         showsVerticalScrollIndicator={false}
       >
+        <TaskList
+          task={overdueTasks}
+          text="Overdue"
+          modal="task-sheet"
+          isVisible={overdueTasksVisible}
+        />
         <TaskList
           task={todayTasks}
           text="Today"

@@ -7,10 +7,13 @@ import useModalSheetStore from "@/hooks/useModalSheetStore";
 
 import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
 import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
+import useTaskStore from "@/hooks/useTaskStore";
+import { useEffect } from "react";
 
 export default function Layout() {
   const { palette, isDarkMode, isOLEDMode, hasColorOnNavBar } = useThemeStore();
   const { isModalOpen } = useModalSheetStore();
+  const { loadSettings } = useTaskStore();
 
   const navBarBackgroundColor = hasColorOnNavBar
     ? isDarkMode
@@ -23,6 +26,10 @@ export default function Layout() {
       ? "#000000"
       : Colors.Backgrounds_Dark.Brand
     : Colors.Backgrounds_Light.Brand;
+
+  useEffect(() => {
+    loadSettings();
+  }, []);
 
   return (
     <Tabs
