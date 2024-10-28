@@ -10,26 +10,28 @@ import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
 
 export default function Layout() {
   const { height: screenHeight, width: screenWidth } = useWindowDimensions();
-  const { palette, isDarkMode, isOLEDMode } = useThemeStore();
+  const { palette, isDarkMode, isOLEDMode, hasColorOnNavBar } = useThemeStore();
   const { isModalOpen } = useModalSheetStore();
+
+  const navBarBackgroundColor = hasColorOnNavBar
+    ? isDarkMode
+      ? isOLEDMode
+        ? "#000000"
+        : Colors[palette][600]
+      : Colors[palette][600]
+    : isDarkMode
+    ? Colors.Backgrounds_Dark.Brand
+    : Colors.Backgrounds_Light.Brand;
 
   return (
     <Tabs
       screenOptions={{
         tabBarLabelStyle: { display: "none" },
         tabBarStyle: {
-          backgroundColor: isDarkMode
-            ? isOLEDMode
-              ? "#000000"
-              : Colors[palette][600]
-            : Colors[palette][600],
+          backgroundColor: navBarBackgroundColor,
           display: isModalOpen ? "none" : "flex",
           elevation: 0,
-          borderColor: isDarkMode
-            ? isOLEDMode
-              ? "#000000"
-              : Colors[palette][600]
-            : Colors[palette][600],
+          borderColor: navBarBackgroundColor,
         },
         tabBarActiveTintColor: Colors.Text_Dark.Default,
         tabBarInactiveTintColor: Colors.Text_Dark.Tertiary,

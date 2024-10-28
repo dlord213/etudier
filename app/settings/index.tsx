@@ -12,9 +12,11 @@ export default function Page() {
     palette,
     isDarkMode,
     isOLEDMode,
+    hasColorOnNavBar,
     setPalette,
     toggleDarkMode,
     toggleOLEDMode,
+    toggleColorOnNavBar,
     saveSettings,
   } = useThemeStore();
   const styleState = styles(isDarkMode, isOLEDMode);
@@ -96,6 +98,35 @@ export default function Page() {
         <Switch
           value={isOLEDMode}
           onValueChange={toggleOLEDMode}
+          thumbColor={Colors[palette][600]}
+          trackColor={{
+            false: isDarkMode
+              ? Colors.Backgrounds_Light.Brand
+              : Colors.Backgrounds_Dark.Brand,
+            true: isDarkMode
+              ? Colors.Backgrounds_Light.Brand
+              : Colors.Backgrounds_Dark.Brand,
+          }}
+          disabled={!isDarkMode ? true : false}
+        />
+      </View>
+      <View
+        style={{
+          flexDirection: "row",
+          justifyContent: "space-between",
+          alignItems: "center",
+        }}
+      >
+        <View style={{ flexShrink: 1 }}>
+          <ThemedText text="Color on navigation bar" />
+          <ThemedText
+            text="This toggles the color based on your preferences that's shown in the dashboard."
+            color="Secondary"
+          />
+        </View>
+        <Switch
+          value={hasColorOnNavBar}
+          onValueChange={toggleColorOnNavBar}
           thumbColor={Colors[palette][600]}
           trackColor={{
             false: isDarkMode

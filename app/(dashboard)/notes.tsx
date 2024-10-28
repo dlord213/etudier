@@ -33,7 +33,36 @@ export default function Page() {
           <MaterialIcons name="sort" size={24} color={iconColor} />
         </Pressable>
       </View>
-      <View style={{ flexDirection: "row", gap: 8 }}></View>
+      <View style={{ flexDirection: "row", gap: 8 }}>
+        <Pressable
+          style={({ pressed }) => [
+            {
+              backgroundColor: pressed
+                ? Colors[palette][300]
+                : Colors[palette][200],
+              paddingVertical: 4,
+              paddingHorizontal: 24,
+              borderRadius: 16,
+            },
+          ]}
+        >
+          <ThemedText text="All" style={{ color: Colors[palette][500] }} />
+        </Pressable>
+        <Pressable
+          style={({ pressed }) => [
+            {
+              backgroundColor: pressed
+                ? Colors[palette][300]
+                : Colors[palette][200],
+              paddingVertical: 4,
+              paddingHorizontal: 24,
+              borderRadius: 16,
+            },
+          ]}
+        >
+          <ThemedText text="Priority" style={{ color: Colors[palette][500] }} />
+        </Pressable>
+      </View>
     </SafeAreaView>
   );
 }

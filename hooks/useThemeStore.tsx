@@ -6,11 +6,13 @@ interface ThemeStoreInterface {
   palette: string;
   isDarkMode: boolean;
   isOLEDMode: boolean;
+  hasColorOnNavBar: boolean;
   setDarkMode: (value: boolean) => void;
   setOLEDMode: (value: boolean) => void;
   setPalette: (newPalette: string) => void;
   toggleDarkMode: () => void;
   toggleOLEDMode: () => void;
+  toggleColorOnNavBar: () => void;
   loadSettings: () => Promise<void>;
   saveSettings: () => Promise<void>;
 }
@@ -19,6 +21,7 @@ const useThemeStore = create<ThemeStoreInterface>()((set, get) => ({
   palette: "Wewak",
   isDarkMode: true,
   isOLEDMode: false,
+  hasColorOnNavBar: false,
   setPalette: (newPalette: string) => set({ palette: newPalette }),
   setDarkMode: (value: boolean) => set({ isDarkMode: value }),
   setOLEDMode: (value: boolean) => set({ isOLEDMode: value }),
@@ -28,6 +31,9 @@ const useThemeStore = create<ThemeStoreInterface>()((set, get) => ({
       set({ isOLEDMode: !get().isOLEDMode });
     }
   },
+  toggleColorOnNavBar: () => {
+    set({ hasColorOnNavBar: !get().hasColorOnNavBar });
+  },
   loadSettings: async () => {
     const themeSettings = await AsyncStorage.getItem("@theme_settings");
     if (themeSettings) {
@@ -36,6 +42,7 @@ const useThemeStore = create<ThemeStoreInterface>()((set, get) => ({
         palette: settings.palette,
         isDarkMode: settings.isDarkMode,
         isOLEDMode: settings.isOLEDMode,
+        hasColorOnNavBar: settings.hasColorOnNavBar,
       });
     }
   },
@@ -46,6 +53,7 @@ const useThemeStore = create<ThemeStoreInterface>()((set, get) => ({
         palette: get().palette,
         isDarkMode: get().isDarkMode,
         isOLEDMode: get().isOLEDMode,
+        hasColorOnNavBar: get().hasColorOnNavBar,
       })
     );
   },
