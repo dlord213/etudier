@@ -3,6 +3,7 @@ import PocketBase, { RecordAuthResponse, RecordModel } from "pocketbase";
 import { ToastAndroid } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { router } from "expo-router";
+import { differenceInDays, parseISO } from "date-fns";
 
 interface AuthFormInterface {
   email: string;
@@ -31,13 +32,17 @@ interface AuthStoreInterface {
   client_instance: PocketBase;
   form: AuthFormInterface;
   session: RecordAuthResponse<RecordModel> | SessionInterface;
-  isEmailSent: boolean;
+  isChangeEmailSent: boolean;
+  isChangePasswordSent: boolean;
+  isVerifyEmailSent: boolean;
   loadStoredSession: () => Promise<void>;
   clearStoredSession: () => Promise<void>;
   handleLogin: () => Promise<void>;
   handleRegister: () => Promise<void>;
   handleLogout: () => Promise<void>;
-  handleVerification: () => Promise<void>;
+  requestVerification: () => Promise<void>;
+  requestChangeEmail: () => Promise<void>;
+  requestChangePassword: () => Promise<void>;
   setEmail: (emailVal: string) => void;
   setPassword: (passwordVal: string) => void;
   setName: (nameVal: string) => void;
@@ -45,6 +50,14 @@ interface AuthStoreInterface {
   toggleIsAuthing: () => void;
   isAuthing: boolean;
   isLoggedIn: boolean;
+}
+
+function canUpdateAfterThreeDays(lastUpdated: string): boolean {
+  const daysSinceLastUpdate = differenceInDays(
+    new Date(),
+    parseISO(lastUpdated)
+  );
+  return daysSinceLastUpdate >= 3;
 }
 
 const useAuthStore = create<AuthStoreInterface>()((set, get) => ({
@@ -70,7 +83,9 @@ const useAuthStore = create<AuthStoreInterface>()((set, get) => ({
     },
     token: "",
   },
-  isEmailSent: false,
+  isChangeEmailSent: false,
+  isChangePasswordSent: false,
+  isVerifyEmailSent: false,
   loadStoredSession: async () => {
     try {
       let session = await AsyncStorage.getItem("@session");
@@ -79,7 +94,6 @@ const useAuthStore = create<AuthStoreInterface>()((set, get) => ({
         let parsedSession = JSON.parse(session);
         set({ session: parsedSession });
         get().client_instance.authStore.save(parsedSession.token);
-        console.log(parsedSession);
         if (get().client_instance.authStore.isValid) {
           const refreshedData = await get()
             .client_instance.collection("users")
@@ -223,7 +237,7 @@ const useAuthStore = create<AuthStoreInterface>()((set, get) => ({
       );
     }
   },
-  handleVerification: async () => {
+  requestVerification: async () => {
     if (get().isLoggedIn) {
       const isVerified = get().session.record.verified == true ? true : false;
 
@@ -232,7 +246,7 @@ const useAuthStore = create<AuthStoreInterface>()((set, get) => ({
         return;
       }
 
-      if (get().isEmailSent) {
+      if (get().isVerifyEmailSent) {
         ToastAndroid.show(
           "Email verification already sent, check your email.",
           ToastAndroid.SHORT
@@ -245,14 +259,104 @@ const useAuthStore = create<AuthStoreInterface>()((set, get) => ({
           .client_instance.collection("users")
           .requestVerification(get().session.record.email);
 
-        set({ isEmailSent: true });
+        set({ isVerifyEmailSent: true });
 
         ToastAndroid.show(
           "Please check your e-mail address.",
           ToastAndroid.SHORT
         );
       } catch (err) {
-        ToastAndroid.show(`Error: ${err}`, ToastAndroid.SHORT);
+        ToastAndroid.show(`Error: ${err.message}`, ToastAndroid.SHORT);
+      }
+    }
+  },
+  requestChangeEmail: async () => {
+    if (get().isLoggedIn) {
+      const isVerified = get().session.record.verified == true ? true : false;
+      const lastUpdated = get().session.record.updated;
+
+      if (!isVerified) {
+        ToastAndroid.show(
+          "Please verify your email address before changing your email address.",
+          ToastAndroid.SHORT
+        );
+        return;
+      }
+
+      if (!canUpdateAfterThreeDays(lastUpdated)) {
+        ToastAndroid.show(
+          "You can only request after 3 days of your last update.",
+          ToastAndroid.SHORT
+        );
+        return;
+      }
+
+      if (get().isChangeEmailSent) {
+        ToastAndroid.show(
+          "Please check your email, it's already sent.",
+          ToastAndroid.SHORT
+        );
+        return;
+      }
+
+      try {
+        await get()
+          .client_instance.collection("users")
+          .requestEmailChange(get().session.record.email);
+
+        set({ isChangeEmailSent: true });
+
+        ToastAndroid.show(
+          "Please check your e-mail address.",
+          ToastAndroid.SHORT
+        );
+      } catch (err) {
+        ToastAndroid.show(`Error: ${err.message}`, ToastAndroid.SHORT);
+      }
+    }
+  },
+  requestChangePassword: async () => {
+    if (get().isLoggedIn) {
+      const isVerified = get().session.record.verified == true ? true : false;
+      const lastUpdated = get().session.record.updated;
+
+      if (!isVerified) {
+        ToastAndroid.show(
+          "Please verify your email address before changing your email address.",
+          ToastAndroid.SHORT
+        );
+        return;
+      }
+
+      if (!canUpdateAfterThreeDays(lastUpdated)) {
+        ToastAndroid.show(
+          "You can only request after 3 days of your last update.",
+          ToastAndroid.SHORT
+        );
+        return;
+      }
+
+      if (get().isChangePasswordSent) {
+        ToastAndroid.show(
+          "Please check your email, it's already sent.",
+          ToastAndroid.SHORT
+        );
+        return;
+      }
+
+      try {
+        await get()
+          .client_instance.collection("users")
+          .requestPasswordReset(get().session.record.email);
+
+        set({ isChangeEmailSent: true });
+
+        ToastAndroid.show(
+          "Please check your e-mail address.",
+          ToastAndroid.SHORT
+        );
+      } catch (err) {
+        ToastAndroid.show(`Error: ${err.message}`, ToastAndroid.SHORT);
       }
     }
   },

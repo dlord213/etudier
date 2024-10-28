@@ -15,8 +15,14 @@ import useAuthStore from "@/hooks/useAuthStore";
 export default function Page() {
   const { isDarkMode, palette } = useThemeStore();
 
-  const { session, handleLogout, handleVerification, isEmailSent } =
-    useAuthStore();
+  const {
+    session,
+    handleLogout,
+    requestVerification,
+    requestChangeEmail,
+    requestChangePassword,
+    isVerifyEmailSent,
+  } = useAuthStore();
 
   const iconColor = isDarkMode
     ? Colors.Text_Dark.Default
@@ -132,12 +138,14 @@ export default function Page() {
             />
             <Pressable
               style={{ flexDirection: "row", gap: 16, alignItems: "center" }}
+              onPress={requestChangePassword}
             >
               <Ionicons name="lock-closed" size={24} color={iconColor} />
               <ThemedText text="Change password" />
             </Pressable>
             <Pressable
               style={{ flexDirection: "row", gap: 16, alignItems: "center" }}
+              onPress={requestChangeEmail}
             >
               <Ionicons name="mail-sharp" size={24} color={iconColor} />
               <ThemedText text="Change email address" />
@@ -149,13 +157,12 @@ export default function Page() {
                 alignItems: "center",
                 display: session.record.verified ? "none" : "flex",
               }}
-              onPress={handleVerification}
+              onPress={requestVerification}
             >
               <MaterialCommunityIcons
                 name="account-check"
                 size={24}
                 color={iconColor}
-                disabled={isEmailSent ? true : false}
               />
               <ThemedText text="Verify email address" />
             </Pressable>
