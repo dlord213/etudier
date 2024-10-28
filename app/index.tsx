@@ -285,9 +285,7 @@ export default function Index() {
             : Colors.Backgrounds_Light.Brand,
         }}
         onClose={() => {
-          setTimeout(() => {
-            resetForm();
-          }, 300);
+          resetForm();
         }}
       >
         <View style={{ padding: 16 }}>
@@ -366,9 +364,7 @@ export default function Index() {
             : Colors.Backgrounds_Light.Brand,
         }}
         onClose={() => {
-          setTimeout(() => {
-            resetForm();
-          }, 300);
+          resetForm();
         }}
       >
         <View style={{ padding: 16 }}>

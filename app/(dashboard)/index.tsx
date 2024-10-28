@@ -132,7 +132,6 @@ export default function Page() {
       <BottomSheet
         ref={taskModalRef}
         height={screenHeight / 5}
-        disableKeyboardHandling
         onClose={() => {
           toggleModalVisibility();
           if (isEditingTask) {
