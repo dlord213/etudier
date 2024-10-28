@@ -9,7 +9,6 @@ import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
 import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
 
 export default function Layout() {
-  const { height: screenHeight, width: screenWidth } = useWindowDimensions();
   const { palette, isDarkMode, isOLEDMode, hasColorOnNavBar } = useThemeStore();
   const { isModalOpen } = useModalSheetStore();
 
@@ -20,7 +19,9 @@ export default function Layout() {
         : Colors[palette][600]
       : Colors[palette][600]
     : isDarkMode
-    ? Colors.Backgrounds_Dark.Brand
+    ? isOLEDMode
+      ? "#000000"
+      : Colors.Backgrounds_Dark.Brand
     : Colors.Backgrounds_Light.Brand;
 
   return (
@@ -33,7 +34,9 @@ export default function Layout() {
           elevation: 0,
           borderColor: navBarBackgroundColor,
         },
-        tabBarActiveTintColor: Colors.Text_Dark.Default,
+        tabBarActiveTintColor: !hasColorOnNavBar
+          ? Colors[palette][400]
+          : Colors.Text_Dark.Default,
         tabBarInactiveTintColor: Colors.Text_Dark.Tertiary,
       }}
     >

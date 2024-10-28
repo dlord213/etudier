@@ -7,14 +7,21 @@ import useTaskStore, { TaskForm } from "@/hooks/useTaskStore";
 import useThemeStore from "@/hooks/useThemeStore";
 import Colors from "@/constants/Colors";
 import useModalSheetStore from "@/hooks/useModalSheetStore";
+import { SheetManager } from "react-native-actions-sheet";
 
 interface TaskListInterface {
   task: TaskForm[];
   text: string;
   modal: any;
+  isVisible?: boolean;
 }
 
-export default function TaskList({ task, text, modal }: TaskListInterface) {
+export default function TaskList({
+  task,
+  text,
+  modal,
+  isVisible = true,
+}: TaskListInterface) {
   const { toggleIsCompleted, toggleIsEditingTask, form, isEditingTask } =
     useTaskStore();
   const { isDarkMode } = useThemeStore();
@@ -26,7 +33,7 @@ export default function TaskList({ task, text, modal }: TaskListInterface) {
     : Colors.Text_Light.Default;
 
   return (
-    <View style={{ gap: 8 }}>
+    <View style={{ gap: 8, display: isVisible ? "flex" : "none" }}>
       <ThemedText
         text={text}
         style={{ fontFamily: "WorkSans_700Bold", fontSize: 24 }}
@@ -42,7 +49,7 @@ export default function TaskList({ task, text, modal }: TaskListInterface) {
               form.title = task.title;
               form.date = new Date(task.date);
               form.id = task.id;
-              modal.current?.open();
+              SheetManager.show(modal);
             }}
           >
             {task.isCompleted ? (

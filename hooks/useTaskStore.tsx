@@ -20,9 +20,12 @@ interface TaskStoreInterface {
   tomorrowTasks: TaskForm[];
   upcomingTasks: TaskForm[];
   completedTasks: TaskForm[];
+  todayTasksVisible: boolean;
+  tomorrowTasksVisible: boolean;
+  upcomingTasksVisible: boolean;
+  completedTasksVisible: boolean;
   isEditingTask: boolean;
   form: TaskForm;
-  toggleIsEditingTask: () => void;
   loadStoredTasks: () => Promise<void>;
   saveStoredStateTasks: () => Promise<void>;
   getTodayTasks: () => void;
@@ -33,6 +36,11 @@ interface TaskStoreInterface {
   updateDate: () => void;
   updateTask: () => Promise<void>;
   toggleIsCompleted: (id: number) => Promise<void>;
+  toggleIsEditingTask: () => void;
+  toggleTodayTasksVisible: () => void;
+  toggleTomorrowTasksVisible: () => void;
+  toggleUpcomingTasksVisible: () => void;
+  toggleCompletedTasksVisible: () => void;
   addTask: () => Promise<void>;
   resetForm: () => void;
 }
@@ -45,14 +53,15 @@ const useTaskStore = create<TaskStoreInterface>()(
     upcomingTasks: [],
     completedTasks: [],
     isEditingTask: false,
+    todayTasksVisible: true,
+    tomorrowTasksVisible: true,
+    upcomingTasksVisible: true,
+    completedTasksVisible: true,
     form: {
       id: Date.now(),
       title: "",
       date: new Date(),
       isCompleted: false,
-    },
-    toggleIsEditingTask: () => {
-      set({ isEditingTask: !get().isEditingTask });
     },
     loadStoredTasks: async () => {
       try {
@@ -189,6 +198,21 @@ const useTaskStore = create<TaskStoreInterface>()(
       } catch (error) {
         ToastAndroid.show(`Error changing state: ${error}`, ToastAndroid.SHORT);
       }
+    },
+    toggleIsEditingTask: () => {
+      set({ isEditingTask: !get().isEditingTask });
+    },
+    toggleTodayTasksVisible: () => {
+      set({ todayTasksVisible: !get().todayTasksVisible });
+    },
+    toggleTomorrowTasksVisible: () => {
+      set({ tomorrowTasksVisible: !get().tomorrowTasksVisible });
+    },
+    toggleUpcomingTasksVisible: () => {
+      set({ upcomingTasksVisible: !get().upcomingTasksVisible });
+    },
+    toggleCompletedTasksVisible: () => {
+      set({ completedTasksVisible: !get().completedTasksVisible });
     },
     addTask: async () => {
       if (!get().form.title) {

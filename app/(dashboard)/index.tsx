@@ -19,6 +19,7 @@ import useTaskStore from "@/hooks/useTaskStore";
 import ThemedText from "@/components/ThemedText";
 import TaskList from "@/components/TaskList";
 import { SheetManager } from "react-native-actions-sheet";
+import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 
 export default function Page() {
   const { palette, isDarkMode, isOLEDMode } = useThemeStore();
@@ -30,11 +31,14 @@ export default function Page() {
     tomorrowTasks,
     upcomingTasks,
     completedTasks,
+    todayTasksVisible,
+    tomorrowTasksVisible,
+    upcomingTasksVisible,
+    completedTasksVisible,
     saveStoredStateTasks,
     loadStoredTasks,
   } = useTaskStore();
 
-  const taskModalRef = useRef<BottomSheetMethods>(null);
   const styleState = styles(isDarkMode, isOLEDMode);
 
   const iconColor = isDarkMode
@@ -62,9 +66,14 @@ export default function Page() {
           style={{ fontFamily: "WorkSans_900Black", fontSize: 32 }}
           text="Tasks"
         />
-        <Pressable onPress={() => router.push("/user")}>
-          <FontAwesome name="user-circle-o" size={24} color={iconColor} />
-        </Pressable>
+        <View style={{ flexDirection: "row", gap: 24 }}>
+          <Pressable onPress={() => SheetManager.show("task-sort-sheet")}>
+            <MaterialIcons name="sort" size={24} color={iconColor} />
+          </Pressable>
+          <Pressable onPress={() => router.push("/user")}>
+            <FontAwesome name="user-circle-o" size={24} color={iconColor} />
+          </Pressable>
+        </View>
       </View>
       <Pressable
         style={{
@@ -94,12 +103,33 @@ export default function Page() {
         />
       </Pressable>
       <ScrollView
-        contentContainerStyle={{ gap: 8, paddingBottom: 24 }}
+        contentContainerStyle={{ gap: 8, paddingBottom: 16 }}
         showsVerticalScrollIndicator={false}
       >
-        <TaskList task={todayTasks} text="Today" modal={taskModalRef} />
-        <TaskList task={tomorrowTasks} text="Tomorrow" modal={taskModalRef} />
-        <TaskList task={upcomingTasks} text="Upcoming" modal={taskModalRef} />
+        <TaskList
+          task={todayTasks}
+          text="Today"
+          modal="task-sheet"
+          isVisible={todayTasksVisible}
+        />
+        <TaskList
+          task={tomorrowTasks}
+          text="Tomorrow"
+          modal="task-sheet"
+          isVisible={tomorrowTasksVisible}
+        />
+        <TaskList
+          task={upcomingTasks}
+          text="Upcoming"
+          modal="task-sheet"
+          isVisible={upcomingTasksVisible}
+        />
+        <TaskList
+          task={completedTasks}
+          text="Completed"
+          modal="task-sheet"
+          isVisible={completedTasksVisible}
+        />
       </ScrollView>
       <Pressable
         onPress={() => {
@@ -110,10 +140,7 @@ export default function Page() {
           padding: 16,
           backgroundColor: isDarkMode ? Colors.Text_Dark.Secondary : "#F4F4F4",
           borderRadius: 16,
-          position: "absolute",
           bottom: 12,
-          left: 8,
-          width: screenWidth - 24,
         }}
       >
         <ThemedText text="I want to..." color="Tertiary" />

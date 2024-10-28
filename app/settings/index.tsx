@@ -120,7 +120,7 @@ export default function Page() {
         <View style={{ flexShrink: 1 }}>
           <ThemedText text="Color on navigation bar" />
           <ThemedText
-            text="This toggles the color based on your preferences that's shown in the dashboard."
+            text="This toggles the color that's shown in the dashboard. (Disabled in OLED Mode)"
             color="Secondary"
           />
         </View>
@@ -136,7 +136,7 @@ export default function Page() {
               ? Colors.Backgrounds_Light.Brand
               : Colors.Backgrounds_Dark.Brand,
           }}
-          disabled={!isDarkMode ? true : false}
+          disabled={isDarkMode ? (isOLEDMode ? true : false) : false}
         />
       </View>
       <ThemedText
