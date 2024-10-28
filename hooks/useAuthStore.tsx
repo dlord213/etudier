@@ -31,6 +31,7 @@ interface AuthStoreInterface {
   client_instance: PocketBase;
   form: AuthFormInterface;
   session: RecordAuthResponse<RecordModel> | SessionInterface;
+  isEmailSent: boolean;
   loadStoredSession: () => Promise<void>;
   clearStoredSession: () => Promise<void>;
   handleLogin: () => Promise<void>;
@@ -69,6 +70,7 @@ const useAuthStore = create<AuthStoreInterface>()((set, get) => ({
     },
     token: "",
   },
+  isEmailSent: false,
   loadStoredSession: async () => {
     try {
       let session = await AsyncStorage.getItem("@session");
@@ -138,7 +140,6 @@ const useAuthStore = create<AuthStoreInterface>()((set, get) => ({
       set({ isAuthing: false });
       set({ isLoggedIn: true });
     } catch (error) {
-      console.error("Login error: ", error);
       set({ isAuthing: false });
       set({ isLoggedIn: false });
       get().resetForm();
@@ -199,7 +200,6 @@ const useAuthStore = create<AuthStoreInterface>()((set, get) => ({
       set({ isAuthing: false });
       set({ isLoggedIn: true });
     } catch (error) {
-      console.error("Login error: ", error);
       set({ isAuthing: false });
       set({ isLoggedIn: false });
       get().resetForm();
@@ -212,11 +212,10 @@ const useAuthStore = create<AuthStoreInterface>()((set, get) => ({
   handleLogout: async () => {
     try {
       await AsyncStorage.removeItem("@session");
-      await get().client_instance.authStore.clear();
-      set({ isLoggedIn: false });
+      get().client_instance.authStore.clear();
+      set({ isEmailSent: false, isAuthing: false, isLoggedIn: false });
       router.replace("/");
     } catch (error) {
-      console.error("Logout error: ", error);
       get().resetForm();
       ToastAndroid.show(
         `Login failed: ${error.message || "Unknown error occurred"}`,
@@ -233,17 +232,27 @@ const useAuthStore = create<AuthStoreInterface>()((set, get) => ({
         return;
       }
 
+      if (get().isEmailSent) {
+        ToastAndroid.show(
+          "Email verification already sent, check your email.",
+          ToastAndroid.SHORT
+        );
+        return;
+      }
+
       try {
         await get()
           .client_instance.collection("users")
           .requestVerification(get().session.record.email);
+
+        set({ isEmailSent: true });
 
         ToastAndroid.show(
           "Please check your e-mail address.",
           ToastAndroid.SHORT
         );
       } catch (err) {
-        console.error(err);
+        ToastAndroid.show(`Error: ${err}`, ToastAndroid.SHORT);
       }
     }
   },

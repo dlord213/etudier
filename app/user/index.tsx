@@ -1,5 +1,5 @@
 import Colors from "@/constants/Colors";
-import { Pressable, StyleSheet, View } from "react-native";
+import { Image, Pressable, StyleSheet, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 import AntDesign from "@expo/vector-icons/AntDesign";
@@ -15,7 +15,8 @@ import useAuthStore from "@/hooks/useAuthStore";
 export default function Page() {
   const { isDarkMode, palette } = useThemeStore();
 
-  const { session, handleLogout, handleVerification } = useAuthStore();
+  const { session, handleLogout, handleVerification, isEmailSent } =
+    useAuthStore();
 
   const iconColor = isDarkMode
     ? Colors.Text_Dark.Default
@@ -52,23 +53,43 @@ export default function Page() {
         />
       </View>
       <View style={{ gap: 16, marginBottom: 8 }}>
-        <View style={{ flexDirection: "row", gap: 16, alignItems: "center" }}>
-          <View
-            style={{
-              width: 64,
-              height: 64,
-              backgroundColor: isDarkMode
-                ? Colors.Backgrounds_Dark.Brand
-                : Colors.Backgrounds_Light.Brand,
-              borderRadius: 999,
-            }}
-          ></View>
+        <View
+          style={{
+            flexDirection: "row",
+            gap: 24,
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          {!session.record.avatar ? (
+            <FontAwesome
+              name="user-circle"
+              size={64}
+              color={
+                isDarkMode
+                  ? Colors.Text_Dark.Default
+                  : Colors.Text_Light.Default
+              }
+            />
+          ) : (
+            <Image
+              style={{
+                width: 64,
+                height: 64,
+                backgroundColor: isDarkMode
+                  ? Colors.Backgrounds_Dark.Brand
+                  : Colors.Backgrounds_Light.Brand,
+                borderRadius: 999,
+              }}
+              src={session.record.avatar}
+            />
+          )}
           <View>
             <ThemedText
               text={session.record.name != "" ? session.record.name : "No name"}
               style={{
                 fontFamily: "WorkSans_700Bold",
-                color: Colors[palette][600],
+                color: Colors[palette][500],
                 fontSize: 24,
               }}
             />
@@ -122,13 +143,19 @@ export default function Page() {
               <ThemedText text="Change email address" />
             </Pressable>
             <Pressable
-              style={{ flexDirection: "row", gap: 16, alignItems: "center" }}
+              style={{
+                flexDirection: "row",
+                gap: 16,
+                alignItems: "center",
+                display: session.record.verified ? "none" : "flex",
+              }}
               onPress={handleVerification}
             >
               <MaterialCommunityIcons
                 name="account-check"
                 size={24}
                 color={iconColor}
+                disabled={isEmailSent ? true : false}
               />
               <ThemedText text="Verify email address" />
             </Pressable>
@@ -158,6 +185,6 @@ const styles = (isDarkMode: boolean) =>
         : Colors.Backgrounds_Light.Brand,
       flex: 1,
       paddingHorizontal: 16,
-      gap: 12,
+      gap: 16,
     },
   });
