@@ -25,7 +25,7 @@ export default function Page() {
         />
         <ThemedText
           text="Settings"
-          style={{ fontFamily: "WorkSans_700Bold", fontSize: 36 }}
+          style={{ fontFamily: "WorkSans_700Bold", fontSize: 32 }}
         />
       </View>
       <ThemedText

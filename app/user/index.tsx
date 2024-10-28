@@ -48,7 +48,7 @@ export default function Page() {
           />
           <ThemedText
             text="Profile"
-            style={{ fontFamily: "WorkSans_700Bold", fontSize: 36 }}
+            style={{ fontFamily: "WorkSans_700Bold", fontSize: 32 }}
           />
         </View>
         <FontAwesome

@@ -211,7 +211,7 @@ const styles = (isDarkMode: boolean) =>
         ? Colors.Backgrounds_Dark.Brand
         : Colors.Backgrounds_Light.Brand,
       flex: 1,
-      padding: 16,
+      paddingHorizontal: 16,
       gap: 8,
     },
   });

@@ -1,3 +1,4 @@
+import React from "react";
 import {
   Pressable,
   StyleSheet,
@@ -6,8 +7,6 @@ import {
   useWindowDimensions,
   View,
 } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
-import Carousel from "pinar";
 import {
   WorkSans_400Regular,
   WorkSans_700Bold,
@@ -16,11 +15,13 @@ import {
   useFonts,
   WorkSans_900Black,
 } from "@expo-google-fonts/work-sans";
+
+import { SafeAreaView } from "react-native-safe-area-context";
 import { useEffect, useRef, useState } from "react";
-import { Redirect, router, SplashScreen } from "expo-router";
+import { Redirect, SplashScreen } from "expo-router";
 import BottomSheet, { BottomSheetMethods } from "@devvie/bottom-sheet";
-import React from "react";
 import LottieView from "lottie-react-native";
+import Carousel from "pinar";
 
 import Colors from "@/constants/Colors";
 import useThemeStore from "@/hooks/useThemeStore";
@@ -152,7 +153,6 @@ export default function Index() {
         ref={carouselRef}
         showsDots={false}
         showsControls={false}
-        containerStyle={{ height: screenHeight / 2 }}
         onIndexChanged={({ index, total }) => {
           setDotIndex(index);
         }}
@@ -164,12 +164,20 @@ export default function Index() {
               flex: 1,
               justifyContent: "center",
               alignItems: "center",
-              padding: 16,
             }}
             key={obj.title}
           >
             {/* SEP */}
             <View>
+              <LottieView
+                autoPlay
+                loop
+                source={obj.animation}
+                style={{
+                  height: screenHeight / 2,
+                  width: screenWidth,
+                }}
+              />
               <ThemedText
                 text={obj.title}
                 style={{
@@ -185,6 +193,7 @@ export default function Index() {
                   fontSize: 14,
                   fontFamily: "WorkSans_400Regular",
                   textAlign: "center",
+                  paddingHorizontal: 8,
                 }}
               />
             </View>
@@ -207,8 +216,7 @@ export default function Index() {
               signUpRef.current?.open();
             }}
             style={{
-              borderWidth: 1,
-              borderColor: Colors[palette][600],
+              backgroundColor: Colors[palette][200],
               paddingVertical: 8,
               paddingHorizontal: 16,
               borderRadius: 16,
@@ -228,9 +236,8 @@ export default function Index() {
               loginRef.current?.open();
             }}
             style={{
-              borderWidth: dotIndex == 3 ? 0 : 1,
-              borderColor: Colors[palette][600],
-              backgroundColor: dotIndex == 3 ? Colors[palette][600] : btnColor,
+              backgroundColor:
+                dotIndex == 3 ? Colors[palette][600] : Colors[palette][200],
               paddingVertical: 8,
               paddingHorizontal: 16,
               borderRadius: 16,
