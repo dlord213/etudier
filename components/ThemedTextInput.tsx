@@ -8,6 +8,7 @@ interface ThemedTextInputProps extends TextInputProps {
   value?: string | undefined;
   style?: StyleProp<TextStyle>;
   editable?: boolean;
+  inverted?: boolean;
 }
 
 export default function ThemedTextInput({
@@ -16,8 +17,17 @@ export default function ThemedTextInput({
   value,
   style,
   editable = true,
+  inverted = false,
 }: ThemedTextInputProps) {
   const { palette, isDarkMode } = useThemeStore();
+
+  const textColor = !inverted
+    ? isDarkMode
+      ? Colors.Text_Dark.Default
+      : Colors.Text_Light.Default
+    : isDarkMode
+    ? Colors.Text_Light.Default
+    : Colors.Text_Dark.Default;
 
   return (
     <TextInput
@@ -28,9 +38,10 @@ export default function ThemedTextInput({
       style={[
         style,
         {
-          color: isDarkMode
-            ? Colors.Text_Dark.Default
-            : Colors.Text_Light.Default,
+          backgroundColor: isDarkMode
+            ? Colors.Backgrounds_Dark.Brand
+            : Colors.Backgrounds_Light.Brand,
+          color: textColor,
         },
       ]}
       placeholderTextColor={Colors[palette][300]}

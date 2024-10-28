@@ -49,7 +49,6 @@ export default function Index() {
   const { palette, isDarkMode, isOLEDMode, loadSettings } = useThemeStore();
   const {
     form,
-    loadStoredSession,
     handleLogin,
     handleRegister,
     setEmail,
@@ -60,11 +59,6 @@ export default function Index() {
     isLoggedIn,
     toggleIsAuthing,
   } = useAuthStore();
-
-  useEffect(() => {
-    loadStoredSession();
-    loadSettings();
-  }, []);
 
   const styleState = styles(isDarkMode, isOLEDMode);
 
@@ -288,7 +282,7 @@ export default function Index() {
         style={{
           backgroundColor: isDarkMode
             ? Colors.Backgrounds_Dark.Brand
-            : Colors.Backgrounds_Light,
+            : Colors.Backgrounds_Light.Brand,
         }}
         onClose={() => {
           setTimeout(() => {
@@ -369,7 +363,7 @@ export default function Index() {
         style={{
           backgroundColor: isDarkMode
             ? Colors.Backgrounds_Dark.Brand
-            : Colors.Backgrounds_Light,
+            : Colors.Backgrounds_Light.Brand,
         }}
         onClose={() => {
           setTimeout(() => {

@@ -31,6 +31,7 @@ const useThemeStore = create<ThemeStoreInterface>()((set, get) => ({
     const themeSettings = await AsyncStorage.getItem("@theme_settings");
     if (themeSettings) {
       const settings = JSON.parse(themeSettings);
+      console.log(settings);
       set({
         palette: settings.palette,
         isDarkMode: settings.isDarkMode,
