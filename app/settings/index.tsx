@@ -2,7 +2,8 @@ import ThemedText from "@/components/ThemedText";
 import Colors from "@/constants/Colors";
 import useThemeStore from "@/hooks/useThemeStore";
 import AntDesign from "@expo/vector-icons/AntDesign";
-import { router } from "expo-router";
+import { router, useFocusEffect, useNavigation } from "expo-router";
+import { useCallback } from "react";
 import { Pressable, StyleSheet, Switch, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
@@ -14,12 +15,26 @@ export default function Page() {
     setPalette,
     toggleDarkMode,
     toggleOLEDMode,
+    saveSettings,
   } = useThemeStore();
   const styleState = styles(isDarkMode, isOLEDMode);
+
+  const navigation = useNavigation();
 
   const iconColor = isDarkMode
     ? Colors.Text_Dark.Default
     : Colors.Text_Light.Default;
+
+  useFocusEffect(
+    useCallback(() => {
+      const saveSettingsBeforeRemoval = navigation.addListener(
+        "beforeRemove",
+        saveSettings
+      );
+
+      return saveSettingsBeforeRemoval;
+    }, [navigation])
+  );
 
   return (
     <SafeAreaView style={styleState.safeAreaView}>

@@ -46,7 +46,7 @@ export default function Index() {
   const loginRef = useRef<BottomSheetMethods>(null);
   const carouselRef = useRef(null);
 
-  const { palette, isDarkMode, isOLEDMode } = useThemeStore();
+  const { palette, isDarkMode, isOLEDMode, loadSettings } = useThemeStore();
   const {
     form,
     loadStoredSession,
@@ -63,12 +63,10 @@ export default function Index() {
 
   useEffect(() => {
     loadStoredSession();
+    loadSettings();
   }, []);
 
   const styleState = styles(isDarkMode, isOLEDMode);
-  const btnColor = isDarkMode
-    ? Colors.Backgrounds_Dark.Brand
-    : Colors.Backgrounds_Light.Brand;
 
   useEffect(() => {
     if (loaded || error) {

@@ -1,3 +1,4 @@
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { create } from "zustand";
 
 interface ThemeStoreInterface {
@@ -9,6 +10,8 @@ interface ThemeStoreInterface {
   setPalette: (newPalette: string) => void;
   toggleDarkMode: () => void;
   toggleOLEDMode: () => void;
+  loadSettings: () => Promise<void>;
+  saveSettings: () => Promise<void>;
 }
 
 const useThemeStore = create<ThemeStoreInterface>()((set, get) => ({
@@ -23,6 +26,27 @@ const useThemeStore = create<ThemeStoreInterface>()((set, get) => ({
     if (get().isDarkMode) {
       set({ isOLEDMode: !get().isOLEDMode });
     }
+  },
+  loadSettings: async () => {
+    const themeSettings = await AsyncStorage.getItem("@theme_settings");
+    if (themeSettings) {
+      const settings = JSON.parse(themeSettings);
+      set({
+        palette: settings.palette,
+        isDarkMode: settings.isDarkMode,
+        isOLEDMode: settings.isOLEDMode,
+      });
+    }
+  },
+  saveSettings: async () => {
+    await AsyncStorage.setItem(
+      "@theme_settings",
+      JSON.stringify({
+        palette: get().palette,
+        isDarkMode: get().isDarkMode,
+        isOLEDMode: get().isOLEDMode,
+      })
+    );
   },
 }));
 
