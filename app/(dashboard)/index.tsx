@@ -1,5 +1,11 @@
 import Colors from "@/constants/Colors";
-import { Pressable, ScrollView, StyleSheet, View } from "react-native";
+import {
+  Pressable,
+  ScrollView,
+  SectionList,
+  StyleSheet,
+  View,
+} from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useCallback } from "react";
 import { router, useFocusEffect } from "expo-router";
@@ -14,6 +20,7 @@ import ThemedText from "@/components/ThemedText";
 import TaskList from "@/components/TaskList";
 import { SheetManager } from "react-native-actions-sheet";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
+import Ionicons from "@expo/vector-icons/Ionicons";
 
 export default function Page() {
   const { palette, isDarkMode, isOLEDMode } = useThemeStore();
@@ -32,7 +39,22 @@ export default function Page() {
     completedTasksVisible,
     saveStoredStateTasks,
     loadStoredTasks,
+    toggleIsCompleted,
+    toggleIsEditingTask,
+    form,
   } = useTaskStore();
+
+  const sections = [
+    { title: "Overdue", data: overdueTasks, isVisible: overdueTasksVisible },
+    { title: "Today", data: todayTasks, isVisible: todayTasksVisible },
+    { title: "Tomorrow", data: tomorrowTasks, isVisible: tomorrowTasksVisible },
+    { title: "Upcoming", data: upcomingTasks, isVisible: upcomingTasksVisible },
+    {
+      title: "Completed",
+      data: completedTasks,
+      isVisible: completedTasksVisible,
+    },
+  ];
 
   const styleState = styles(isDarkMode, isOLEDMode);
 
@@ -97,41 +119,55 @@ export default function Page() {
           color={Colors.Text_Dark.Default}
         />
       </Pressable>
-      <ScrollView
-        contentContainerStyle={{ gap: 8, paddingBottom: 16 }}
+      <SectionList
+        sections={sections.filter(
+          (section) => section.isVisible && section.data.length > 0
+        )}
+        keyExtractor={(item) => item.id}
+        renderSectionHeader={({ section: { title } }) => (
+          <ThemedText
+            text={title}
+            style={{
+              fontFamily: "WorkSans_700Bold",
+              fontSize: 24,
+              marginVertical: 8,
+            }}
+          />
+        )}
+        renderItem={({ item: task }) => (
+          <Pressable
+            style={{ flexDirection: "row", gap: 8, paddingVertical: 4 }}
+            onPress={() => {
+              toggleIsEditingTask();
+              toggleModalVisibility();
+              form.title = task.title;
+              form.date = new Date(task.date);
+              form.id = task.id;
+              SheetManager.show("task-sheet");
+            }}
+          >
+            <Ionicons
+              name={
+                task.isCompleted
+                  ? "checkmark-circle"
+                  : "checkmark-circle-outline"
+              }
+              size={24}
+              color={iconColor}
+              onPress={() => toggleIsCompleted(task.id)}
+            />
+            <ThemedText text={task.title} />
+          </Pressable>
+        )}
+        ListEmptyComponent={
+          <ThemedText
+            text="No tasks available."
+            style={{ fontFamily: "WorkSans_900Black", fontSize: 24 }}
+          />
+        }
+        contentContainerStyle={{ paddingBottom: 16 }}
         showsVerticalScrollIndicator={false}
-      >
-        <TaskList
-          task={overdueTasks}
-          text="Overdue"
-          modal="task-sheet"
-          isVisible={overdueTasksVisible}
-        />
-        <TaskList
-          task={todayTasks}
-          text="Today"
-          modal="task-sheet"
-          isVisible={todayTasksVisible}
-        />
-        <TaskList
-          task={tomorrowTasks}
-          text="Tomorrow"
-          modal="task-sheet"
-          isVisible={tomorrowTasksVisible}
-        />
-        <TaskList
-          task={upcomingTasks}
-          text="Upcoming"
-          modal="task-sheet"
-          isVisible={upcomingTasksVisible}
-        />
-        <TaskList
-          task={completedTasks}
-          text="Completed"
-          modal="task-sheet"
-          isVisible={completedTasksVisible}
-        />
-      </ScrollView>
+      />
       <Pressable
         onPress={() => {
           SheetManager.show("task-sheet");

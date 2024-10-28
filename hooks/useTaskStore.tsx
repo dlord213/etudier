@@ -189,6 +189,7 @@ const useTaskStore = create<TaskStoreInterface>()(
         }
 
         try {
+          get().getOverdueTasks();
           get().getTodayTasks();
           get().getTomorrowTasks();
           get().getUpcomingTasks();
@@ -254,6 +255,8 @@ const useTaskStore = create<TaskStoreInterface>()(
         set((state) => {
           state.storedTasks.push(newTask);
         });
+
+        get().getOverdueTasks();
         get().getTodayTasks();
         get().getTomorrowTasks();
         get().getUpcomingTasks();
