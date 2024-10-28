@@ -8,13 +8,13 @@ import Colors from "@/constants/Colors";
 import useThemeStore from "@/hooks/useThemeStore";
 
 export default function Page() {
-  const { palette, isDarkMode } = useThemeStore();
+  const { palette, isDarkMode, isOLEDMode } = useThemeStore();
 
   const iconColor = isDarkMode
     ? Colors.Text_Dark.Default
     : Colors.Text_Light.Default;
 
-  const styleState = styles(isDarkMode);
+  const styleState = styles(isDarkMode, isOLEDMode);
 
   return (
     <SafeAreaView style={styleState.safeAreaView}>
@@ -38,11 +38,13 @@ export default function Page() {
   );
 }
 
-const styles = (isDarkMode: boolean) =>
+const styles = (isDarkMode: boolean, isOLEDMode: boolean) =>
   StyleSheet.create({
     safeAreaView: {
       backgroundColor: isDarkMode
-        ? Colors.Backgrounds_Dark.Brand
+        ? isOLEDMode
+          ? "#000000"
+          : Colors.Backgrounds_Dark.Brand
         : Colors.Backgrounds_Light.Brand,
       flex: 1,
       paddingHorizontal: 16,

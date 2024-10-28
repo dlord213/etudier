@@ -7,8 +7,15 @@ import { Pressable, StyleSheet, Switch, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function Page() {
-  const { palette, isDarkMode, setPalette, toggleDarkMode } = useThemeStore();
-  const styleState = styles(isDarkMode);
+  const {
+    palette,
+    isDarkMode,
+    isOLEDMode,
+    setPalette,
+    toggleDarkMode,
+    toggleOLEDMode,
+  } = useThemeStore();
+  const styleState = styles(isDarkMode, isOLEDMode);
 
   const iconColor = isDarkMode
     ? Colors.Text_Dark.Default
@@ -57,6 +64,42 @@ export default function Page() {
           }}
         />
       </View>
+      <View
+        style={{
+          flexDirection: "row",
+          justifyContent: "space-between",
+          alignItems: "center",
+        }}
+      >
+        <View style={{ flexShrink: 1 }}>
+          <ThemedText text="OLED Mode" />
+          <ThemedText
+            text="Can only be enabled if dark mode is turned on."
+            color="Secondary"
+          />
+        </View>
+        <Switch
+          value={isOLEDMode}
+          onValueChange={toggleOLEDMode}
+          thumbColor={Colors[palette][600]}
+          trackColor={{
+            false: isDarkMode
+              ? Colors.Backgrounds_Light.Brand
+              : Colors.Backgrounds_Dark.Brand,
+            true: isDarkMode
+              ? Colors.Backgrounds_Light.Brand
+              : Colors.Backgrounds_Dark.Brand,
+          }}
+          disabled={!isDarkMode ? true : false}
+        />
+      </View>
+      <ThemedText
+        text="Colors"
+        style={{
+          fontFamily: "WorkSans_700Bold",
+        }}
+        color="Tertiary"
+      />
       <View
         style={{
           flexDirection: "row",
@@ -114,14 +157,16 @@ export default function Page() {
   );
 }
 
-const styles = (isDarkMode: boolean) =>
+const styles = (isDarkMode: boolean, isOLEDMode: boolean) =>
   StyleSheet.create({
     safeAreaView: {
       backgroundColor: isDarkMode
-        ? Colors.Backgrounds_Dark.Brand
+        ? isOLEDMode
+          ? "#000000"
+          : Colors.Backgrounds_Dark.Brand
         : Colors.Backgrounds_Light.Brand,
       flex: 1,
       paddingHorizontal: 16,
-      gap: 8,
+      gap: 16,
     },
   });

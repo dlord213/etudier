@@ -10,12 +10,10 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { useCallback, useRef } from "react";
 import BottomSheet, { BottomSheetMethods } from "@devvie/bottom-sheet";
 import { router, useFocusEffect } from "expo-router";
-import { parseISO, isSameDay, addDays, isAfter } from "date-fns";
 
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import AntDesign from "@expo/vector-icons/AntDesign";
-import Ionicons from "@expo/vector-icons/Ionicons";
 
 import useThemeStore from "@/hooks/useThemeStore";
 import useModalSheetStore from "@/hooks/useModalSheetStore";
@@ -23,11 +21,10 @@ import useTaskStore from "@/hooks/useTaskStore";
 import ThemedText from "@/components/ThemedText";
 import ThemedTextInput from "@/components/ThemedTextInput";
 import TaskList from "@/components/TaskList";
-import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 
 export default function Page() {
-  const { palette, isDarkMode } = useThemeStore();
+  const { palette, isDarkMode, isOLEDMode } = useThemeStore();
   const { toggleModalVisibility } = useModalSheetStore();
   const { height: screenHeight, width: screenWidth } = useWindowDimensions();
 
@@ -49,7 +46,7 @@ export default function Page() {
   } = useTaskStore();
 
   const taskModalRef = useRef<BottomSheetMethods>(null);
-  const styleState = styles(isDarkMode);
+  const styleState = styles(isDarkMode, isOLEDMode);
 
   const iconColor = isDarkMode
     ? Colors.Text_Dark.Default
@@ -204,11 +201,13 @@ export default function Page() {
   );
 }
 
-const styles = (isDarkMode: boolean) =>
+const styles = (isDarkMode: boolean, isOLEDMode: boolean) =>
   StyleSheet.create({
     safeAreaView: {
       backgroundColor: isDarkMode
-        ? Colors.Backgrounds_Dark.Brand
+        ? isOLEDMode
+          ? "#000000"
+          : Colors.Backgrounds_Dark.Brand
         : Colors.Backgrounds_Light.Brand,
       flex: 1,
       paddingHorizontal: 16,

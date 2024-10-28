@@ -46,7 +46,7 @@ export default function Index() {
   const loginRef = useRef<BottomSheetMethods>(null);
   const carouselRef = useRef(null);
 
-  const { palette, isDarkMode } = useThemeStore();
+  const { palette, isDarkMode, isOLEDMode } = useThemeStore();
   const {
     form,
     loadStoredSession,
@@ -65,7 +65,7 @@ export default function Index() {
     loadStoredSession();
   }, []);
 
-  const styleState = styles(isDarkMode);
+  const styleState = styles(isDarkMode, isOLEDMode);
   const btnColor = isDarkMode
     ? Colors.Backgrounds_Dark.Brand
     : Colors.Backgrounds_Light.Brand;
@@ -465,11 +465,13 @@ export default function Index() {
   );
 }
 
-const styles = (isDarkMode: boolean) =>
+const styles = (isDarkMode: boolean, isOLEDMode: boolean) =>
   StyleSheet.create({
     safeAreaView: {
       backgroundColor: isDarkMode
-        ? Colors.Backgrounds_Dark.Brand
+        ? isOLEDMode
+          ? "#000000"
+          : Colors.Backgrounds_Dark.Brand
         : Colors.Backgrounds_Light.Brand,
       flex: 1,
       alignItems: "center",
