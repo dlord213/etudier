@@ -275,7 +275,7 @@ export default function Index() {
       </View>
       <BottomSheet
         ref={loginRef}
-        height={screenHeight / 2.3}
+        height={screenHeight}
         disableDragHandlePanning
         disableBodyPanning
         disableKeyboardHandling
@@ -356,7 +356,7 @@ export default function Index() {
       </BottomSheet>
       <BottomSheet
         ref={signUpRef}
-        height={screenHeight / 2}
+        height={screenHeight}
         disableDragHandlePanning
         disableBodyPanning
         disableKeyboardHandling
