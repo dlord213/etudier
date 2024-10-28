@@ -36,6 +36,7 @@ interface AuthStoreInterface {
   handleLogin: () => Promise<void>;
   handleRegister: () => Promise<void>;
   handleLogout: () => Promise<void>;
+  handleVerification: () => Promise<void>;
   setEmail: (emailVal: string) => void;
   setPassword: (passwordVal: string) => void;
   setName: (nameVal: string) => void;
@@ -76,7 +77,16 @@ const useAuthStore = create<AuthStoreInterface>()((set, get) => ({
         let parsedSession = JSON.parse(session);
         set({ session: parsedSession });
         get().client_instance.authStore.save(parsedSession.token);
+        console.log(parsedSession);
         if (get().client_instance.authStore.isValid) {
+          const refreshedData = await get()
+            .client_instance.collection("users")
+            .authRefresh();
+
+          set({ session: refreshedData });
+
+          await AsyncStorage.setItem("@session", JSON.stringify(refreshedData));
+
           set({ isAuthing: false });
           set({ isLoggedIn: true });
         }
@@ -212,6 +222,29 @@ const useAuthStore = create<AuthStoreInterface>()((set, get) => ({
         `Login failed: ${error.message || "Unknown error occurred"}`,
         ToastAndroid.LONG
       );
+    }
+  },
+  handleVerification: async () => {
+    if (get().isLoggedIn) {
+      const isVerified = get().session.record.verified == true ? true : false;
+
+      if (isVerified) {
+        ToastAndroid.show("Account already verified", ToastAndroid.SHORT);
+        return;
+      }
+
+      try {
+        await get()
+          .client_instance.collection("users")
+          .requestVerification(get().session.record.email);
+
+        ToastAndroid.show(
+          "Please check your e-mail address.",
+          ToastAndroid.SHORT
+        );
+      } catch (err) {
+        console.error(err);
+      }
     }
   },
   setEmail: (emailVal: string) =>

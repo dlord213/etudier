@@ -5,6 +5,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import Ionicons from "@expo/vector-icons/Ionicons";
+import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 
 import { router } from "expo-router";
 import ThemedText from "@/components/ThemedText";
@@ -14,7 +15,7 @@ import useAuthStore from "@/hooks/useAuthStore";
 export default function Page() {
   const { isDarkMode, palette } = useThemeStore();
 
-  const { session, handleLogout } = useAuthStore();
+  const { session, handleLogout, handleVerification } = useAuthStore();
 
   const iconColor = isDarkMode
     ? Colors.Text_Dark.Default
@@ -119,6 +120,17 @@ export default function Page() {
             >
               <Ionicons name="mail-sharp" size={24} color={iconColor} />
               <ThemedText text="Change email address" />
+            </Pressable>
+            <Pressable
+              style={{ flexDirection: "row", gap: 16, alignItems: "center" }}
+              onPress={handleVerification}
+            >
+              <MaterialCommunityIcons
+                name="account-check"
+                size={24}
+                color={iconColor}
+              />
+              <ThemedText text="Verify email address" />
             </Pressable>
           </View>
         </View>
