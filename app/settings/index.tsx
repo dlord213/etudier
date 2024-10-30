@@ -1,12 +1,14 @@
-import ThemedText from "@/components/ThemedText";
-import Colors from "@/constants/Colors";
-import useNoteStore from "@/hooks/useNoteStore";
-import useThemeStore from "@/hooks/useThemeStore";
-import AntDesign from "@expo/vector-icons/AntDesign";
 import { router, useFocusEffect, useNavigation } from "expo-router";
 import { useCallback } from "react";
 import { Pressable, StyleSheet, Switch, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+
+import ThemedText from "@/components/ThemedText";
+import Colors from "@/constants/Colors";
+import useNoteStore from "@/hooks/useNoteStore";
+import useThemeStore from "@/hooks/useThemeStore";
+
+import AntDesign from "@expo/vector-icons/AntDesign";
 
 export default function Page() {
   const {

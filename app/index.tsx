@@ -14,7 +14,7 @@ import {
   useFonts,
   WorkSans_900Black,
 } from "@expo-google-fonts/work-sans";
-
+import { SheetManager } from "react-native-actions-sheet";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useEffect, useRef, useState } from "react";
 import { Redirect, SplashScreen } from "expo-router";
@@ -27,7 +27,6 @@ import ThemedText from "@/components/ThemedText";
 import LandingPageStrings from "@/constants/LandingPageStrings";
 import useAuthStore from "@/hooks/useAuthStore";
 import "./sheets.tsx";
-import { SheetManager } from "react-native-actions-sheet";
 
 SplashScreen.preventAutoHideAsync();
 

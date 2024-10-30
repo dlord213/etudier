@@ -1,12 +1,6 @@
 import { useLocalSearchParams } from "expo-router";
 import React, { useCallback, useEffect, useState } from "react";
-import {
-  StyleSheet,
-  TextInput,
-  ToastAndroid,
-  useWindowDimensions,
-  View,
-} from "react-native";
+import { StyleSheet, TextInput, useWindowDimensions, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { router, useFocusEffect, useNavigation } from "expo-router";
 
@@ -25,14 +19,8 @@ export default function Page() {
 
   const { isDarkMode, isOLEDMode, palette } = useThemeStore();
   const { height: screenHeight } = useWindowDimensions();
-  const {
-    findNote,
-    setTitle,
-    setDescription,
-    form,
-    resetForm,
-    saveNoteChanges,
-  } = useNoteStore();
+  const { findNote, setTitle, setDescription, form, saveNoteChanges } =
+    useNoteStore();
 
   const styleState = styles(isDarkMode, isOLEDMode);
   const navigation = useNavigation();

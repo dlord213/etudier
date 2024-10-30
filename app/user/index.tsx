@@ -1,13 +1,13 @@
 import Colors from "@/constants/Colors";
 import { Image, Pressable, StyleSheet, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { router } from "expo-router";
 
 import AntDesign from "@expo/vector-icons/AntDesign";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 
-import { router } from "expo-router";
 import ThemedText from "@/components/ThemedText";
 import useThemeStore from "@/hooks/useThemeStore";
 import useAuthStore from "@/hooks/useAuthStore";

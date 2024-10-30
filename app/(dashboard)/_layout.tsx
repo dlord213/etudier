@@ -1,14 +1,14 @@
 import { Tabs } from "expo-router";
+import { useEffect } from "react";
 
 import Colors from "@/constants/Colors";
 import useThemeStore from "@/hooks/useThemeStore";
 import useModalSheetStore from "@/hooks/useModalSheetStore";
+import useTaskStore from "@/hooks/useTaskStore";
+import useNoteStore from "@/hooks/useNoteStore";
 
 import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
 import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
-import useTaskStore from "@/hooks/useTaskStore";
-import { useEffect } from "react";
-import useNoteStore from "@/hooks/useNoteStore";
 
 export default function Layout() {
   const { palette, isDarkMode, isOLEDMode, hasColorOnNavBar } = useThemeStore();
@@ -55,6 +55,15 @@ export default function Layout() {
           headerShown: false,
           tabBarIcon: ({ color }) => (
             <FontAwesome5 name="tasks" size={20} color={color} />
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="focus"
+        options={{
+          headerShown: false,
+          tabBarIcon: ({ color }) => (
+            <FontAwesome6 name="clock-four" size={20} color={color} />
           ),
         }}
       />
