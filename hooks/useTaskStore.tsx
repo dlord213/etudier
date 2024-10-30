@@ -54,8 +54,8 @@ interface TaskStoreInterface {
   toggleCompletedTasksVisible: () => void;
   addTask: () => Promise<void>;
   resetForm: () => void;
-  saveSettings: () => Promise<void>;
-  loadSettings: () => Promise<void>;
+  saveTaskSettings: () => Promise<void>;
+  loadTaskSettings: () => Promise<void>;
 }
 
 const useTaskStore = create<TaskStoreInterface>()(
@@ -277,7 +277,7 @@ const useTaskStore = create<TaskStoreInterface>()(
         },
       });
     },
-    saveSettings: async () => {
+    saveTaskSettings: async () => {
       await AsyncStorage.setItem(
         "@tasks_settings",
         JSON.stringify({
@@ -289,7 +289,7 @@ const useTaskStore = create<TaskStoreInterface>()(
         })
       );
     },
-    loadSettings: async () => {
+    loadTaskSettings: async () => {
       const taskSettings = await AsyncStorage.getItem("@tasks_settings");
       if (taskSettings) {
         const settings = JSON.parse(taskSettings);

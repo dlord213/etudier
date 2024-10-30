@@ -1,5 +1,6 @@
 import ThemedText from "@/components/ThemedText";
 import Colors from "@/constants/Colors";
+import useNoteStore from "@/hooks/useNoteStore";
 import useThemeStore from "@/hooks/useThemeStore";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import { router, useFocusEffect, useNavigation } from "expo-router";
@@ -17,8 +18,10 @@ export default function Page() {
     toggleDarkMode,
     toggleOLEDMode,
     toggleColorOnNavBar,
-    saveSettings,
+    saveThemeSettings,
   } = useThemeStore();
+  const { isGridView, toggleGridView, saveNoteSettings } = useNoteStore();
+
   const styleState = styles(isDarkMode, isOLEDMode);
 
   const navigation = useNavigation();
@@ -31,7 +34,10 @@ export default function Page() {
     useCallback(() => {
       const saveSettingsBeforeRemoval = navigation.addListener(
         "beforeRemove",
-        saveSettings
+        () => {
+          saveThemeSettings();
+          saveNoteSettings();
+        }
       );
 
       return saveSettingsBeforeRemoval;
@@ -199,6 +205,36 @@ export default function Page() {
           onPress={() => setPalette("Willow")}
         />
       </View>
+      <ThemedText
+        text="Notes"
+        style={{
+          fontFamily: "WorkSans_700Bold",
+        }}
+        color="Tertiary"
+      />
+      <View
+        style={{
+          flexDirection: "row",
+          justifyContent: "space-between",
+          alignItems: "center",
+        }}
+      >
+        <ThemedText text="Grid View" />
+        <Switch
+          value={isGridView}
+          onValueChange={toggleGridView}
+          thumbColor={Colors[palette][600]}
+          trackColor={{
+            false: isDarkMode
+              ? Colors.Backgrounds_Light.Brand
+              : Colors.Backgrounds_Dark.Brand,
+            true: isDarkMode
+              ? Colors.Backgrounds_Light.Brand
+              : Colors.Backgrounds_Dark.Brand,
+          }}
+          disabled={!isDarkMode ? true : false}
+        />
+      </View>
     </SafeAreaView>
   );
 }
@@ -213,6 +249,6 @@ const styles = (isDarkMode: boolean, isOLEDMode: boolean) =>
         : Colors.Backgrounds_Light.Brand,
       flex: 1,
       paddingHorizontal: 16,
-      gap: 16,
+      gap: 12,
     },
   });

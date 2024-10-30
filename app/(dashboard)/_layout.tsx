@@ -1,5 +1,4 @@
 import { Tabs } from "expo-router";
-import { useWindowDimensions } from "react-native";
 
 import Colors from "@/constants/Colors";
 import useThemeStore from "@/hooks/useThemeStore";
@@ -9,11 +8,13 @@ import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
 import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
 import useTaskStore from "@/hooks/useTaskStore";
 import { useEffect } from "react";
+import useNoteStore from "@/hooks/useNoteStore";
 
 export default function Layout() {
   const { palette, isDarkMode, isOLEDMode, hasColorOnNavBar } = useThemeStore();
   const { isModalOpen } = useModalSheetStore();
-  const { loadSettings } = useTaskStore();
+  const { loadTaskSettings } = useTaskStore();
+  const { loadNoteSettings } = useNoteStore();
 
   const navBarBackgroundColor = hasColorOnNavBar
     ? isDarkMode
@@ -28,7 +29,8 @@ export default function Layout() {
     : Colors.Backgrounds_Light.Brand;
 
   useEffect(() => {
-    loadSettings();
+    loadTaskSettings();
+    loadNoteSettings();
   }, []);
 
   return (

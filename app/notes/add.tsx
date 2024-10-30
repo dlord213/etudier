@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect, useState } from "react";
 import {
+  Alert,
   StyleSheet,
   TextInput,
   ToastAndroid,
@@ -39,15 +40,28 @@ export default function Page() {
         e.preventDefault();
 
         if (!form.title) {
-          ToastAndroid.show(
-            "To save a note, you must first enter a title!",
-            ToastAndroid.SHORT
+          Alert.alert(
+            "Unsaved changes",
+            "To save a note, you must first enter a title.",
+            [
+              {
+                text: "Cancel",
+                onPress: () => {},
+                style: "cancel",
+              },
+              {
+                text: "Discard",
+                onPress: () => {
+                  navigation.dispatch(e.data.action);
+                },
+                style: "destructive",
+              },
+            ]
           );
           return;
         }
 
         addNote();
-        resetForm();
         navigation.dispatch(e.data.action);
       };
 

@@ -10,28 +10,46 @@ interface NoteForm {
 
 interface NoteStoreInterface {
   storedNotes: NoteForm[];
+  sortedStoredNotes: NoteForm[];
   form: NoteForm;
+  allNotesVisible: boolean;
+  priorityNotesVisible: boolean;
+  isSortingNotesAscending: boolean;
+  isSortingNotesDescending: boolean;
+  isGridView: boolean;
   loadStoredNotes: () => Promise<void>;
   setTitle: (val: string) => void;
   setDescription: (val: string) => void;
+  toggleAllNotesVisible: () => void;
+  togglePriorityNotesVisible: () => void;
+  toggleIsSortingNotesAscending: () => void;
+  toggleIsSortingNotesDescending: () => void;
+  toggleGridView: () => void;
   addNote: () => Promise<void>;
   findNote: (id: string) => void;
   saveNoteChanges: () => Promise<void>;
   resetForm: () => void;
+  loadNoteSettings: () => Promise<void>;
+  saveNoteSettings: () => Promise<void>;
 }
 
 const useNoteStore = create<NoteStoreInterface>()(
   immer((set, get) => ({
     storedNotes: [],
+    sortedStoredNotes: [],
     form: {
       id: new Date(),
       title: "",
       description: "",
     },
+    allNotesVisible: false,
+    priorityNotesVisible: false,
+    isSortingNotesAscending: true,
+    isSortingNotesDescending: false,
+    isGridView: false,
     loadStoredNotes: async () => {
       let notes = await AsyncStorage.getItem("@notes");
       if (notes) {
-        console.log(JSON.parse(notes));
         set({ storedNotes: JSON.parse(notes) });
       }
     },
@@ -40,6 +58,33 @@ const useNoteStore = create<NoteStoreInterface>()(
     },
     setDescription: (val: string) => {
       set({ form: { ...get().form, description: val } });
+    },
+    toggleAllNotesVisible: () => {
+      set({ allNotesVisible: !get().allNotesVisible });
+    },
+    togglePriorityNotesVisible: () => {
+      set({ priorityNotesVisible: !get().priorityNotesVisible });
+    },
+    toggleIsSortingNotesAscending: () => {
+      set({
+        sortedStoredNotes: [...get().storedNotes].sort((a, b) => {
+          return new Date(a.id).getTime() - new Date(b.id).getTime();
+        }),
+        isSortingNotesAscending: true,
+        isSortingNotesDescending: false,
+      });
+    },
+    toggleIsSortingNotesDescending: () => {
+      set({
+        sortedStoredNotes: [...get().storedNotes].sort((a, b) => {
+          return new Date(b.id).getTime() - new Date(a.id).getTime();
+        }),
+        isSortingNotesAscending: false,
+        isSortingNotesDescending: true,
+      });
+    },
+    toggleGridView: () => {
+      set({ isGridView: !get().isGridView });
     },
     addNote: async () => {
       if (!get().form.title) {
@@ -60,7 +105,6 @@ const useNoteStore = create<NoteStoreInterface>()(
     findNote: (id: string) => {
       const note = get().storedNotes.find((note) => note.id.toString() === id);
       if (note) {
-        console.log(note);
         set({ form: note });
       }
     },
@@ -75,6 +119,23 @@ const useNoteStore = create<NoteStoreInterface>()(
     },
     resetForm: () => {
       set({ form: { id: new Date(), title: "", description: "" } });
+    },
+    loadNoteSettings: async () => {
+      const noteSettings = await AsyncStorage.getItem("@note_settings");
+      if (noteSettings) {
+        const settings = JSON.parse(noteSettings);
+        set({
+          isGridView: settings.isGridView,
+        });
+      }
+    },
+    saveNoteSettings: async () => {
+      await AsyncStorage.setItem(
+        "@note_settings",
+        JSON.stringify({
+          isGridView: get().isGridView,
+        })
+      );
     },
   }))
 );

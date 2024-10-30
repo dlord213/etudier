@@ -1,17 +1,21 @@
 import Colors from "@/constants/Colors";
 import useThemeStore from "@/hooks/useThemeStore";
-import { Pressable, Text } from "react-native";
+import { Pressable, Text, ViewStyle } from "react-native";
 import ThemedText from "./ThemedText";
 import { router } from "expo-router";
 
 interface NoteItemComponentProps {
   title: string;
+  description?: string;
   date: Date;
+  style?: ViewStyle;
 }
 
 export default function NoteItemComponent({
   title,
+  description,
   date,
+  style,
 }: NoteItemComponentProps) {
   const { palette } = useThemeStore();
 
@@ -31,6 +35,7 @@ export default function NoteItemComponent({
           padding: 12,
           borderRadius: 8,
         },
+        style,
       ]}
     >
       <ThemedText
@@ -46,6 +51,7 @@ export default function NoteItemComponent({
       >
         {title}
       </Text>
+      {description ? <ThemedText text={description} color="Secondary" /> : null}
     </Pressable>
   );
 }

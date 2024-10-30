@@ -13,8 +13,8 @@ interface ThemeStoreInterface {
   toggleDarkMode: () => void;
   toggleOLEDMode: () => void;
   toggleColorOnNavBar: () => void;
-  loadSettings: () => Promise<void>;
-  saveSettings: () => Promise<void>;
+  loadThemeSettings: () => Promise<void>;
+  saveThemeSettings: () => Promise<void>;
 }
 
 const useThemeStore = create<ThemeStoreInterface>()((set, get) => ({
@@ -34,7 +34,7 @@ const useThemeStore = create<ThemeStoreInterface>()((set, get) => ({
   toggleColorOnNavBar: () => {
     set({ hasColorOnNavBar: !get().hasColorOnNavBar });
   },
-  loadSettings: async () => {
+  loadThemeSettings: async () => {
     const themeSettings = await AsyncStorage.getItem("@theme_settings");
     if (themeSettings) {
       const settings = JSON.parse(themeSettings);
@@ -46,7 +46,7 @@ const useThemeStore = create<ThemeStoreInterface>()((set, get) => ({
       });
     }
   },
-  saveSettings: async () => {
+  saveThemeSettings: async () => {
     await AsyncStorage.setItem(
       "@theme_settings",
       JSON.stringify({

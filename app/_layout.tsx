@@ -4,19 +4,30 @@ import { useEffect } from "react";
 
 import useAuthStore from "@/hooks/useAuthStore";
 import useThemeStore from "@/hooks/useThemeStore";
-import useModalSheetStore from "@/hooks/useModalSheetStore";
 import Colors from "@/constants/Colors";
 
 export default function RootLayout() {
-  const { isDarkMode, isOLEDMode } = useThemeStore();
+  const { isDarkMode, isOLEDMode, palette, hasColorOnNavBar } = useThemeStore();
 
   const { loadStoredSession } = useAuthStore();
-  const { loadSettings } = useThemeStore();
+  const { loadThemeSettings } = useThemeStore();
 
   useEffect(() => {
     loadStoredSession();
-    loadSettings();
+    loadThemeSettings();
   }, []);
+
+  const navBarBackgroundColor = hasColorOnNavBar
+    ? isDarkMode
+      ? isOLEDMode
+        ? "#000000"
+        : Colors[palette][600]
+      : Colors[palette][600]
+    : isDarkMode
+    ? isOLEDMode
+      ? "#000000"
+      : Colors.Backgrounds_Dark.Brand
+    : Colors.Backgrounds_Light.Brand;
 
   return (
     <SheetProvider>
@@ -33,7 +44,13 @@ export default function RootLayout() {
         }}
       >
         <Stack.Screen name="index" />
-        <Stack.Screen name="(dashboard)" options={{ animation: "fade" }} />
+        <Stack.Screen
+          name="(dashboard)"
+          options={{
+            animation: "fade",
+            navigationBarColor: navBarBackgroundColor,
+          }}
+        />
         <Stack.Screen
           name="user/index"
           options={{ animation: "fade_from_bottom" }}

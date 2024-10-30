@@ -51,7 +51,6 @@ export default function Page() {
         e.preventDefault();
 
         saveNoteChanges();
-        resetForm();
         navigation.dispatch(e.data.action);
       };
 

@@ -1,4 +1,10 @@
-import { Pressable, SectionList, StyleSheet, View } from "react-native";
+import {
+  Pressable,
+  SectionList,
+  StyleSheet,
+  useWindowDimensions,
+  View,
+} from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useCallback } from "react";
 import { router, useFocusEffect } from "expo-router";
@@ -17,7 +23,8 @@ import Colors from "@/constants/Colors";
 
 export default function Page() {
   const { palette, isDarkMode, isOLEDMode } = useThemeStore();
-  const { toggleModalVisibility } = useModalSheetStore();
+  const { toggleModalVisibility, isModalOpen } = useModalSheetStore();
+  const { height: screenHeight } = useWindowDimensions();
 
   const {
     overdueTasks,
@@ -153,10 +160,19 @@ export default function Page() {
           </Pressable>
         )}
         ListEmptyComponent={
-          <ThemedText
-            text="No tasks available."
-            style={{ fontFamily: "WorkSans_900Black", fontSize: 24 }}
-          />
+          <View
+            style={{
+              justifyContent: "center",
+              alignItems: "center",
+              flex: 1,
+              minHeight: screenHeight / 2,
+            }}
+          >
+            <ThemedText
+              text="No tasks available."
+              style={{ fontFamily: "WorkSans_900Black", fontSize: 24 }}
+            />
+          </View>
         }
         contentContainerStyle={{ paddingBottom: 16 }}
         showsVerticalScrollIndicator={false}
@@ -170,6 +186,7 @@ export default function Page() {
           padding: 16,
           backgroundColor: isDarkMode ? Colors.Text_Dark.Secondary : "#F4F4F4",
           borderRadius: 16,
+          marginBottom: 8,
         }}
       >
         <ThemedText text="I want to..." color="Tertiary" />
