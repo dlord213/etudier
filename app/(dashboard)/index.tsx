@@ -1,26 +1,19 @@
-import Colors from "@/constants/Colors";
-import {
-  Pressable,
-  ScrollView,
-  SectionList,
-  StyleSheet,
-  View,
-} from "react-native";
+import { Pressable, SectionList, StyleSheet, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useCallback } from "react";
 import { router, useFocusEffect } from "expo-router";
+import { SheetManager } from "react-native-actions-sheet";
 
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
+import MaterialIcons from "@expo/vector-icons/MaterialIcons";
+import Ionicons from "@expo/vector-icons/Ionicons";
 
 import useThemeStore from "@/hooks/useThemeStore";
 import useModalSheetStore from "@/hooks/useModalSheetStore";
 import useTaskStore from "@/hooks/useTaskStore";
 import ThemedText from "@/components/ThemedText";
-import TaskList from "@/components/TaskList";
-import { SheetManager } from "react-native-actions-sheet";
-import MaterialIcons from "@expo/vector-icons/MaterialIcons";
-import Ionicons from "@expo/vector-icons/Ionicons";
+import Colors from "@/constants/Colors";
 
 export default function Page() {
   const { palette, isDarkMode, isOLEDMode } = useThemeStore();
@@ -177,7 +170,6 @@ export default function Page() {
           padding: 16,
           backgroundColor: isDarkMode ? Colors.Text_Dark.Secondary : "#F4F4F4",
           borderRadius: 16,
-          bottom: 12,
         }}
       >
         <ThemedText text="I want to..." color="Tertiary" />

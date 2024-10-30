@@ -4,9 +4,11 @@ import { useEffect } from "react";
 
 import useAuthStore from "@/hooks/useAuthStore";
 import useThemeStore from "@/hooks/useThemeStore";
+import useModalSheetStore from "@/hooks/useModalSheetStore";
+import Colors from "@/constants/Colors";
 
 export default function RootLayout() {
-  const { isDarkMode } = useThemeStore();
+  const { isDarkMode, isOLEDMode } = useThemeStore();
 
   const { loadStoredSession } = useAuthStore();
   const { loadSettings } = useThemeStore();
@@ -23,6 +25,11 @@ export default function RootLayout() {
           headerShown: false,
           statusBarStyle: isDarkMode ? "light" : "dark",
           statusBarTranslucent: true,
+          navigationBarColor: isDarkMode
+            ? isOLEDMode
+              ? "#000000"
+              : Colors.Backgrounds_Dark.Brand
+            : Colors.Backgrounds_Light.Brand,
         }}
       >
         <Stack.Screen name="index" />
@@ -33,6 +40,14 @@ export default function RootLayout() {
         />
         <Stack.Screen
           name="settings/index"
+          options={{ animation: "fade_from_bottom" }}
+        />
+        <Stack.Screen
+          name="notes/add"
+          options={{ animation: "fade_from_bottom" }}
+        />
+        <Stack.Screen
+          name="notes/[id]"
           options={{ animation: "fade_from_bottom" }}
         />
       </Stack>
