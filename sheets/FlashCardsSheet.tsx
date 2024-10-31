@@ -106,7 +106,7 @@ export default function FlashCardsSheet() {
                     ]}
                     onPress={() => {
                       router.push({
-                        pathname: "/hub/[flashcard]",
+                        pathname: "/flashcard/[flashcard]",
                         params: { id: item.id },
                       });
                       SheetManager.hide("hub-flashcards-sheet");

@@ -12,12 +12,15 @@ import SparkAnimation from "@/assets/animations/spark.json";
 import ThemedText from "@/components/ThemedText";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import { SheetManager } from "react-native-actions-sheet";
+import useQuizStore from "@/hooks/useQuizStore";
 
 export default function Page() {
   const { id } = useLocalSearchParams();
 
   const { isDarkMode, isOLEDMode, palette } = useThemeStore();
   const { client_instance } = useAuthStore();
+  const { setID, setDescription, setQuestions, setTitle } = useQuizStore();
+
   const { height: screenHeight, width: screenWidth } = useWindowDimensions();
 
   const iconColor = isDarkMode
@@ -139,6 +142,17 @@ export default function Page() {
                     flex: 1,
                   },
                 ]}
+                onPress={() => {
+                  router.push({
+                    pathname: "/flashcard/quiz/[quiz]",
+                    params: { quiz_id: data.id },
+                  });
+
+                  setID(data.id);
+                  setTitle(data.quiz.quiz.title);
+                  setDescription(data.quiz.quiz.description);
+                  setQuestions(data.quiz.quiz.questions);
+                }}
               >
                 <ThemedText
                   text="Start"

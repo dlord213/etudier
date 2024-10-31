@@ -1,6 +1,6 @@
 import { FlatList, Pressable, StyleSheet, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { router, useFocusEffect } from "expo-router";
+import { router, useFocusEffect, useNavigation } from "expo-router";
 import { useCallback } from "react";
 import { ResponsiveGrid } from "react-native-flexible-grid";
 import { SheetManager } from "react-native-actions-sheet";
@@ -22,8 +22,8 @@ export default function Page() {
     loadStoredNotes,
     resetForm,
     isGridView,
-    isSortingNotesAscending,
   } = useNoteStore();
+  const navigation = useNavigation();
 
   const iconColor = isDarkMode
     ? Colors.Text_Dark.Default
@@ -34,8 +34,8 @@ export default function Page() {
   useFocusEffect(
     useCallback(() => {
       loadStoredNotes();
-      resetForm();
-    }, [])
+      return () => resetForm();
+    }, [navigation])
   );
 
   if (isGridView) {
@@ -130,13 +130,7 @@ export default function Page() {
       </View>
       {storedNotes.length > 0 ? (
         <FlatList
-          data={storedNotes.sort((a, b) => {
-            if (isSortingNotesAscending) {
-              return new Date(a.id).getTime() - new Date(b.id).getTime();
-            } else {
-              return new Date(b.id).getTime() - new Date(a.id).getTime();
-            }
-          })}
+          data={sortedStoredNotes}
           keyExtractor={(item) => item.id}
           renderItem={(item) => (
             <NoteItemComponent date={item.item.id} title={item.item.title} />
