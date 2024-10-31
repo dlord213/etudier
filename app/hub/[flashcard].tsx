@@ -52,22 +52,13 @@ export default function Page() {
             width: screenWidth / 1.2,
           }}
         >
-          <View
-            style={{
-              gap: 8,
-              flexDirection: "row",
-              marginVertical: 8,
-              justifyContent: "space-between",
-              alignItems: "center",
-            }}
-          >
-            <AntDesign
-              name="close"
-              size={28}
-              color={iconColor}
-              onPress={() => router.back()}
-            />
-          </View>
+          <AntDesign
+            name="close"
+            size={28}
+            color={iconColor}
+            onPress={() => router.back()}
+            style={{ marginVertical: 16 }}
+          />
           <View
             style={{
               backgroundColor: Colors[palette][600],
@@ -161,6 +152,19 @@ export default function Page() {
               </Pressable>
             </View>
           </View>
+          {data.expand ? (
+            <ThemedText
+              text={"This quiz is made by " + data.expand.user_id.name + "."}
+              style={{
+                backgroundColor: Colors[palette][600],
+                paddingVertical: 8,
+                paddingHorizontal: 16,
+                borderRadius: 16,
+                marginVertical: 8,
+                color: Colors.Text_Dark.Default,
+              }}
+            />
+          ) : null}
         </View>
       </SafeAreaView>
     );

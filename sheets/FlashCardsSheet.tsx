@@ -1,7 +1,7 @@
 import { ActivityIndicator, Pressable, ScrollView, View } from "react-native";
 import ActionSheet, { SheetManager } from "react-native-actions-sheet";
-import React from "react";
-import { useQuery } from "@tanstack/react-query";
+import React, { useState } from "react";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { router } from "expo-router";
 
 import Colors from "@/constants/Colors";
@@ -9,15 +9,21 @@ import useThemeStore from "@/hooks/useThemeStore";
 import ThemedText from "@/components/ThemedText";
 import useAuthStore from "@/hooks/useAuthStore";
 
+import FontAwesome from "@expo/vector-icons/FontAwesome";
+import AntDesign from "@expo/vector-icons/AntDesign";
+
 export default function FlashCardsSheet() {
   const { isDarkMode, palette } = useThemeStore();
   const { client_instance } = useAuthStore();
+
+  const queryClient = useQueryClient();
+  const [currentPage, setCurrentPage] = useState(1);
 
   const fetchFlashCards = async () => {
     try {
       const flashCardsData = await client_instance
         .collection("flashcard")
-        .getList(1, 20);
+        .getList(currentPage, 5);
 
       return flashCardsData;
     } catch (error) {
@@ -26,7 +32,7 @@ export default function FlashCardsSheet() {
   };
 
   const { isPending, isError, data, error, refetch } = useQuery({
-    queryKey: ["flashcards"],
+    queryKey: ["flashcards", currentPage],
     queryFn: fetchFlashCards,
     enabled: true,
   });
@@ -41,10 +47,42 @@ export default function FlashCardsSheet() {
       }}
     >
       <View style={{ padding: 4, gap: 8 }}>
-        <ThemedText
-          style={{ fontFamily: "WorkSans_900Black", fontSize: 32 }}
-          text="Flashcards"
-        />
+        <View
+          style={{
+            flexDirection: "row",
+            justifyContent: "space-between",
+            alignItems: "center",
+          }}
+        >
+          <ThemedText
+            style={{ fontFamily: "WorkSans_900Black", fontSize: 32 }}
+            text="Flashcards"
+          />
+          <View style={{ flexDirection: "row", gap: 8, alignItems: "center" }}>
+            <AntDesign
+              name="caretleft"
+              size={24}
+              color={
+                isDarkMode
+                  ? Colors.Text_Dark.Default
+                  : Colors.Text_Light.Default
+              }
+              style={{ display: currentPage == 1 ? "none" : "flex" }}
+              onPress={() => setCurrentPage((val) => val - 1)}
+            />
+            <AntDesign
+              name="caretright"
+              size={24}
+              color={
+                isDarkMode
+                  ? Colors.Text_Dark.Default
+                  : Colors.Text_Light.Default
+              }
+              onPress={() => setCurrentPage((val) => val + 1)}
+            />
+          </View>
+        </View>
+
         {isPending ? (
           <ActivityIndicator size={48} color={Colors[palette][600]} />
         ) : (

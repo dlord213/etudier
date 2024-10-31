@@ -128,7 +128,7 @@ export default function Page() {
             {
               backgroundColor: pressed
                 ? Colors[palette][500]
-                : Colors[palette][400],
+                : Colors[palette][600],
               paddingHorizontal: 24,
               paddingVertical: 12,
               borderRadius: 8,

@@ -45,7 +45,7 @@ export default function Layout() {
           borderColor: navBarBackgroundColor,
         },
         tabBarActiveTintColor: !hasColorOnNavBar
-          ? Colors[palette][400]
+          ? Colors[palette][500]
           : Colors.Text_Dark.Default,
         tabBarInactiveTintColor: Colors.Text_Dark.Tertiary,
       }}

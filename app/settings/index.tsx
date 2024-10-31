@@ -234,7 +234,6 @@ export default function Page() {
               ? Colors.Backgrounds_Light.Brand
               : Colors.Backgrounds_Dark.Brand,
           }}
-          disabled={!isDarkMode ? true : false}
         />
       </View>
     </SafeAreaView>
