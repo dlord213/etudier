@@ -50,7 +50,12 @@ const useNoteStore = create<NoteStoreInterface>()(
     loadStoredNotes: async () => {
       let notes = await AsyncStorage.getItem("@notes");
       if (notes) {
-        set({ storedNotes: JSON.parse(notes) });
+        set({
+          storedNotes: JSON.parse(notes),
+          sortedStoredNotes: [...get().storedNotes].sort((a, b) => {
+            return new Date(a.id).getTime() - new Date(b.id).getTime();
+          }),
+        });
       }
     },
     setTitle: (val: string) => {

@@ -33,7 +33,6 @@ export default function ThesaurusSheet() {
           headers: { "X-Api-Key": apiKey },
         }
       );
-      console.log(response.data);
       return response.data;
     } catch (error) {
       throw error;
