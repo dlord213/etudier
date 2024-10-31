@@ -9,6 +9,7 @@ import StudyFocusModeCompletedSheet from "@/sheets/StudyFocusModeCompletedSheet"
 import BreakFocusModeCompletedSheet from "@/sheets/BreakFocusModeCompletedSheet";
 import DictionarySheet from "@/sheets/DictionarySheet";
 import HolidaySheet from "@/sheets/HolidaySheet";
+import ThesaurusSheet from "@/sheets/ThesaurusSheet";
 
 registerSheet("login-sheet", LoginSheet);
 registerSheet("register-sheet", RegisterSheet);
@@ -19,6 +20,7 @@ registerSheet("focus-mode-study-completed-sheet", StudyFocusModeCompletedSheet);
 registerSheet("focus-mode-break-completed-sheet", BreakFocusModeCompletedSheet);
 registerSheet("hub-dictionary-sheet", DictionarySheet);
 registerSheet("hub-holiday-sheet", HolidaySheet);
+registerSheet("hub-thesaurus-sheet", ThesaurusSheet);
 
 declare module "react-native-actions-sheet" {
   interface Sheets {
@@ -31,6 +33,7 @@ declare module "react-native-actions-sheet" {
     "focus-mode-break-completed-sheet": SheetDefinition;
     "hub-dictionary-sheet": SheetDefinition;
     "hub-holiday-sheet": SheetDefinition;
+    "hub-thesaurus-sheet": SheetDefinition;
   }
 }
 

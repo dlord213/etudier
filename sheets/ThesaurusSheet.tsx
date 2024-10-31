@@ -1,4 +1,13 @@
-import { ScrollView, TextInput, View } from "react-native";
+import {
+  ActivityIndicator,
+  FlatList,
+  Pressable,
+  ScrollView,
+  SectionList,
+  Text,
+  TextInput,
+  View,
+} from "react-native";
 import ActionSheet from "react-native-actions-sheet";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
@@ -9,20 +18,22 @@ import Colors from "@/constants/Colors";
 import useThemeStore from "@/hooks/useThemeStore";
 import ThemedText from "@/components/ThemedText";
 
-export default function HolidaySheet() {
+export default function ThesaurusSheet() {
   const { isDarkMode, palette } = useThemeStore();
   const apiKey = process.env.EXPO_PUBLIC_ETUDIER_API_NINJAS_KEY;
 
-  const [country, setCountry] = useState<string>("");
+  const [word, setWord] = useState<string>("");
 
-  const fetchCountryHolidaysData = async () => {
+  const fetchThesaurusData = async () => {
     try {
       const response = await axios.get(
-        `https://api.api-ninjas.com/v1/holidays?country=${country}&year=2024`,
+        `https://api.api-ninjas.com/v1/thesaurus?word=${word}
+`,
         {
           headers: { "X-Api-Key": apiKey },
         }
       );
+      console.log(response.data);
       return response.data;
     } catch (error) {
       throw error;
@@ -30,13 +41,13 @@ export default function HolidaySheet() {
   };
 
   const { isPending, isError, data, refetch } = useQuery({
-    queryKey: ["holiday"],
-    queryFn: fetchCountryHolidaysData,
+    queryKey: ["thesaurus"],
+    queryFn: fetchThesaurusData,
     enabled: false,
   });
 
   const handleSubmit = () => {
-    if (!country) {
+    if (!word) {
       return;
     }
     refetch();
@@ -53,7 +64,7 @@ export default function HolidaySheet() {
     >
       <View style={{ padding: 16, gap: 8 }}>
         <ThemedText
-          text="Holidays"
+          text="Thesaurus"
           style={{ fontFamily: "WorkSans_900Black", fontSize: 36 }}
         />
         <View
@@ -76,46 +87,41 @@ export default function HolidaySheet() {
               paddingHorizontal: 16,
               flex: 1,
             }}
-            placeholder="Search for a country"
+            placeholder="Search for a word"
             cursorColor={Colors[palette][600]}
             selectionColor={Colors[palette][600]}
             selectionHandleColor={Colors[palette][600]}
-            value={country}
-            onChangeText={(val) => setCountry(val)}
+            value={word}
+            onChangeText={(val) => setWord(val)}
           />
         </View>
       </View>
       {data ? (
-        <>
-          <ScrollView>
-            {data
-              .sort((a, b) => new Date(a.date) - new Date(b.date))
-              .map((holiday, index) => (
-                <View
-                  style={{
-                    padding: 16,
-                    borderBottomWidth: 1,
-                    borderColor: Colors.Text_Dark.Secondary,
-                  }}
-                  key={index}
-                >
-                  <ThemedText
-                    text={holiday.name}
-                    style={{ fontFamily: "WorkSans_700Bold", fontSize: 24 }}
-                  />
-                  <ThemedText
-                    text={new Date(holiday.date).toLocaleDateString("en-US", {
-                      year: "numeric",
-                      month: "long",
-                      day: "numeric",
-                    })}
-                    color="Secondary"
-                  />
-                  <ThemedText text={holiday.day} color="Secondary" />
-                </View>
-              ))}
-          </ScrollView>
-        </>
+        <SectionList
+          sections={[
+            { title: "Synonyms", data: data.synonyms },
+            { title: "Antonyms", data: data.antonyms },
+          ].filter((section) => section.data.length > 0)}
+          keyExtractor={(item: any, index: any) => `${item}-${index}`}
+          renderSectionHeader={({ section: { title } }) => (
+            <ThemedText
+              text={title}
+              style={{
+                fontSize: 24,
+                fontFamily: "WorkSans_700Bold",
+                paddingHorizontal: 16,
+                marginVertical: 8,
+              }}
+            />
+          )}
+          renderItem={({ item }) => (
+            <ThemedText
+              text={item}
+              style={{ paddingHorizontal: 16, fontSize: 16, marginVertical: 4 }}
+            />
+          )}
+          contentContainerStyle={{ paddingBottom: 16 }}
+        />
       ) : null}
       {isError ? (
         <ThemedText

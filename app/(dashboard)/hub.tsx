@@ -86,6 +86,7 @@ export default function Page() {
                 borderRadius: 16,
               },
             ]}
+            onPress={() => SheetManager.show("hub-thesaurus-sheet")}
           >
             <ThemedText
               text="Thesaurus"
