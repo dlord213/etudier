@@ -10,6 +10,8 @@ import BreakFocusModeCompletedSheet from "@/sheets/BreakFocusModeCompletedSheet"
 import DictionarySheet from "@/sheets/DictionarySheet";
 import HolidaySheet from "@/sheets/HolidaySheet";
 import ThesaurusSheet from "@/sheets/ThesaurusSheet";
+import FlashCardsSheet from "@/sheets/FlashCardsSheet";
+import FlashcardResourcesSheet from "@/sheets/FlashcardResourcesSheet";
 
 registerSheet("login-sheet", LoginSheet);
 registerSheet("register-sheet", RegisterSheet);
@@ -21,6 +23,8 @@ registerSheet("focus-mode-break-completed-sheet", BreakFocusModeCompletedSheet);
 registerSheet("hub-dictionary-sheet", DictionarySheet);
 registerSheet("hub-holiday-sheet", HolidaySheet);
 registerSheet("hub-thesaurus-sheet", ThesaurusSheet);
+registerSheet("hub-flashcards-sheet", FlashCardsSheet);
+registerSheet("hub-flashcards-resources-sheet", FlashcardResourcesSheet);
 
 declare module "react-native-actions-sheet" {
   interface Sheets {
@@ -34,6 +38,12 @@ declare module "react-native-actions-sheet" {
     "hub-dictionary-sheet": SheetDefinition;
     "hub-holiday-sheet": SheetDefinition;
     "hub-thesaurus-sheet": SheetDefinition;
+    "hub-flashcards-sheet": SheetDefinition;
+    "hub-flashcards-resources-sheet": SheetDefinition<{
+      payload: {
+        resources: any;
+      };
+    }>;
   }
 }
 

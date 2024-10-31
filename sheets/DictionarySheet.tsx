@@ -50,7 +50,6 @@ export default function DictionarySheet() {
     try {
       const response = await axios.get(dictionaryAPILink + word);
       const sortedData = getSortedDefinitions(response.data);
-      console.log(sortedData);
       return sortedData;
     } catch (error) {
       throw error;
@@ -66,7 +65,6 @@ export default function DictionarySheet() {
   const handleSubmit = async () => {
     if (!word) return;
     refetch();
-    console.log(word);
   };
 
   const DictionaryEntry = ({ entry }) => {
@@ -154,7 +152,12 @@ export default function DictionarySheet() {
             onSubmitEditing={handleSubmit}
             enterKeyHint="search"
             style={{
-              backgroundColor: Colors.Backgrounds_Light.Brand,
+              backgroundColor: isDarkMode
+                ? Colors.Backgrounds_Light.Brand
+                : Colors.Backgrounds_Dark.Brand,
+              color: isDarkMode
+                ? Colors.Text_Light.Default
+                : Colors.Text_Dark.Default,
               padding: 8,
               borderRadius: 8,
               fontFamily: "WorkSans_400Regular",
@@ -165,6 +168,9 @@ export default function DictionarySheet() {
             cursorColor={Colors[palette][600]}
             selectionColor={Colors[palette][600]}
             selectionHandleColor={Colors[palette][600]}
+            placeholderTextColor={
+              isDarkMode ? Colors.Text_Light.Default : Colors.Text_Dark.Default
+            }
             value={word}
             onChangeText={(val) => setWord(val)}
           />

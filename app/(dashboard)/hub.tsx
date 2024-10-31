@@ -108,6 +108,7 @@ export default function Page() {
                 borderRadius: 16,
               },
             ]}
+            onPress={() => SheetManager.show("hub-flashcards-sheet")}
           >
             <ThemedText
               text="Flashcards"

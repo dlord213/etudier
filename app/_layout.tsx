@@ -71,6 +71,10 @@ export default function RootLayout() {
             name="notes/[id]"
             options={{ animation: "fade_from_bottom" }}
           />
+          <Stack.Screen
+            name="hub/[flashcard]"
+            options={{ animation: "fade_from_bottom" }}
+          />
         </Stack>
       </SheetProvider>
     </QueryClientProvider>

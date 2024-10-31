@@ -79,17 +79,25 @@ export default function ThesaurusSheet() {
             onSubmitEditing={handleSubmit}
             enterKeyHint="search"
             style={{
-              backgroundColor: Colors.Backgrounds_Light.Brand,
               padding: 8,
               borderRadius: 8,
               fontFamily: "WorkSans_400Regular",
               paddingHorizontal: 16,
               flex: 1,
+              backgroundColor: isDarkMode
+                ? Colors.Backgrounds_Light.Brand
+                : Colors.Backgrounds_Dark.Brand,
+              color: isDarkMode
+                ? Colors.Text_Light.Default
+                : Colors.Text_Dark.Default,
             }}
             placeholder="Search for a word"
             cursorColor={Colors[palette][600]}
             selectionColor={Colors[palette][600]}
             selectionHandleColor={Colors[palette][600]}
+            placeholderTextColor={
+              isDarkMode ? Colors.Text_Light.Default : Colors.Text_Dark.Default
+            }
             value={word}
             onChangeText={(val) => setWord(val)}
           />
