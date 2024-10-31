@@ -8,6 +8,7 @@ import {
 } from "react-native";
 import {
   WorkSans_400Regular,
+  WorkSans_400Regular_Italic,
   WorkSans_700Bold,
   WorkSans_600SemiBold,
   WorkSans_300Light,
@@ -34,6 +35,7 @@ export default function Index() {
   const [loaded, error] = useFonts({
     WorkSans_300Light,
     WorkSans_400Regular,
+    WorkSans_400Regular_Italic,
     WorkSans_600SemiBold,
     WorkSans_700Bold,
     WorkSans_900Black,

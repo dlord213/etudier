@@ -3,13 +3,13 @@ import ActionSheet, { SheetManager } from "react-native-actions-sheet";
 
 import Colors from "@/constants/Colors";
 import useThemeStore from "@/hooks/useThemeStore";
-import ThemedText from "./ThemedText";
+import ThemedText from "@/components/ThemedText";
 import useFocusModeStore, { FocusModeStates } from "@/hooks/useFocusModeStore";
 
-export default function BreakFocusModeCompletedSheet() {
+export default function StudyFocusModeCompletedSheet() {
   const { isDarkMode, palette } = useThemeStore();
   const {
-    toggleIsPlaying,
+    toggleIsOnBreakMode,
     toggleIsSheetIconVisible,
     setFocusModeState,
     adjustTimerDuration,
@@ -28,13 +28,10 @@ export default function BreakFocusModeCompletedSheet() {
         <View>
           <View style={{ marginBottom: 16 }}>
             <ThemedText
-              text="Break mode is up!"
+              text="Focus mode is up!"
               style={{ fontFamily: "WorkSans_900Black", fontSize: 36 }}
             />
-            <ThemedText
-              text="Time to get back on focus mode!"
-              color="Tertiary"
-            />
+            <ThemedText text="Time for a break!" color="Tertiary" />
           </View>
           <View style={{ gap: 16 }}>
             <Pressable
@@ -49,11 +46,11 @@ export default function BreakFocusModeCompletedSheet() {
                 },
               ]}
               onPress={() => {
-                toggleIsPlaying();
+                toggleIsOnBreakMode();
                 toggleIsSheetIconVisible(false);
-                setFocusModeState(FocusModeStates.Study);
+                setFocusModeState(FocusModeStates.Break);
                 adjustTimerDuration();
-                SheetManager.hide("focus-mode-break-completed-sheet");
+                SheetManager.hide("focus-mode-study-completed-sheet");
               }}
             >
               <Text
@@ -63,7 +60,7 @@ export default function BreakFocusModeCompletedSheet() {
                   textAlign: "center",
                 }}
               >
-                Start focus mode
+                Start break mode
               </Text>
             </Pressable>
             <ThemedText

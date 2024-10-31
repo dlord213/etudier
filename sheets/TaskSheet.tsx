@@ -9,7 +9,7 @@ import Colors from "@/constants/Colors";
 import useModalSheetStore from "@/hooks/useModalSheetStore";
 import useTaskStore from "@/hooks/useTaskStore";
 import useThemeStore from "@/hooks/useThemeStore";
-import ThemedTextInput from "./ThemedTextInput";
+import ThemedTextInput from "@/components/ThemedTextInput";
 
 export default function TaskSheet() {
   const {

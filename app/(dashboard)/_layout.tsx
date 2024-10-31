@@ -8,6 +8,7 @@ import useTaskStore from "@/hooks/useTaskStore";
 import useNoteStore from "@/hooks/useNoteStore";
 
 import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
+import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
 
 export default function Layout() {
@@ -64,6 +65,15 @@ export default function Layout() {
           headerShown: false,
           tabBarIcon: ({ color }) => (
             <FontAwesome6 name="clock-four" size={20} color={color} />
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="hub"
+        options={{
+          headerShown: false,
+          tabBarIcon: ({ color }) => (
+            <MaterialIcons name="hub" size={20} color={color} />
           ),
         }}
       />

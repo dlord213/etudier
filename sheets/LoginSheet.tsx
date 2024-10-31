@@ -1,21 +1,21 @@
+import { Pressable, Text, TextInput, View } from "react-native";
+import ActionSheet, { SheetManager } from "react-native-actions-sheet";
+
 import Colors from "@/constants/Colors";
 import useAuthStore from "@/hooks/useAuthStore";
 import useThemeStore from "@/hooks/useThemeStore";
-import { Pressable, Text, TextInput, View } from "react-native";
-import ActionSheet, { SheetManager } from "react-native-actions-sheet";
-import ThemedText from "./ThemedText";
+import ThemedText from "@/components/ThemedText";
 
-export default function RegisterSheet() {
+export default function LoginSheet() {
+  const { isDarkMode, palette } = useThemeStore();
   const {
     form,
     resetForm,
-    handleRegister,
-    setEmail,
-    setName,
     setPassword,
+    setEmail,
     toggleIsAuthing,
+    handleLogin,
   } = useAuthStore();
-  const { isDarkMode, palette } = useThemeStore();
 
   return (
     <ActionSheet
@@ -32,30 +32,12 @@ export default function RegisterSheet() {
       <View style={{ padding: 16 }}>
         <View>
           <ThemedText
-            text="Register"
+            text="Login"
             style={{ fontFamily: "WorkSans_900Black", fontSize: 36 }}
           />
-          <ThemedText
-            text="Your personalized study journey starts here!"
-            color="Tertiary"
-          />
+          <ThemedText text="Pick up where you left off." color="Tertiary" />
         </View>
         <View style={{ gap: 8, marginVertical: 16 }}>
-          <TextInput
-            style={{
-              backgroundColor: Colors.Backgrounds_Light.Brand,
-              padding: 8,
-              borderRadius: 8,
-              fontFamily: "WorkSans_400Regular",
-              paddingHorizontal: 16,
-            }}
-            placeholder="Name"
-            cursorColor={Colors[palette][600]}
-            selectionColor={Colors[palette][600]}
-            selectionHandleColor={Colors[palette][600]}
-            value={form.name}
-            onChangeText={setName}
-          />
           <TextInput
             style={{
               backgroundColor: Colors.Backgrounds_Light.Brand,
@@ -95,9 +77,9 @@ export default function RegisterSheet() {
             borderRadius: 16,
           }}
           onPress={() => {
-            SheetManager.hide("register-sheet");
+            SheetManager.hide("login-sheet");
             toggleIsAuthing();
-            handleRegister();
+            handleLogin();
           }}
         >
           <Text
@@ -107,7 +89,7 @@ export default function RegisterSheet() {
               textAlign: "center",
             }}
           >
-            Register
+            Login
           </Text>
         </Pressable>
       </View>

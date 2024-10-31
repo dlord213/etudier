@@ -1,8 +1,9 @@
-import Colors from "@/constants/Colors";
-import useThemeStore from "@/hooks/useThemeStore";
 import { Switch, View } from "react-native";
 import ActionSheet from "react-native-actions-sheet";
-import ThemedText from "./ThemedText";
+
+import Colors from "@/constants/Colors";
+import useThemeStore from "@/hooks/useThemeStore";
+import ThemedText from "@/components/ThemedText";
 import useTaskStore from "@/hooks/useTaskStore";
 
 export default function TaskSortSheet() {
