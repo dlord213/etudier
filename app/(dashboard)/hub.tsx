@@ -64,6 +64,7 @@ export default function Page() {
                 borderRadius: 16,
               },
             ]}
+            onPress={() => SheetManager.show("hub-holiday-sheet")}
           >
             <ThemedText
               text="Holidays"

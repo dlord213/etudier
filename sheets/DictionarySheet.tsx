@@ -22,7 +22,6 @@ export default function DictionarySheet() {
   const dictionaryAPILink = `https://api.dictionaryapi.dev/api/v2/entries/en/`;
 
   const [word, setWord] = useState<string>("");
-  const queryClient = useQueryClient();
 
   const getSortedDefinitions = (data: any) => {
     return data.map((entry: any) => {
@@ -58,7 +57,7 @@ export default function DictionarySheet() {
     }
   };
 
-  const { isPending, isError, data, error } = useQuery({
+  const { isPending, isError, data, error, refetch } = useQuery({
     queryKey: ["dictionary"],
     queryFn: fetchWordData,
     enabled: false,
@@ -66,11 +65,7 @@ export default function DictionarySheet() {
 
   const handleSubmit = async () => {
     if (!word) return;
-    queryClient.invalidateQueries({ queryKey: ["dictionary"] });
-    queryClient.fetchQuery({
-      queryKey: ["dictionary"],
-      queryFn: fetchWordData,
-    });
+    refetch();
     console.log(word);
   };
 
