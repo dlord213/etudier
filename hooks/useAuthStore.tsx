@@ -115,7 +115,6 @@ const useAuthStore = create<AuthStoreInterface>()(
             } catch (error) {
               get().clearStoredSession();
               set({ isAuthing: false, isLoggedIn: false });
-              console.log(error);
             }
           }
         } else {
