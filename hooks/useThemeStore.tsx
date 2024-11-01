@@ -1,5 +1,4 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { useColorScheme } from "react-native";
 import { create } from "zustand";
 
 interface ThemeStoreInterface {

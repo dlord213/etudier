@@ -2,6 +2,10 @@ import { router, useFocusEffect, useNavigation } from "expo-router";
 import { useCallback } from "react";
 import { Pressable, StyleSheet, Switch, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { reloadAppAsync } from "expo";
+import { toast } from "sonner-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import * as Updates from "expo-updates";
 
 import ThemedText from "@/components/ThemedText";
 import Colors from "@/constants/Colors";
@@ -236,6 +240,50 @@ export default function Page() {
           }}
         />
       </View>
+      <ThemedText
+        text="Data"
+        style={{
+          fontFamily: "WorkSans_700Bold",
+        }}
+        color="Tertiary"
+      />
+      <Pressable
+        style={{
+          flexDirection: "row",
+          gap: 16,
+          alignItems: "center",
+        }}
+        onPress={() => {
+          toast(
+            "This will erase your notes, tasks, preferences. Are you sure?",
+            {
+              action: {
+                label: "Yes",
+                onClick: () => {
+                  AsyncStorage.clear();
+                  toast.dismiss();
+                  Updates.reloadAsync();
+                },
+              },
+              cancel: {
+                label: "No",
+                onClick: () => {
+                  toast.dismiss();
+                },
+              },
+            }
+          );
+        }}
+      >
+        <AntDesign name="delete" color={iconColor} size={24} />
+        <View>
+          <ThemedText text="Clear all data" />
+          <ThemedText
+            text="This erases all your data locally & online."
+            color="Secondary"
+          />
+        </View>
+      </Pressable>
     </SafeAreaView>
   );
 }
