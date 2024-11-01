@@ -1,10 +1,10 @@
 import { Pressable, ScrollView, StyleSheet, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { SheetManager } from "react-native-actions-sheet";
 
 import ThemedText from "@/components/ThemedText";
 import Colors from "@/constants/Colors";
 import useThemeStore from "@/hooks/useThemeStore";
-import { SheetManager } from "react-native-actions-sheet";
 
 export default function Page() {
   const { palette, isDarkMode, isOLEDMode } = useThemeStore();

@@ -29,7 +29,7 @@ export default function HolidaySheet() {
     }
   };
 
-  const { isPending, isError, data, refetch } = useQuery({
+  const { isError, data, refetch } = useQuery({
     queryKey: ["holiday"],
     queryFn: fetchCountryHolidaysData,
     enabled: false,

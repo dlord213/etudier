@@ -1,13 +1,4 @@
-import {
-  ActivityIndicator,
-  FlatList,
-  Pressable,
-  ScrollView,
-  SectionList,
-  Text,
-  TextInput,
-  View,
-} from "react-native";
+import { SectionList, TextInput, View } from "react-native";
 import ActionSheet from "react-native-actions-sheet";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
@@ -39,8 +30,8 @@ export default function ThesaurusSheet() {
     }
   };
 
-  const { isPending, isError, data, refetch } = useQuery({
-    queryKey: ["thesaurus"],
+  const { isError, data, refetch } = useQuery({
+    queryKey: ["thesaurus", word],
     queryFn: fetchThesaurusData,
     enabled: false,
   });

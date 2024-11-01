@@ -1,7 +1,7 @@
 import { ActivityIndicator, Pressable, ScrollView, View } from "react-native";
 import ActionSheet, { SheetManager } from "react-native-actions-sheet";
 import React, { useState } from "react";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import { router } from "expo-router";
 
 import Colors from "@/constants/Colors";
@@ -9,7 +9,6 @@ import useThemeStore from "@/hooks/useThemeStore";
 import ThemedText from "@/components/ThemedText";
 import useAuthStore from "@/hooks/useAuthStore";
 
-import FontAwesome from "@expo/vector-icons/FontAwesome";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import useQuizStore from "@/hooks/useQuizStore";
 
@@ -17,7 +16,6 @@ export default function FlashCardsSheet() {
   const { isDarkMode, palette } = useThemeStore();
   const { client_instance } = useAuthStore();
 
-  const queryClient = useQueryClient();
   const [currentPage, setCurrentPage] = useState(1);
 
   const { resetQuestion, resetResource, resetQuestions, resetResources } =
@@ -35,7 +33,7 @@ export default function FlashCardsSheet() {
     }
   };
 
-  const { isPending, isError, data, error, refetch } = useQuery({
+  const { isPending, data } = useQuery({
     queryKey: ["flashcards", currentPage],
     queryFn: fetchFlashCards,
     enabled: true,

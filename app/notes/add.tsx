@@ -3,7 +3,6 @@ import {
   Alert,
   StyleSheet,
   TextInput,
-  ToastAndroid,
   useWindowDimensions,
   View,
 } from "react-native";

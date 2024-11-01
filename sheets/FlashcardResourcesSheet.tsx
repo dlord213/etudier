@@ -1,6 +1,5 @@
-import { ScrollView, TextInput, View } from "react-native";
+import { ScrollView, View } from "react-native";
 import ActionSheet, { SheetProps } from "react-native-actions-sheet";
-import { useState } from "react";
 import React from "react";
 
 import Colors from "@/constants/Colors";

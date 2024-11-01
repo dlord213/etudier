@@ -1,14 +1,6 @@
-import {
-  ActivityIndicator,
-  FlatList,
-  Pressable,
-  ScrollView,
-  Text,
-  TextInput,
-  View,
-} from "react-native";
-import ActionSheet, { SheetManager } from "react-native-actions-sheet";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { FlatList, Pressable, ScrollView, TextInput, View } from "react-native";
+import ActionSheet from "react-native-actions-sheet";
+import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import axios from "axios";
 import React from "react";
@@ -56,8 +48,8 @@ export default function DictionarySheet() {
     }
   };
 
-  const { isPending, isError, data, error, refetch } = useQuery({
-    queryKey: ["dictionary"],
+  const { data, refetch } = useQuery({
+    queryKey: ["dictionary", word],
     queryFn: fetchWordData,
     enabled: false,
   });
