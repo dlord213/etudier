@@ -18,6 +18,7 @@ import Colors from "@/constants/Colors";
 import useThemeStore from "@/hooks/useThemeStore";
 import ThemedText from "@/components/ThemedText";
 import useNoteStore from "@/hooks/useNoteStore";
+import { toast } from "sonner-native";
 
 export default function Page() {
   const { isDarkMode, isOLEDMode, palette } = useThemeStore();
@@ -39,24 +40,19 @@ export default function Page() {
         e.preventDefault();
 
         if (!form.title) {
-          Alert.alert(
-            "Unsaved changes",
-            "To save a note, you must first enter a title.",
-            [
-              {
-                text: "Cancel",
-                onPress: () => {},
-                style: "cancel",
+          toast("To save a note, you must first enter a title. Discard note?", {
+            action: {
+              label: "YES",
+              onClick: () => {
+                toast.dismiss();
+                navigation.dispatch(e.data.action);
               },
-              {
-                text: "Discard",
-                onPress: () => {
-                  navigation.dispatch(e.data.action);
-                },
-                style: "destructive",
-              },
-            ]
-          );
+            },
+            cancel: {
+              label: "NO",
+              onClick: () => {},
+            },
+          });
           return;
         }
 
