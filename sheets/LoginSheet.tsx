@@ -5,6 +5,7 @@ import Colors from "@/constants/Colors";
 import useAuthStore from "@/hooks/useAuthStore";
 import useThemeStore from "@/hooks/useThemeStore";
 import ThemedText from "@/components/ThemedText";
+import { toast } from "sonner-native";
 
 export default function LoginSheet() {
   const { isDarkMode, palette } = useThemeStore();
@@ -77,6 +78,13 @@ export default function LoginSheet() {
             borderRadius: 16,
           }}
           onPress={() => {
+            if (form.password.length < 8) {
+              toast("Password must be atleast 8 characters.", {
+                duration: 3000,
+                style: { zIndex: 999 },
+              });
+              return;
+            }
             SheetManager.hide("login-sheet");
             toggleIsAuthing();
             handleLogin();

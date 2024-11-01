@@ -25,8 +25,14 @@ export default function Page() {
 
   const { isDarkMode, isOLEDMode, palette } = useThemeStore();
   const { height: screenHeight } = useWindowDimensions();
-  const { findNote, setTitle, setDescription, form, saveNoteChanges } =
-    useNoteStore();
+  const {
+    findNote,
+    setTitle,
+    setDescription,
+    form,
+    saveNoteChanges,
+    resetForm,
+  } = useNoteStore();
 
   const [loaded, setLoaded] = useState(false);
 
@@ -50,6 +56,7 @@ export default function Page() {
         e.preventDefault();
 
         saveNoteChanges();
+        resetForm();
         navigation.dispatch(e.data.action);
       };
 

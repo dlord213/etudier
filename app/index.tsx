@@ -30,6 +30,7 @@ import ThemedText from "@/components/ThemedText";
 import LandingPageStrings from "@/constants/LandingPageStrings";
 import useAuthStore from "@/hooks/useAuthStore";
 import "./sheets.tsx";
+import { toast } from "sonner-native";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -204,6 +205,7 @@ export default function Index() {
           <Pressable
             onPress={() => {
               SheetManager.show("register-sheet");
+              toast.dismiss();
             }}
             style={{
               backgroundColor: Colors[palette][200],
@@ -224,6 +226,7 @@ export default function Index() {
           <Pressable
             onPress={() => {
               SheetManager.show("login-sheet");
+              toast.dismiss();
             }}
             style={{
               backgroundColor:

@@ -102,6 +102,7 @@ const useNoteStore = create<NoteStoreInterface>()(
         set((state) => {
           state.storedNotes.push(newNote);
         });
+        get().resetForm();
         await AsyncStorage.setItem("@notes", JSON.stringify(get().storedNotes));
       } catch (error) {
         console.log(error);

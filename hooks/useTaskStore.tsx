@@ -11,6 +11,7 @@ import {
   isBefore,
   startOfToday,
 } from "date-fns";
+import { toast } from "sonner-native";
 
 const tomorrow = addDays(new Date(), 1);
 
@@ -83,12 +84,20 @@ const useTaskStore = create<TaskStoreInterface>()(
         const tasks = await AsyncStorage.getItem("@tasks");
         if (tasks) {
           const parsedTasks = JSON.parse(tasks);
-          set({ storedTasks: parsedTasks });
-          get().getOverdueTasks();
-          get().getTodayTasks();
-          get().getTomorrowTasks();
-          get().getUpcomingTasks();
-          get().getCompletedTasks();
+          set({ storedTasks: parsedTasks }, false);
+          const {
+            getOverdueTasks,
+            getTodayTasks,
+            getTomorrowTasks,
+            getUpcomingTasks,
+            getCompletedTasks,
+          } = get();
+
+          getOverdueTasks();
+          getTodayTasks();
+          getTomorrowTasks();
+          getUpcomingTasks();
+          getCompletedTasks();
         }
       } catch (error) {
         console.error("Error loading tasks: ", error);
@@ -139,9 +148,14 @@ const useTaskStore = create<TaskStoreInterface>()(
     },
     saveStoredStateTasks: async () => {
       try {
-        await AsyncStorage.setItem("@tasks", JSON.stringify(get().storedTasks));
+        const { storedTasks } = get();
+        if (storedTasks && storedTasks.length > 0) {
+          setTimeout(async () => {
+            await AsyncStorage.setItem("@tasks", JSON.stringify(storedTasks));
+          }, 0);
+        }
       } catch (err) {
-        ToastAndroid.show(`Error saving tasks: ${err}`, ToastAndroid.SHORT);
+        toast(`Error saving tasks: ${err}`);
       }
     },
     updateTitle: (newTitle: string) => {

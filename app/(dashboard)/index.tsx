@@ -27,6 +27,7 @@ export default function Page() {
   const { height: screenHeight } = useWindowDimensions();
 
   const {
+    storedTasks,
     overdueTasks,
     todayTasks,
     tomorrowTasks,

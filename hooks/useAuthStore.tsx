@@ -5,6 +5,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { router } from "expo-router";
 import { differenceInDays, parseISO } from "date-fns";
 import { immer } from "zustand/middleware/immer";
+import { toast } from "sonner-native";
 
 interface AuthFormInterface {
   email: string;
@@ -96,7 +97,6 @@ const useAuthStore = create<AuthStoreInterface>()(
           let parsedSession = JSON.parse(session);
           set({ session: parsedSession });
           get().client_instance.authStore.save(parsedSession.token);
-          console.log(get().client_instance.authStore.isValid);
           if (get().client_instance.authStore.isValid) {
             try {
               const refreshedData = await get()
@@ -169,10 +169,9 @@ const useAuthStore = create<AuthStoreInterface>()(
         set({ isAuthing: false });
         set({ isLoggedIn: false });
         get().resetForm();
-        ToastAndroid.show(
-          `Login failed: ${error.message || "Unknown error occurred"}`,
-          ToastAndroid.LONG
-        );
+        toast(`Login failed, please check your credentials.`, {
+          duration: 3000,
+        });
       }
     },
     handleRegister: async () => {
