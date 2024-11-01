@@ -41,26 +41,6 @@ export default function Page() {
   if (isGridView) {
     return (
       <SafeAreaView style={styleState.safeAreaView}>
-        <View
-          style={{
-            flexDirection: "row",
-            justifyContent: "space-between",
-            alignItems: "center",
-          }}
-        >
-          <ThemedText
-            style={{ fontFamily: "WorkSans_900Black", fontSize: 32 }}
-            text="Notes"
-          />
-          <MaterialIcons
-            name="sort"
-            size={24}
-            color={iconColor}
-            onPress={() => {
-              SheetManager.show("note-sort-sheet");
-            }}
-          />
-        </View>
         {storedNotes.length > 0 ? (
           <ResponsiveGrid
             data={sortedStoredNotes}
@@ -77,6 +57,29 @@ export default function Page() {
             )}
             maxItemsPerColumn={2}
             virtualization={true}
+            showScrollIndicator={false}
+            HeaderComponent={
+              <View
+                style={{
+                  flexDirection: "row",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                }}
+              >
+                <ThemedText
+                  style={{ fontFamily: "WorkSans_900Black", fontSize: 32 }}
+                  text="Notes"
+                />
+                <MaterialIcons
+                  name="sort"
+                  size={24}
+                  color={iconColor}
+                  onPress={() => {
+                    SheetManager.show("note-sort-sheet");
+                  }}
+                />
+              </View>
+            }
           />
         ) : (
           <ThemedText

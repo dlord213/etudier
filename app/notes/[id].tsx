@@ -84,11 +84,6 @@ export default function Page() {
               color={iconColor}
               onPress={() => router.back()}
             />
-            <MaterialCommunityIcons
-              name="dots-vertical"
-              size={24}
-              color={iconColor}
-            />
           </View>
           <TextInput
             style={{

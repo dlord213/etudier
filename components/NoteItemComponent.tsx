@@ -1,8 +1,9 @@
+import { Pressable, Text, ViewStyle } from "react-native";
+import { router } from "expo-router";
+
 import Colors from "@/constants/Colors";
 import useThemeStore from "@/hooks/useThemeStore";
-import { Pressable, Text, ViewStyle } from "react-native";
 import ThemedText from "./ThemedText";
-import { router } from "expo-router";
 
 interface NoteItemComponentProps {
   title: string;
@@ -39,7 +40,7 @@ export default function NoteItemComponent({
       ]}
     >
       <ThemedText
-        text={new Date(date).toLocaleDateString()}
+        text={new Date(date).toLocaleDateString("en-US")}
         color="Secondary"
       />
       <Text

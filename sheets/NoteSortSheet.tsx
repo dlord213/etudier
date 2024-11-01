@@ -37,58 +37,7 @@ export default function NoteSortSheet() {
               text="Can't find it?"
               style={{ fontFamily: "WorkSans_900Black", fontSize: 36 }}
             />
-            <ThemedText text="Filter or sort your notes!" color="Tertiary" />
-          </View>
-          <View
-            style={{
-              flexDirection: "row",
-              justifyContent: "space-between",
-              alignItems: "center",
-            }}
-          >
-            <ThemedText text="All notes" />
-            <Switch
-              value={allNotesVisible}
-              onValueChange={toggleAllNotesVisible}
-              thumbColor={Colors[palette][600]}
-              trackColor={{
-                false: isDarkMode
-                  ? Colors.Backgrounds_Light.Brand
-                  : Colors.Backgrounds_Dark.Brand,
-                true: isDarkMode
-                  ? Colors.Backgrounds_Light.Brand
-                  : Colors.Backgrounds_Dark.Brand,
-              }}
-            />
-          </View>
-          <View
-            style={{
-              flexDirection: "row",
-              justifyContent: "space-between",
-              alignItems: "center",
-            }}
-          >
-            <View>
-              <ThemedText text="Priority" />
-              <ThemedText
-                text="Disabled if all notes is enabled"
-                color="Secondary"
-              />
-            </View>
-            <Switch
-              value={priorityNotesVisible}
-              onValueChange={togglePriorityNotesVisible}
-              thumbColor={Colors[palette][600]}
-              trackColor={{
-                false: isDarkMode
-                  ? Colors.Backgrounds_Light.Brand
-                  : Colors.Backgrounds_Dark.Brand,
-                true: isDarkMode
-                  ? Colors.Backgrounds_Light.Brand
-                  : Colors.Backgrounds_Dark.Brand,
-              }}
-              disabled={allNotesVisible ? true : false}
-            />
+            <ThemedText text="Sort your notes!" color="Tertiary" />
           </View>
           <View
             style={{

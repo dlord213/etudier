@@ -40,21 +40,24 @@ export default function Page() {
     useCallback(() => {
       const preventBack = navigation.addListener("beforeRemove", (e) => {
         e.preventDefault();
-
-        toast("Cancel the quiz?", {
-          duration: 2000,
-          action: {
-            label: "Yes",
-            onClick: () => {
-              navigation.dispatch(e.data.action);
-              toast.dismiss();
+        if (!isComplete) {
+          toast("Quit the quiz?", {
+            duration: 2000,
+            action: {
+              label: "Yes",
+              onClick: () => {
+                navigation.dispatch(e.data.action);
+                toast.dismiss();
+              },
             },
-          },
-          cancel: {
-            label: "No",
-            onClick: () => {},
-          },
-        });
+            cancel: {
+              label: "No",
+              onClick: () => {},
+            },
+          });
+        } else {
+          navigation.dispatch(e.data.action);
+        }
       });
 
       return () => preventBack();
@@ -76,7 +79,7 @@ export default function Page() {
           <AntDesign
             name="close"
             size={24}
-            color={iconColor}
+            color={Colors.Text_Dark.Default}
             style={{ marginVertical: 16 }}
             onPress={() => router.back()}
           />
@@ -102,12 +105,17 @@ export default function Page() {
         >
           <ThemedText
             text="Score"
-            style={{ fontSize: 32, fontFamily: "WorkSans_700Bold" }}
+            style={{
+              fontSize: 32,
+              fontFamily: "WorkSans_700Bold",
+              color: Colors.Text_Dark.Default,
+            }}
           />
           <ThemedText
             text={
               "Out of " + questions.length + " items, you scored " + score + "."
             }
+            style={{ color: Colors.Text_Dark.Default }}
           />
         </View>
         <View
@@ -144,7 +152,7 @@ export default function Page() {
               style={{
                 color: isDarkMode
                   ? Colors.Text_Dark.Secondary
-                  : Colors.Text_Light.Tertiary,
+                  : Colors.Text_Dark.Default,
                 textAlign: "center",
               }}
             />
