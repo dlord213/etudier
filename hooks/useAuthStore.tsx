@@ -96,21 +96,29 @@ const useAuthStore = create<AuthStoreInterface>()(
           let parsedSession = JSON.parse(session);
           set({ session: parsedSession });
           get().client_instance.authStore.save(parsedSession.token);
+          console.log(get().client_instance.authStore.isValid);
           if (get().client_instance.authStore.isValid) {
-            const refreshedData = await get()
-              .client_instance.collection("users")
-              .authRefresh();
+            try {
+              const refreshedData = await get()
+                .client_instance.collection("users")
+                .authRefresh();
 
-            set({ session: refreshedData });
+              set({ session: refreshedData });
 
-            await AsyncStorage.setItem(
-              "@session",
-              JSON.stringify(refreshedData)
-            );
+              await AsyncStorage.setItem(
+                "@session",
+                JSON.stringify(refreshedData)
+              );
 
-            set({ isAuthing: false });
-            set({ isLoggedIn: true });
+              set({ isAuthing: false });
+              set({ isLoggedIn: true });
+            } catch (error) {
+              get().clearStoredSession();
+              set({ isAuthing: false, isLoggedIn: false });
+              console.log(error);
+            }
           }
+        } else {
         }
       } catch (err) {
         return;
