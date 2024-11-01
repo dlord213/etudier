@@ -1,12 +1,9 @@
 import { Pressable, ScrollView, StyleSheet, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
-import Feather from "@expo/vector-icons/Feather";
-
 import ThemedText from "@/components/ThemedText";
 import Colors from "@/constants/Colors";
 import useThemeStore from "@/hooks/useThemeStore";
-import { router } from "expo-router";
 import { SheetManager } from "react-native-actions-sheet";
 
 export default function Page() {

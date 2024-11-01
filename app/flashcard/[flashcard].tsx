@@ -1,4 +1,4 @@
-import { Link, router, useLocalSearchParams } from "expo-router";
+import { router, useLocalSearchParams } from "expo-router";
 import { Pressable, StyleSheet, useWindowDimensions, View } from "react-native";
 import { useQuery } from "@tanstack/react-query";
 import LottieView from "lottie-react-native";
@@ -41,7 +41,7 @@ export default function Page() {
     }
   };
 
-  const { isPending, isError, data, error, refetch } = useQuery({
+  const { data } = useQuery({
     queryKey: ["flashcard", id],
     queryFn: fetchFlashCardData,
     enabled: true,

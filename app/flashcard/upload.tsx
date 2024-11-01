@@ -1,7 +1,7 @@
 import { Pressable, StyleSheet, TextInput, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { router, useFocusEffect, useNavigation } from "expo-router";
-import { useCallback, useEffect, useState } from "react";
+import { router, useNavigation } from "expo-router";
+import { useState } from "react";
 import { toast } from "sonner-native";
 
 import Colors from "@/constants/Colors";

@@ -1,9 +1,4 @@
-import {
-  router,
-  useFocusEffect,
-  useLocalSearchParams,
-  useNavigation,
-} from "expo-router";
+import { router, useFocusEffect, useNavigation } from "expo-router";
 import { useCallback, useState } from "react";
 import { Pressable, StyleSheet, useWindowDimensions, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -17,10 +12,9 @@ import ThemedText from "@/components/ThemedText";
 import AntDesign from "@expo/vector-icons/AntDesign";
 
 export default function Page() {
-  const { quiz_id } = useLocalSearchParams();
   const { isDarkMode, isOLEDMode, palette } = useThemeStore();
   const { title, questions } = useQuizStore();
-  const { height: screenHeight, width: screenWidth } = useWindowDimensions();
+  const { width: screenWidth } = useWindowDimensions();
   const navigation = useNavigation();
 
   const [currentIndex, setCurrentIndex] = useState(0);
