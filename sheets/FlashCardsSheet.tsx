@@ -11,6 +11,7 @@ import useAuthStore from "@/hooks/useAuthStore";
 
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import AntDesign from "@expo/vector-icons/AntDesign";
+import useQuizStore from "@/hooks/useQuizStore";
 
 export default function FlashCardsSheet() {
   const { isDarkMode, palette } = useThemeStore();
@@ -18,6 +19,9 @@ export default function FlashCardsSheet() {
 
   const queryClient = useQueryClient();
   const [currentPage, setCurrentPage] = useState(1);
+
+  const { resetQuestion, resetResource, resetQuestions, resetResources } =
+    useQuizStore();
 
   const fetchFlashCards = async () => {
     try {
@@ -54,6 +58,21 @@ export default function FlashCardsSheet() {
             alignItems: "center",
           }}
         >
+          <AntDesign
+            name="addfile"
+            size={24}
+            color={
+              isDarkMode ? Colors.Text_Dark.Default : Colors.Text_Light.Default
+            }
+            onPress={() => {
+              resetQuestion();
+              resetResource();
+              resetQuestions();
+              resetResources();
+              router.push("flashcard/upload");
+              SheetManager.hide("hub-flashcards-sheet");
+            }}
+          />
           <ThemedText
             style={{ fontFamily: "WorkSans_900Black", fontSize: 32 }}
             text="Flashcards"

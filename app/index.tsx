@@ -1,5 +1,6 @@
 import React from "react";
 import {
+  Platform,
   Pressable,
   StyleSheet,
   Text,
@@ -21,6 +22,7 @@ import { useEffect, useRef, useState } from "react";
 import { Redirect, SplashScreen } from "expo-router";
 import LottieView from "lottie-react-native";
 import Carousel from "pinar";
+import * as Notifications from "expo-notifications";
 
 import Colors from "@/constants/Colors";
 import useThemeStore from "@/hooks/useThemeStore";
@@ -30,6 +32,14 @@ import useAuthStore from "@/hooks/useAuthStore";
 import "./sheets.tsx";
 
 SplashScreen.preventAutoHideAsync();
+
+Notifications.setNotificationHandler({
+  handleNotification: async () => ({
+    shouldShowAlert: true,
+    shouldPlaySound: true,
+    shouldSetBadge: false,
+  }),
+});
 
 export default function Index() {
   const [loaded, error] = useFonts({

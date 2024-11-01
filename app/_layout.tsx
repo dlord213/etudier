@@ -83,22 +83,25 @@ export default function RootLayout() {
               options={{
                 animation: "fade_from_bottom",
                 statusBarColor: Colors[palette][600],
+                statusBarStyle: "light",
+              }}
+            />
+            <Stack.Screen
+              name="flashcard/upload"
+              options={{
+                animation: "fade_from_bottom",
+                statusBarColor: Colors[palette][600],
+                statusBarStyle: "light",
               }}
             />
           </Stack>
         </SheetProvider>
       </QueryClientProvider>
       <Toaster
-        visibleToasts={2}
+        visibleToasts={1}
         position="bottom-center"
         closeButton={true}
-        toastOptions={{
-          style: {
-            backgroundColor: isDarkMode
-              ? Colors.Backgrounds_Dark.Brand
-              : Colors.Backgrounds_Light.Brand,
-          },
-        }}
+        theme={isDarkMode ? "dark" : "light"}
       />
     </GestureHandlerRootView>
   );

@@ -2,6 +2,7 @@ import Colors from "@/constants/Colors";
 import { Image, Pressable, StyleSheet, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { router } from "expo-router";
+import * as Notifications from "expo-notifications";
 
 import AntDesign from "@expo/vector-icons/AntDesign";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
@@ -165,6 +166,30 @@ export default function Page() {
                 color={iconColor}
               />
               <ThemedText text="Verify email address" />
+            </Pressable>
+          </View>
+          <View style={{ gap: 16 }}>
+            <ThemedText
+              text="Notifications"
+              style={{
+                fontFamily: "WorkSans_700Bold",
+              }}
+              color="Tertiary"
+            />
+            <Pressable
+              style={{ flexDirection: "row", gap: 16, alignItems: "center" }}
+              onPress={async () => {
+                await Notifications.scheduleNotificationAsync({
+                  content: {
+                    title: "You have unfinished tasks for today!",
+                    body: "Don't let procrastination get you, finish the tasks while you can.",
+                  },
+                  trigger: { seconds: 2 },
+                });
+              }}
+            >
+              <Ionicons name="notifications" size={24} color={iconColor} />
+              <ThemedText text="Test notification" />
             </Pressable>
           </View>
         </View>

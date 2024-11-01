@@ -63,7 +63,7 @@ function canUpdateAfterThreeDays(lastUpdated: string): boolean {
 
 const useAuthStore = create<AuthStoreInterface>()(
   immer((set, get) => ({
-    client_instance: new PocketBase("https://oasis-mob-prog-act.pockethost.io"),
+    client_instance: new PocketBase("https://etudier.pockethost.io/"),
     form: {
       email: "",
       password: "",

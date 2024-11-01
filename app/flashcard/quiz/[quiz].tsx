@@ -4,7 +4,7 @@ import {
   useLocalSearchParams,
   useNavigation,
 } from "expo-router";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useState } from "react";
 import { Pressable, StyleSheet, useWindowDimensions, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { toast } from "sonner-native";
@@ -88,7 +88,11 @@ export default function Page() {
           />
           <ThemedText
             text={title}
-            style={{ fontFamily: "WorkSans_900Black", fontSize: 20 }}
+            style={{
+              fontFamily: "WorkSans_900Black",
+              fontSize: 20,
+              color: Colors.Text_Dark.Default,
+            }}
           />
           <View />
         </View>
@@ -170,13 +174,17 @@ export default function Page() {
         <AntDesign
           name="close"
           size={24}
-          color={iconColor}
+          color={Colors.Text_Dark.Default}
           style={{ marginVertical: 16 }}
           onPress={() => router.back()}
         />
         <ThemedText
           text={title}
-          style={{ fontFamily: "WorkSans_900Black", fontSize: 20 }}
+          style={{
+            fontFamily: "WorkSans_900Black",
+            fontSize: 20,
+            color: Colors.Text_Dark.Default,
+          }}
         />
         <View />
       </View>
@@ -192,9 +200,16 @@ export default function Page() {
       >
         <ThemedText
           text="Question"
-          style={{ fontSize: 32, fontFamily: "WorkSans_700Bold" }}
+          style={{
+            fontSize: 32,
+            fontFamily: "WorkSans_700Bold",
+            color: Colors.Text_Dark.Default,
+          }}
         />
-        <ThemedText text={currentFlashcard.question} style={{ fontSize: 18 }} />
+        <ThemedText
+          text={currentFlashcard.question}
+          style={{ fontSize: 18, color: Colors.Text_Dark.Default }}
+        />
       </View>
       {currentFlashcard.choices ? (
         <View
@@ -232,6 +247,7 @@ export default function Page() {
                       if (choice === currentFlashcard.answer) {
                         setScore((val: number) => val + 1);
                       }
+                      toast.dismiss();
                       handleNext();
                     },
                   }
@@ -243,7 +259,7 @@ export default function Page() {
                 style={{
                   color: isDarkMode
                     ? Colors.Text_Dark.Secondary
-                    : Colors.Text_Light.Tertiary,
+                    : Colors.Text_Dark.Default,
                 }}
               />
             </Pressable>

@@ -15,7 +15,7 @@ export default function Layout() {
   const { palette, isDarkMode, isOLEDMode, hasColorOnNavBar } = useThemeStore();
   const { isModalOpen } = useModalSheetStore();
   const { loadTaskSettings } = useTaskStore();
-  const { loadNoteSettings } = useNoteStore();
+  const { loadNoteSettings, loadStoredNotes } = useNoteStore();
 
   const navBarBackgroundColor = hasColorOnNavBar
     ? isDarkMode
@@ -32,6 +32,7 @@ export default function Layout() {
   useEffect(() => {
     loadTaskSettings();
     loadNoteSettings();
+    loadStoredNotes();
   }, []);
 
   return (
