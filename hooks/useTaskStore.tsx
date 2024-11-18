@@ -150,9 +150,7 @@ const useTaskStore = create<TaskStoreInterface>()(
       try {
         const { storedTasks } = get();
         if (storedTasks && storedTasks.length > 0) {
-          setTimeout(async () => {
-            await AsyncStorage.setItem("@tasks", JSON.stringify(storedTasks));
-          }, 0);
+          await AsyncStorage.setItem("@tasks", JSON.stringify(storedTasks));
         }
       } catch (err) {
         toast(`Error saving tasks: ${err}`);

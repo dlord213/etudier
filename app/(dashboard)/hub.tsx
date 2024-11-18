@@ -6,17 +6,69 @@ import ThemedText from "@/components/ThemedText";
 import Colors from "@/constants/Colors";
 import useThemeStore from "@/hooks/useThemeStore";
 
+import Ionicons from "@expo/vector-icons/Ionicons";
+import FontAwesome from "@expo/vector-icons/FontAwesome";
+import { useQuery } from "@tanstack/react-query";
+import { useState } from "react";
+import useAuthStore from "@/hooks/useAuthStore";
+
 export default function Page() {
   const { palette, isDarkMode, isOLEDMode } = useThemeStore();
+  const { client_instance } = useAuthStore();
 
   const styleState = styles(isDarkMode, isOLEDMode);
 
+  const iconColor = isDarkMode
+    ? Colors.Text_Dark.Default
+    : Colors.Text_Light.Default;
+
+  const [currentPage, setCurrentPage] = useState<number>(0);
+
+  const getResources = async () => {
+    try {
+      const resourceList = await client_instance
+        .collection("resource")
+        .getList(1, 20);
+
+      return resourceList;
+    } catch (error) {
+      throw error;
+    }
+  };
+
+  const {
+    data,
+    error,
+    refetch: refetchResources,
+  } = useQuery({
+    queryFn: getResources,
+    queryKey: ["resources", currentPage],
+    enabled: true,
+    refetchIntervalInBackground: false,
+  });
+
   return (
     <SafeAreaView style={styleState.safeAreaView}>
-      <ThemedText
-        style={{ fontFamily: "WorkSans_900Black", fontSize: 32 }}
-        text="Resource Hub"
-      />
+      <View
+        style={{
+          flexDirection: "row",
+          justifyContent: "space-between",
+          alignItems: "center",
+        }}
+      >
+        <ThemedText
+          style={{ fontFamily: "WorkSans_900Black", fontSize: 32 }}
+          text="Resource Hub"
+        />
+        <FontAwesome
+          name="refresh"
+          size={24}
+          color={iconColor}
+          onPress={() => {
+            refetchResources();
+          }}
+        />
+      </View>
       <View
         style={{
           flexDirection: "row",
@@ -118,6 +170,64 @@ export default function Page() {
           </Pressable>
         </ScrollView>
       </View>
+      {data
+        ? data.items.map((item: any) => (
+            <Pressable
+              key={item.id}
+              style={({ pressed }) => [
+                {
+                  backgroundColor: isDarkMode
+                    ? Colors.Backgrounds_Light.Brand
+                    : Colors.Backgrounds_Dark.Brand,
+                  padding: 12,
+                  borderRadius: 8,
+                  opacity: pressed ? 0.9 : 1,
+                },
+              ]}
+            >
+              <ThemedText
+                text={item.title}
+                style={{
+                  color: isDarkMode
+                    ? Colors.Text_Light.Default
+                    : Colors.Text_Dark.Default,
+                  fontFamily: "WorkSans_700Bold",
+                  fontSize: 20,
+                }}
+              />
+              <ThemedText
+                text={item.description}
+                style={{
+                  color: isDarkMode
+                    ? Colors.Text_Dark.Secondary
+                    : Colors.Text_Light.Tertiary,
+                }}
+              />
+            </Pressable>
+          ))
+        : null}
+      <Pressable
+        style={({ pressed }) => [
+          {
+            position: "absolute",
+            backgroundColor: pressed
+              ? Colors[palette][500]
+              : Colors[palette][600],
+            width: 48,
+            height: 48,
+            borderRadius: 8,
+            bottom: 16,
+            right: 16,
+            justifyContent: "center",
+            alignItems: "center",
+          },
+        ]}
+        onPress={() => {
+          SheetManager.show("hub-resource-upload-file-sheet");
+        }}
+      >
+        <Ionicons name="add" size={24} color={Colors.Text_Dark.Default} />
+      </Pressable>
     </SafeAreaView>
   );
 }

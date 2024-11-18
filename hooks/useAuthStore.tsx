@@ -118,9 +118,12 @@ const useAuthStore = create<AuthStoreInterface>()(
             }
           }
         } else {
+          get().clearStoredSession();
+          set({ isAuthing: false, isLoggedIn: false });
         }
       } catch (err) {
-        return;
+        get().clearStoredSession();
+        set({ isAuthing: false, isLoggedIn: false });
       }
     },
     clearStoredSession: async () => {

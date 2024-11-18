@@ -95,14 +95,14 @@ export default function RootLayout() {
               }}
             />
           </Stack>
+          <Toaster
+            visibleToasts={1}
+            position="bottom-center"
+            closeButton={true}
+            theme={isDarkMode ? "dark" : "light"}
+          />
         </SheetProvider>
       </QueryClientProvider>
-      <Toaster
-        visibleToasts={1}
-        position="bottom-center"
-        closeButton={true}
-        theme={isDarkMode ? "dark" : "light"}
-      />
     </GestureHandlerRootView>
   );
 }

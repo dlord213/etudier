@@ -10,10 +10,6 @@ export default function NoteSortSheet() {
   const { isDarkMode, palette } = useThemeStore();
 
   const {
-    allNotesVisible,
-    priorityNotesVisible,
-    toggleAllNotesVisible,
-    togglePriorityNotesVisible,
     isSortingNotesAscending,
     isSortingNotesDescending,
     toggleIsSortingNotesAscending,

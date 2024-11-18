@@ -12,6 +12,7 @@ import HolidaySheet from "@/sheets/HolidaySheet";
 import ThesaurusSheet from "@/sheets/ThesaurusSheet";
 import FlashCardsSheet from "@/sheets/FlashCardsSheet";
 import FlashcardResourcesSheet from "@/sheets/FlashcardResourcesSheet";
+import ResourceUploadFileSheet from "@/sheets/ResourceUploadFileSheet";
 
 registerSheet("login-sheet", LoginSheet);
 registerSheet("register-sheet", RegisterSheet);
@@ -25,6 +26,7 @@ registerSheet("hub-holiday-sheet", HolidaySheet);
 registerSheet("hub-thesaurus-sheet", ThesaurusSheet);
 registerSheet("hub-flashcards-sheet", FlashCardsSheet);
 registerSheet("hub-flashcards-resources-sheet", FlashcardResourcesSheet);
+registerSheet("hub-resource-upload-file-sheet", ResourceUploadFileSheet);
 
 declare module "react-native-actions-sheet" {
   interface Sheets {
@@ -44,6 +46,7 @@ declare module "react-native-actions-sheet" {
         resources: any;
       };
     }>;
+    "hub-resource-upload-file-sheet": SheetDefinition;
   }
 }
 

@@ -225,9 +225,9 @@ export default function Page() {
             gap: 8,
           }}
         >
-          {currentFlashcard.choices.map((choice: any) => (
+          {currentFlashcard.choices.map((choice: any, index: number) => (
             <Pressable
-              key={choice}
+              key={index}
               style={({ pressed }) => [
                 {
                   backgroundColor: isDarkMode
