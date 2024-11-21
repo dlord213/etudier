@@ -11,8 +11,10 @@
 2. Start the app
 
    ```bash
-    npx expo start
+    npx expo run:android
+    npm start
    ```
+   Make sure it's running on development build as this library uses native modules.
 
 In the output, you'll find options to open the app in a
 
