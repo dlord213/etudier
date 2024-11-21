@@ -6,6 +6,7 @@ import { router } from "expo-router";
 import { differenceInDays, parseISO } from "date-fns";
 import { immer } from "zustand/middleware/immer";
 import { toast } from "sonner-native";
+import * as Network from "expo-network";
 
 interface AuthFormInterface {
   email: string;
@@ -26,6 +27,7 @@ interface SessionInterface {
     updated: string;
     username: string;
     verified: boolean;
+    is_premium: boolean;
   };
   token: string;
 }
@@ -52,6 +54,8 @@ interface AuthStoreInterface {
   toggleIsAuthing: () => void;
   isAuthing: boolean;
   isLoggedIn: boolean;
+  uploadOnCloud: (tasks: string, notes: string) => Promise<number | undefined>;
+  getDataOnCloud: () => Promise<void>;
 }
 
 function canUpdateAfterThreeDays(lastUpdated: string): boolean {
@@ -166,6 +170,10 @@ const useAuthStore = create<AuthStoreInterface>()(
           .authWithPassword(email, password);
         set({ session: authData });
         await AsyncStorage.setItem("@session", JSON.stringify(authData));
+        await AsyncStorage.removeItem("@notes");
+        await AsyncStorage.removeItem("@tasks");
+        await get().getDataOnCloud();
+
         set({ isAuthing: false });
         set({ isLoggedIn: true });
       } catch (error) {
@@ -222,9 +230,10 @@ const useAuthStore = create<AuthStoreInterface>()(
           .client_instance.collection("users")
           .authWithPassword(email, password);
 
-        set({ session: authData });
-
         await AsyncStorage.setItem("@session", JSON.stringify(authData));
+        await AsyncStorage.removeItem("@notes");
+        await AsyncStorage.removeItem("@tasks");
+
         set({ isAuthing: false, isLoggedIn: true });
       } catch (error) {
         set({ isAuthing: false, isLoggedIn: false });
@@ -241,6 +250,9 @@ const useAuthStore = create<AuthStoreInterface>()(
     handleLogout: async () => {
       try {
         await AsyncStorage.removeItem("@session");
+        await AsyncStorage.removeItem("@notes");
+        await AsyncStorage.removeItem("@tasks");
+
         get().client_instance.authStore.clear();
         set({ isEmailSent: false, isAuthing: false, isLoggedIn: false });
         router.replace("/");
@@ -392,6 +404,121 @@ const useAuthStore = create<AuthStoreInterface>()(
     toggleIsAuthing: () => set({ isAuthing: !get().isAuthing }),
     isAuthing: false,
     isLoggedIn: false,
+    uploadOnCloud: async (tasks: string, notes: string) => {
+      const networkState = await Network.getNetworkStateAsync();
+      if (networkState.isInternetReachable) {
+        try {
+          const data = {
+            user_id: get().session.record.id,
+            tasks: JSON.parse(tasks),
+            notes: JSON.parse(notes),
+          };
+
+          const existingTasksRecord = await get()
+            .client_instance.collection("task")
+            .getList(1, 5, {
+              filter: `user_id="${get().client_instance.authStore.model?.id}"`,
+            });
+
+          const existingNotesRecord = await get()
+            .client_instance.collection("note")
+            .getList(1, 5, {
+              filter: `user_id="${get().client_instance.authStore.model?.id}"`,
+            });
+
+          if (existingTasksRecord.items.length == 0) {
+            const createTasksRecord = await get()
+              .client_instance.collection("task")
+              .create({ user_id: data.user_id, tasks: data.tasks });
+
+            if (createTasksRecord) {
+              await AsyncStorage.setItem(
+                "@tasks",
+                JSON.stringify(createTasksRecord.tasks)
+              );
+            }
+          } else {
+            const updateExistingTaskRecord = await get()
+              .client_instance.collection("task")
+              .update(existingTasksRecord.items[0].id, { tasks: data.tasks });
+
+            if (updateExistingTaskRecord) {
+              await AsyncStorage.setItem(
+                "@tasks",
+                JSON.stringify(updateExistingTaskRecord.tasks)
+              );
+            }
+          }
+
+          if (existingNotesRecord.items.length == 0) {
+            const createNotesRecord = await get()
+              .client_instance.collection("note")
+              .create({ user_id: data.user_id, notes: data.notes });
+
+            if (createNotesRecord) {
+              await AsyncStorage.setItem(
+                "@notes",
+                JSON.stringify(createNotesRecord.notes)
+              );
+            }
+          } else {
+            const updateExistingNotesRecord = await get()
+              .client_instance.collection("note")
+              .update(existingNotesRecord.items[0].id, { notes: data.notes });
+
+            if (updateExistingNotesRecord) {
+              await AsyncStorage.setItem(
+                "@notes",
+                JSON.stringify(updateExistingNotesRecord.notes)
+              );
+            }
+          }
+
+          return 200;
+        } catch (error) {
+          toast.error(`Error uploading on cloud: ${error}`);
+          console.log(error);
+          throw error;
+        }
+      } else {
+        return;
+      }
+    },
+    getDataOnCloud: async () => {
+      await AsyncStorage.removeItem("@notes");
+      await AsyncStorage.removeItem("@tasks");
+      try {
+        const existingTasksRecord = await get()
+          .client_instance.collection("task")
+          .getList(1, 5, {
+            filter: `user_id="${get().client_instance.authStore.model?.id}"`,
+          });
+
+        const existingNotesRecord = await get()
+          .client_instance.collection("note")
+          .getList(1, 5, {
+            filter: `user_id="${get().client_instance.authStore.model?.id}"`,
+          });
+
+        if (existingTasksRecord.items.length >= 1) {
+          await AsyncStorage.setItem(
+            "@tasks",
+            JSON.stringify(existingTasksRecord.items[0].tasks)
+          );
+        }
+
+        if (existingNotesRecord.items.length >= 1) {
+          await AsyncStorage.setItem(
+            "@notes",
+            JSON.stringify(existingNotesRecord.items[0].notes)
+          );
+        }
+
+        return;
+      } catch (error) {
+        throw error;
+      }
+    },
   }))
 );
 

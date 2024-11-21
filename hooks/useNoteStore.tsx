@@ -1,4 +1,5 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { toast } from "sonner-native";
 import { create } from "zustand";
 import { immer } from "zustand/middleware/immer";
 
@@ -18,6 +19,7 @@ interface NoteStoreInterface {
   isSortingNotesDescending: boolean;
   isGridView: boolean;
   loadStoredNotes: () => Promise<void>;
+  getSortedStoredNotes: () => void;
   setTitle: (val: string) => void;
   setDescription: (val: string) => void;
   toggleAllNotesVisible: () => void;
@@ -31,6 +33,7 @@ interface NoteStoreInterface {
   resetForm: () => void;
   loadNoteSettings: () => Promise<void>;
   saveNoteSettings: () => Promise<void>;
+  clearStoredNotes: () => void;
 }
 
 const useNoteStore = create<NoteStoreInterface>()(
@@ -48,6 +51,8 @@ const useNoteStore = create<NoteStoreInterface>()(
     isSortingNotesDescending: false,
     isGridView: false,
     loadStoredNotes: async () => {
+      set({ storedNotes: [], sortedStoredNotes: [] });
+
       let notes = await AsyncStorage.getItem("@notes");
       if (notes) {
         set({
@@ -57,6 +62,14 @@ const useNoteStore = create<NoteStoreInterface>()(
           }),
         });
       }
+      get().getSortedStoredNotes();
+    },
+    getSortedStoredNotes: () => {
+      set({
+        sortedStoredNotes: [...get().storedNotes].sort((a, b) => {
+          return new Date(a.id).getTime() - new Date(b.id).getTime();
+        }),
+      });
     },
     setTitle: (val: string) => {
       set({ form: { ...get().form, title: val } });
@@ -104,6 +117,7 @@ const useNoteStore = create<NoteStoreInterface>()(
         });
         get().resetForm();
         await AsyncStorage.setItem("@notes", JSON.stringify(get().storedNotes));
+        get().getSortedStoredNotes();
       } catch (error) {
         console.log(error);
       }
@@ -122,6 +136,7 @@ const useNoteStore = create<NoteStoreInterface>()(
 
       set({ storedNotes: updatedNotes });
       await AsyncStorage.setItem("@notes", JSON.stringify(updatedNotes));
+      get().getSortedStoredNotes();
     },
     resetForm: () => {
       set({ form: { id: new Date(), title: "", description: "" } });
@@ -143,6 +158,7 @@ const useNoteStore = create<NoteStoreInterface>()(
         })
       );
     },
+    clearStoredNotes: () => set({ storedNotes: [] }),
   }))
 );
 

@@ -16,14 +16,8 @@ import NoteItemComponent from "@/components/NoteItemComponent";
 
 export default function Page() {
   const { palette, isDarkMode, isOLEDMode } = useThemeStore();
-  const {
-    storedNotes,
-    sortedStoredNotes,
-    loadStoredNotes,
-    resetForm,
-    isGridView,
-  } = useNoteStore();
-  const navigation = useNavigation();
+  const { storedNotes, sortedStoredNotes, resetForm, isGridView } =
+    useNoteStore();
 
   const iconColor = isDarkMode
     ? Colors.Text_Dark.Default
@@ -33,14 +27,33 @@ export default function Page() {
 
   useFocusEffect(
     useCallback(() => {
-      loadStoredNotes();
       return () => resetForm();
-    }, [navigation])
+    }, [])
   );
 
   if (isGridView) {
     return (
       <SafeAreaView style={styleState.safeAreaView}>
+        <View
+          style={{
+            flexDirection: "row",
+            justifyContent: "space-between",
+            alignItems: "center",
+          }}
+        >
+          <ThemedText
+            style={{ fontFamily: "WorkSans_900Black", fontSize: 32 }}
+            text="Notes"
+          />
+          <MaterialIcons
+            name="sort"
+            size={24}
+            color={iconColor}
+            onPress={() => {
+              SheetManager.show("note-sort-sheet");
+            }}
+          />
+        </View>
         {storedNotes.length > 0 ? (
           <ResponsiveGrid
             data={sortedStoredNotes}
@@ -131,21 +144,20 @@ export default function Page() {
           }}
         />
       </View>
-      {storedNotes.length > 0 ? (
-        <FlatList
-          data={sortedStoredNotes}
-          keyExtractor={(item) => item.id}
-          renderItem={(item) => (
-            <NoteItemComponent date={item.item.id} title={item.item.title} />
-          )}
-          contentContainerStyle={{ gap: 8 }}
-        />
-      ) : (
-        <ThemedText
-          text="No notes stored."
-          style={{ fontFamily: "WorkSans_900Black", fontSize: 24 }}
-        />
-      )}
+      <FlatList
+        data={sortedStoredNotes}
+        keyExtractor={(item) => item.id}
+        renderItem={(item) => (
+          <NoteItemComponent date={item.item.id} title={item.item.title} />
+        )}
+        ListEmptyComponent={
+          <ThemedText
+            text="No notes stored."
+            style={{ fontFamily: "WorkSans_900Black", fontSize: 24 }}
+          />
+        }
+        contentContainerStyle={{ gap: 8 }}
+      />
       <Pressable
         style={{
           position: "absolute",

@@ -57,6 +57,7 @@ interface TaskStoreInterface {
   resetForm: () => void;
   saveTaskSettings: () => Promise<void>;
   loadTaskSettings: () => Promise<void>;
+  clearStoredTasks: () => void;
 }
 
 const useTaskStore = create<TaskStoreInterface>()(
@@ -80,6 +81,7 @@ const useTaskStore = create<TaskStoreInterface>()(
       isCompleted: false,
     },
     loadStoredTasks: async () => {
+      get().clearStoredTasks();
       try {
         const tasks = await AsyncStorage.getItem("@tasks");
         if (tasks) {
@@ -314,6 +316,15 @@ const useTaskStore = create<TaskStoreInterface>()(
         });
       }
     },
+    clearStoredTasks: () =>
+      set({
+        storedTasks: [],
+        overdueTasks: [],
+        todayTasks: [],
+        tomorrowTasks: [],
+        upcomingTasks: [],
+        completedTasks: [],
+      }),
   }))
 );
 

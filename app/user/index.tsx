@@ -13,9 +13,15 @@ import ThemedText from "@/components/ThemedText";
 import useThemeStore from "@/hooks/useThemeStore";
 import useAuthStore from "@/hooks/useAuthStore";
 import { SheetManager } from "react-native-actions-sheet";
+import useNoteStore from "@/hooks/useNoteStore";
+import useTaskStore from "@/hooks/useTaskStore";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { toast } from "sonner-native";
 
 export default function Page() {
   const { isDarkMode, palette, isOLEDMode } = useThemeStore();
+  const { storedNotes, clearStoredNotes } = useNoteStore();
+  const { storedTasks, clearStoredTasks } = useTaskStore();
 
   const {
     session,
@@ -23,7 +29,7 @@ export default function Page() {
     requestVerification,
     requestChangeEmail,
     requestChangePassword,
-    isVerifyEmailSent,
+    uploadOnCloud,
   } = useAuthStore();
 
   const iconColor = isDarkMode
@@ -31,6 +37,27 @@ export default function Page() {
     : Colors.Text_Light.Default;
 
   const styleState = styles(isDarkMode, isOLEDMode);
+
+  const dataOnCloudMutation = useMutation({
+    mutationFn: () =>
+      uploadOnCloud(JSON.stringify(storedTasks), JSON.stringify(storedNotes)),
+    onSuccess: () => {
+      toast.dismiss();
+      toast.success("Data synced!", { dismissible: false, duration: 3000 });
+    },
+    onError: () => {
+      toast.dismiss();
+      toast.error("Data not synced, please try again.", {
+        dismissible: false,
+        duration: 3000,
+      });
+    },
+
+    onMutate: () => {
+      toast.dismiss();
+      toast.loading("Syncing...", { dismissible: false });
+    },
+  });
 
   return (
     <SafeAreaView style={styleState.safeAreaView}>
@@ -198,7 +225,12 @@ export default function Page() {
               color="Tertiary"
             />
             <Pressable
-              style={{ flexDirection: "row", gap: 16, alignItems: "center" }}
+              style={{
+                flexDirection: "row",
+                gap: 16,
+                alignItems: "center",
+                display: session.record.is_premium ? "none" : "flex",
+              }}
               onPress={() => SheetManager.show("premium-upgrade-sheet")}
             >
               <MaterialCommunityIcons
@@ -208,6 +240,19 @@ export default function Page() {
               />
               <ThemedText text="Upgrade to premium" />
             </Pressable>
+            <Pressable
+              style={{ flexDirection: "row", gap: 16, alignItems: "center" }}
+              onPress={() => {
+                if (session.record.is_premium) {
+                  dataOnCloudMutation.mutate();
+                } else {
+                  SheetManager.show("premium-upgrade-sheet");
+                }
+              }}
+            >
+              <MaterialCommunityIcons name="sync" size={24} color={iconColor} />
+              <ThemedText text="Sync your data" />
+            </Pressable>
           </View>
         </View>
         <Pressable
@@ -216,7 +261,11 @@ export default function Page() {
             gap: 16,
             alignItems: "center",
           }}
-          onPress={handleLogout}
+          onPress={() => {
+            handleLogout();
+            clearStoredNotes();
+            clearStoredTasks();
+          }}
         >
           <Ionicons name="log-out" size={24} color={iconColor} />
           <ThemedText text="Log-out" />

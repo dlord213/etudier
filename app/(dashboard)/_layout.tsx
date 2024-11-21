@@ -10,12 +10,15 @@ import useNoteStore from "@/hooks/useNoteStore";
 import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
+import useAuthStore from "@/hooks/useAuthStore";
+import { useQuery } from "@tanstack/react-query";
 
 export default function Layout() {
   const { palette, isDarkMode, isOLEDMode, hasColorOnNavBar } = useThemeStore();
   const { isModalOpen } = useModalSheetStore();
-  const { loadTaskSettings } = useTaskStore();
+  const { loadTaskSettings, loadStoredTasks } = useTaskStore();
   const { loadNoteSettings, loadStoredNotes } = useNoteStore();
+  const { session } = useAuthStore();
 
   const navBarBackgroundColor = hasColorOnNavBar
     ? isDarkMode
@@ -32,8 +35,9 @@ export default function Layout() {
   useEffect(() => {
     loadTaskSettings();
     loadNoteSettings();
+    loadStoredTasks();
     loadStoredNotes();
-  }, []);
+  }, [session.token]);
 
   return (
     <Tabs
