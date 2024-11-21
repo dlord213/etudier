@@ -79,6 +79,10 @@ export default function RootLayout() {
               options={{ animation: "fade_from_bottom" }}
             />
             <Stack.Screen
+              name="activity_log/index"
+              options={{ animation: "fade_from_bottom" }}
+            />
+            <Stack.Screen
               name="flashcard/[flashcard]"
               options={{ animation: "fade_from_bottom" }}
             />

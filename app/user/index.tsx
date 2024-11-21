@@ -120,12 +120,6 @@ export default function Page() {
             <Pressable
               style={{ flexDirection: "row", gap: 16, alignItems: "center" }}
             >
-              <Ionicons name="bar-chart-outline" size={24} color={iconColor} />
-              <ThemedText text="Activity Log" />
-            </Pressable>
-            <Pressable
-              style={{ flexDirection: "row", gap: 16, alignItems: "center" }}
-            >
               <Ionicons name="pencil-sharp" size={24} color={iconColor} />
               <ThemedText text="Edit Profile" />
             </Pressable>
