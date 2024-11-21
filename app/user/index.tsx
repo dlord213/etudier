@@ -2,7 +2,7 @@ import Colors from "@/constants/Colors";
 import { Image, Pressable, StyleSheet, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { router } from "expo-router";
-import * as Notifications from "expo-notifications";
+import * as IntentLauncher from "expo-intent-launcher";
 
 import AntDesign from "@expo/vector-icons/AntDesign";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
@@ -12,6 +12,7 @@ import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import ThemedText from "@/components/ThemedText";
 import useThemeStore from "@/hooks/useThemeStore";
 import useAuthStore from "@/hooks/useAuthStore";
+import { SheetManager } from "react-native-actions-sheet";
 
 export default function Page() {
   const { isDarkMode, palette, isOLEDMode } = useThemeStore();
@@ -179,17 +180,39 @@ export default function Page() {
             <Pressable
               style={{ flexDirection: "row", gap: 16, alignItems: "center" }}
               onPress={async () => {
-                await Notifications.scheduleNotificationAsync({
-                  content: {
-                    title: "You have unfinished tasks for today!",
-                    body: "Don't let procrastination get you, finish the tasks while you can.",
-                  },
-                  trigger: { seconds: 2 },
-                });
+                IntentLauncher.startActivityAsync(
+                  IntentLauncher.ActivityAction.APPLICATION_SETTINGS
+                );
               }}
             >
               <Ionicons name="notifications" size={24} color={iconColor} />
-              <ThemedText text="Test notification" />
+              <View style={{ flexShrink: 1 }}>
+                <ThemedText text="Allow on do not disturb mode" />
+                <ThemedText
+                  text="By turning this on, you'll get notified more of your reminders/tasks."
+                  color="Secondary"
+                />
+              </View>
+            </Pressable>
+          </View>
+          <View style={{ gap: 16 }}>
+            <ThemedText
+              text="Premium"
+              style={{
+                fontFamily: "WorkSans_700Bold",
+              }}
+              color="Tertiary"
+            />
+            <Pressable
+              style={{ flexDirection: "row", gap: 16, alignItems: "center" }}
+              onPress={() => SheetManager.show("premium-upgrade-sheet")}
+            >
+              <MaterialCommunityIcons
+                name="account-arrow-up"
+                size={24}
+                color={iconColor}
+              />
+              <ThemedText text="Upgrade to premium" />
             </Pressable>
           </View>
         </View>

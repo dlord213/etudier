@@ -13,6 +13,9 @@ import ThesaurusSheet from "@/sheets/ThesaurusSheet";
 import FlashCardsSheet from "@/sheets/FlashCardsSheet";
 import FlashcardResourcesSheet from "@/sheets/FlashcardResourcesSheet";
 import ResourceUploadFileSheet from "@/sheets/ResourceUploadFileSheet";
+import PremiumUpgradeSheet from "@/sheets/PremiumUpgradeSheet";
+import PremiumPaymentSheet from "@/sheets/PremiumPaymentSheet";
+import PremiumScreenshotUploadSheet from "@/sheets/PremiumScreenshotUpload";
 
 registerSheet("login-sheet", LoginSheet);
 registerSheet("register-sheet", RegisterSheet);
@@ -27,6 +30,9 @@ registerSheet("hub-thesaurus-sheet", ThesaurusSheet);
 registerSheet("hub-flashcards-sheet", FlashCardsSheet);
 registerSheet("hub-flashcards-resources-sheet", FlashcardResourcesSheet);
 registerSheet("hub-resource-upload-file-sheet", ResourceUploadFileSheet);
+registerSheet("premium-upgrade-sheet", PremiumUpgradeSheet);
+registerSheet("premium-payment-sheet", PremiumPaymentSheet);
+registerSheet("premium-screenshot-upload-sheet", PremiumScreenshotUploadSheet);
 
 declare module "react-native-actions-sheet" {
   interface Sheets {
@@ -47,6 +53,9 @@ declare module "react-native-actions-sheet" {
       };
     }>;
     "hub-resource-upload-file-sheet": SheetDefinition;
+    "premium-upgrade-sheet": SheetDefinition;
+    "premium-payment-sheet": SheetDefinition;
+    "premium-screenshot-upload-sheet": SheetDefinition;
   }
 }
 
