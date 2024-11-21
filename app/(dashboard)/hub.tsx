@@ -1,4 +1,10 @@
-import { Pressable, ScrollView, StyleSheet, View } from "react-native";
+import {
+  ActivityIndicator,
+  Pressable,
+  ScrollView,
+  StyleSheet,
+  View,
+} from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { SheetManager } from "react-native-actions-sheet";
 
@@ -11,6 +17,7 @@ import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import useAuthStore from "@/hooks/useAuthStore";
+import { router } from "expo-router";
 
 export default function Page() {
   const { palette, isDarkMode, isOLEDMode } = useThemeStore();
@@ -37,6 +44,7 @@ export default function Page() {
   };
 
   const {
+    isFetched,
     data,
     error,
     refetch: refetchResources,
@@ -170,42 +178,54 @@ export default function Page() {
           </Pressable>
         </ScrollView>
       </View>
-      {data
-        ? data.items.map((item: any) => (
-            <Pressable
-              key={item.id}
-              style={({ pressed }) => [
-                {
-                  backgroundColor: isDarkMode
-                    ? Colors.Backgrounds_Light.Brand
-                    : Colors.Backgrounds_Dark.Brand,
-                  padding: 12,
-                  borderRadius: 8,
-                  opacity: pressed ? 0.9 : 1,
-                },
-              ]}
-            >
-              <ThemedText
-                text={item.title}
-                style={{
-                  color: isDarkMode
-                    ? Colors.Text_Light.Default
-                    : Colors.Text_Dark.Default,
-                  fontFamily: "WorkSans_700Bold",
-                  fontSize: 20,
-                }}
-              />
-              <ThemedText
-                text={item.description}
-                style={{
-                  color: isDarkMode
-                    ? Colors.Text_Dark.Secondary
-                    : Colors.Text_Light.Tertiary,
-                }}
-              />
-            </Pressable>
-          ))
-        : null}
+      {isFetched ? (
+        data.items.map((item: any) => (
+          <Pressable
+            key={item.id}
+            style={({ pressed }) => [
+              {
+                backgroundColor: isDarkMode
+                  ? Colors.Backgrounds_Light.Brand
+                  : Colors.Backgrounds_Dark.Brand,
+                padding: 12,
+                borderRadius: 8,
+                opacity: pressed ? 0.9 : 1,
+              },
+            ]}
+            onPress={() =>
+              router.push({
+                pathname: "/resource/[id]",
+                params: { id: item.id },
+              })
+            }
+          >
+            <ThemedText
+              text={item.title}
+              style={{
+                color: isDarkMode
+                  ? Colors.Text_Light.Default
+                  : Colors.Text_Dark.Default,
+                fontFamily: "WorkSans_700Bold",
+                fontSize: 20,
+              }}
+            />
+            <ThemedText
+              text={item.description}
+              style={{
+                color: isDarkMode
+                  ? Colors.Text_Dark.Secondary
+                  : Colors.Text_Light.Tertiary,
+              }}
+            />
+          </Pressable>
+        ))
+      ) : (
+        <View
+          style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
+        >
+          <ActivityIndicator size={48} color={Colors[palette][600]} />
+        </View>
+      )}
       <Pressable
         style={({ pressed }) => [
           {
