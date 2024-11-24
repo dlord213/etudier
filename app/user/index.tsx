@@ -3,6 +3,9 @@ import { Image, Pressable, StyleSheet, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { router } from "expo-router";
 import * as IntentLauncher from "expo-intent-launcher";
+import { SheetManager } from "react-native-actions-sheet";
+import { useMutation } from "@tanstack/react-query";
+import { toast } from "sonner-native";
 
 import AntDesign from "@expo/vector-icons/AntDesign";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
@@ -12,11 +15,8 @@ import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import ThemedText from "@/components/ThemedText";
 import useThemeStore from "@/hooks/useThemeStore";
 import useAuthStore from "@/hooks/useAuthStore";
-import { SheetManager } from "react-native-actions-sheet";
 import useNoteStore from "@/hooks/useNoteStore";
 import useTaskStore from "@/hooks/useTaskStore";
-import { useMutation, useQuery } from "@tanstack/react-query";
-import { toast } from "sonner-native";
 
 export default function Page() {
   const { isDarkMode, palette, isOLEDMode } = useThemeStore();

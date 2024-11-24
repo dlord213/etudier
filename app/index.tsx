@@ -1,6 +1,5 @@
 import React from "react";
 import {
-  Platform,
   Pressable,
   StyleSheet,
   Text,
@@ -108,7 +107,7 @@ export default function Index() {
               dotIndex == 0 ? Colors[palette][600] : Colors.Text_Light.Tertiary,
             borderRadius: 999,
           }}
-        ></View>
+        />
         <View
           style={{
             width: 12,
@@ -118,7 +117,7 @@ export default function Index() {
 
             borderRadius: 999,
           }}
-        ></View>
+        />
         <View
           style={{
             width: 12,
@@ -128,7 +127,7 @@ export default function Index() {
 
             borderRadius: 999,
           }}
-        ></View>
+        />
         <View
           style={{
             width: 12,
@@ -138,7 +137,7 @@ export default function Index() {
 
             borderRadius: 999,
           }}
-        ></View>
+        />
       </View>
       <Carousel
         ref={carouselRef}

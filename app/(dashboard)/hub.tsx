@@ -46,7 +46,6 @@ export default function Page() {
   const {
     isFetched,
     data,
-    error,
     refetch: refetchResources,
   } = useQuery({
     queryFn: getResources,

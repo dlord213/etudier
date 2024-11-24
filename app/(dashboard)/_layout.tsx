@@ -11,7 +11,6 @@ import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
 import useAuthStore from "@/hooks/useAuthStore";
-import { useQuery } from "@tanstack/react-query";
 
 export default function Layout() {
   const { palette, isDarkMode, isOLEDMode, hasColorOnNavBar } = useThemeStore();

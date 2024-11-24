@@ -24,9 +24,6 @@ export default function Page() {
   const currentFlashcard = questions[currentIndex];
 
   const styleState = styles(isDarkMode, isOLEDMode);
-  const iconColor = isDarkMode
-    ? Colors.Text_Dark.Default
-    : Colors.Text_Light.Default;
 
   const handleNext = () => {
     if (currentIndex < questions.length - 1) {

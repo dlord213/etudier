@@ -9,11 +9,9 @@ import {
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { router, useFocusEffect, useNavigation } from "expo-router";
-
 import { startOfToday } from "date-fns";
 
 import AntDesign from "@expo/vector-icons/AntDesign";
-import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 
 import Colors from "@/constants/Colors";
 import useThemeStore from "@/hooks/useThemeStore";

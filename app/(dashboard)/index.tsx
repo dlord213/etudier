@@ -20,12 +20,10 @@ import useModalSheetStore from "@/hooks/useModalSheetStore";
 import useTaskStore from "@/hooks/useTaskStore";
 import ThemedText from "@/components/ThemedText";
 import Colors from "@/constants/Colors";
-import useAuthStore from "@/hooks/useAuthStore";
-import useNoteStore from "@/hooks/useNoteStore";
 
 export default function Page() {
   const { palette, isDarkMode, isOLEDMode } = useThemeStore();
-  const { toggleModalVisibility, isModalOpen } = useModalSheetStore();
+  const { toggleModalVisibility } = useModalSheetStore();
   const { height: screenHeight } = useWindowDimensions();
 
   const {
@@ -46,8 +44,6 @@ export default function Page() {
     toggleIsEditingTask,
     form,
   } = useTaskStore();
-
-  const { session } = useAuthStore();
 
   const sections = [
     { title: "Overdue", data: overdueTasks, isVisible: overdueTasksVisible },
@@ -74,8 +70,6 @@ export default function Page() {
       return () => saveStoredStateTasks();
     }, [])
   );
-
-  useFocusEffect(useCallback(() => {}, []));
 
   return (
     <SafeAreaView style={styleState.safeAreaView}>

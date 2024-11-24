@@ -2,7 +2,6 @@ import { router, useFocusEffect, useNavigation } from "expo-router";
 import { useCallback } from "react";
 import { Pressable, StyleSheet, Switch, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { reloadAppAsync } from "expo";
 import { toast } from "sonner-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as Updates from "expo-updates";

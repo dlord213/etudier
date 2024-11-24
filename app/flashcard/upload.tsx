@@ -1,6 +1,6 @@
 import { Pressable, StyleSheet, TextInput, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { router, useNavigation } from "expo-router";
+import { router } from "expo-router";
 import { useState } from "react";
 import { toast } from "sonner-native";
 
@@ -17,7 +17,6 @@ export default function Page() {
 
   const [choices, setChoices] = useState(["", "", "", ""]);
   const [answerIndex, setAnswerIndex] = useState(0);
-  const navigation = useNavigation();
 
   const [isAddingQuestions, setIsAddingQuestions] = useState(true);
 
@@ -552,6 +551,7 @@ export default function Page() {
     </SafeAreaView>
   );
 }
+
 const styles = (isDarkMode: boolean, isOLEDMode: boolean) =>
   StyleSheet.create({
     safeAreaView: {

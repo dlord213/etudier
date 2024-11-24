@@ -4,6 +4,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { useQuery } from "@tanstack/react-query";
 import { toast } from "sonner-native";
 import LottieView from "lottie-react-native";
+import { useState } from "react";
 import RNFetchBlob from "react-native-blob-util";
 
 import Colors from "@/constants/Colors";
@@ -13,7 +14,6 @@ import ThemedText from "@/components/ThemedText";
 
 import LoadingAnimation from "@/assets/animations/login.json";
 import AntDesign from "@expo/vector-icons/AntDesign";
-import { useState } from "react";
 
 export default function Page() {
   const { id } = useLocalSearchParams();
@@ -69,7 +69,7 @@ export default function Page() {
     }
   };
 
-  const { isFetched, data, error } = useQuery({
+  const { isFetched, data } = useQuery({
     queryKey: [id],
     queryFn: fetchData,
     enabled: true,

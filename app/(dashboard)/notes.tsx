@@ -1,6 +1,6 @@
 import { FlatList, Pressable, StyleSheet, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { router, useFocusEffect, useNavigation } from "expo-router";
+import { router, useFocusEffect } from "expo-router";
 import { useCallback } from "react";
 import { ResponsiveGrid } from "react-native-flexible-grid";
 import { SheetManager } from "react-native-actions-sheet";
