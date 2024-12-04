@@ -1,17 +1,20 @@
 import { router, useFocusEffect, useNavigation } from "expo-router";
 import { useCallback } from "react";
-import { Pressable, StyleSheet, Switch, View } from "react-native";
+import { FlatList, Pressable, StyleSheet, Switch, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { toast } from "sonner-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as Updates from "expo-updates";
 
 import ThemedText from "@/components/ThemedText";
-import Colors from "@/constants/Colors";
+import Colors, { NON_PREMIUM_COLORS, PREMIUM_COLORS } from "@/constants/Colors";
 import useNoteStore from "@/hooks/useNoteStore";
 import useThemeStore from "@/hooks/useThemeStore";
 
 import AntDesign from "@expo/vector-icons/AntDesign";
+import useAuthStore from "@/hooks/useAuthStore";
+import FontAwesome from "@expo/vector-icons/FontAwesome";
+import { SheetManager } from "react-native-actions-sheet";
 
 export default function Page() {
   const {
@@ -26,6 +29,7 @@ export default function Page() {
     saveThemeSettings,
   } = useThemeStore();
   const { isGridView, toggleGridView, saveNoteSettings } = useNoteStore();
+  const { session } = useAuthStore();
 
   const styleState = styles(isDarkMode, isOLEDMode);
 
@@ -48,6 +52,11 @@ export default function Page() {
       return saveSettingsBeforeRemoval;
     }, [navigation])
   );
+
+  const combinedColors = [
+    ...NON_PREMIUM_COLORS.map((color) => ({ color, isPremium: false })),
+    ...PREMIUM_COLORS.map((color) => ({ color, isPremium: true })),
+  ];
 
   return (
     <SafeAreaView style={styleState.safeAreaView}>
@@ -157,59 +166,51 @@ export default function Page() {
         }}
         color="Tertiary"
       />
-      <View
-        style={{
-          flexDirection: "row",
-          alignItems: "center",
-          justifyContent: "space-between",
-        }}
-      >
-        <Pressable
-          style={{
-            width: 48,
-            height: 48,
-            backgroundColor: Colors.Astral[600],
-            borderRadius: 999,
-          }}
-          onPress={() => setPalette("Astral")}
-        />
-        <Pressable
-          style={{
-            width: 48,
-            height: 48,
-            backgroundColor: Colors.Emerald[600],
-            borderRadius: 999,
-          }}
-          onPress={() => setPalette("Emerald")}
-        />
-        <Pressable
-          style={{
-            width: 48,
-            height: 48,
-            backgroundColor: Colors.Victoria[600],
-            borderRadius: 999,
-          }}
-          onPress={() => setPalette("Victoria")}
-        />
-        <Pressable
-          style={{
-            width: 48,
-            height: 48,
-            backgroundColor: Colors.Wewak[600],
-            borderRadius: 999,
-          }}
-          onPress={() => setPalette("Wewak")}
-        />
-        <Pressable
-          style={{
-            width: 48,
-            height: 48,
-            backgroundColor: Colors.Willow[600],
-            borderRadius: 999,
-          }}
-          onPress={() => setPalette("Willow")}
-        />
-      </View>
+      <FlatList
+        data={combinedColors}
+        horizontal
+        contentContainerStyle={{ gap: 8 }}
+        style={{ maxHeight: 56 }}
+        renderItem={({
+          item,
+        }: {
+          item: { color: string; isPremium: boolean };
+        }) => (
+          <Pressable
+            style={{
+              width: 48,
+              height: 48,
+              backgroundColor: Colors[item.color][600],
+              borderRadius: 999,
+              justifyContent: "center",
+              alignItems: "center",
+              opacity: item.isPremium && !session.record.is_premium ? 0.3 : 1,
+            }}
+            onPress={() => {
+              if (item.isPremium) {
+                if (session.record.is_premium) {
+                  setPalette(item.color);
+                } else {
+                  SheetManager.show("premium-upgrade-sheet");
+                }
+              } else {
+                setPalette(item.color);
+              }
+            }}
+          >
+            {item.isPremium && !session.record.is_premium && (
+              <FontAwesome
+                name="lock"
+                size={24}
+                color={
+                  isDarkMode ? Colors[item.color][400] : Colors[item.color][800]
+                }
+              />
+            )}
+          </Pressable>
+        )}
+        keyExtractor={(item) => item.color}
+      />
       <ThemedText
         text="Notes"
         style={{
