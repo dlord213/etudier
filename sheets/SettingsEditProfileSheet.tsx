@@ -18,7 +18,6 @@ export default function EditProfileSheet() {
   const [name, setName] = useState("");
   const [username, setUsername] = useState("");
   const [imgFilePath, setImgFilePath] = useState<any[]>([]);
-  const [avatarURL, setAvatarURL] = useState<any>();
 
   const avatarSource =
     imgFilePath.uri ||
@@ -31,13 +30,15 @@ export default function EditProfileSheet() {
 
         if (username) formData.append("username", username);
         if (name) formData.append("name", name);
-        if (imgFilePath) {
+
+        if (imgFilePath.length >= 1) {
           formData.append("avatar", {
             uri: imgFilePath.uri,
             name: imgFilePath.name,
-            type: imgFilePath.mimeType,
+            type: imgFilePath.mimeType || "image/jpeg",
           });
         }
+
         const updateRecord = await client_instance
           .collection("users")
           .update(session.record.id, formData);
@@ -51,6 +52,8 @@ export default function EditProfileSheet() {
       toast.dismiss();
       updateSession();
       toast.success("Changes saved!", { dismissible: false, duration: 3000 });
+      setName("");
+      setUsername("");
     },
     onError: () => {
       toast.dismiss();
@@ -58,8 +61,9 @@ export default function EditProfileSheet() {
         dismissible: false,
         duration: 3000,
       });
+      setName("");
+      setUsername("");
     },
-
     onMutate: () => {
       toast.dismiss();
       toast.loading("Saving...", { dismissible: false });
@@ -98,10 +102,7 @@ export default function EditProfileSheet() {
           : Colors.Backgrounds_Light.Brand,
         padding: 16,
       }}
-      onClose={() => {
-        setName("");
-        setUsername("");
-      }}
+      onClose={() => {}}
     >
       <View style={{ padding: 16 }}>
         <View
