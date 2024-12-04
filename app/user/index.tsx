@@ -64,6 +64,12 @@ export default function Page() {
     },
   });
 
+  useEffect(() => {
+    setAvatarURL(
+      client_instance.files.getUrl(session.record, session.record.avatar)
+    );
+  }, [session]);
+
   return (
     <SafeAreaView style={styleState.safeAreaView}>
       <View
