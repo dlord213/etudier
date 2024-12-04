@@ -17,7 +17,7 @@ export default function EditProfileSheet() {
 
   const [name, setName] = useState("");
   const [username, setUsername] = useState("");
-  const [imgFilePath, setImgFilePath] = useState<any[]>([]);
+  const [imgFilePath, setImgFilePath] = useState<any>({});
 
   const avatarSource =
     imgFilePath.uri ||
@@ -31,13 +31,15 @@ export default function EditProfileSheet() {
         if (username) formData.append("username", username);
         if (name) formData.append("name", name);
 
-        if (imgFilePath.length >= 1) {
+        if (imgFilePath.uri) {
           formData.append("avatar", {
             uri: imgFilePath.uri,
             name: imgFilePath.name,
             type: imgFilePath.mimeType || "image/jpeg",
           });
         }
+
+        console.log(imgFilePath);
 
         const updateRecord = await client_instance
           .collection("users")
