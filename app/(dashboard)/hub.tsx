@@ -18,10 +18,11 @@ import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import useAuthStore from "@/hooks/useAuthStore";
 import { router } from "expo-router";
+import { toast } from "sonner-native";
 
 export default function Page() {
   const { palette, isDarkMode, isOLEDMode } = useThemeStore();
-  const { client_instance } = useAuthStore();
+  const { client_instance, session } = useAuthStore();
 
   const styleState = styles(isDarkMode, isOLEDMode);
 
@@ -242,7 +243,11 @@ export default function Page() {
           },
         ]}
         onPress={() => {
-          SheetManager.show("hub-resource-upload-file-sheet");
+          session.record.verified == true
+            ? SheetManager.show("hub-resource-upload-file-sheet")
+            : toast(
+                "You're not a verified user, please verify your email address to upload resource."
+              );
         }}
       >
         <Ionicons name="add" size={24} color={Colors.Text_Dark.Default} />

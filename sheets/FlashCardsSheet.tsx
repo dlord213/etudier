@@ -11,10 +11,11 @@ import useAuthStore from "@/hooks/useAuthStore";
 
 import AntDesign from "@expo/vector-icons/AntDesign";
 import useQuizStore from "@/hooks/useQuizStore";
+import { toast } from "sonner-native";
 
 export default function FlashCardsSheet() {
   const { isDarkMode, palette } = useThemeStore();
-  const { client_instance } = useAuthStore();
+  const { client_instance, session } = useAuthStore();
 
   const [currentPage, setCurrentPage] = useState(1);
 
@@ -63,12 +64,19 @@ export default function FlashCardsSheet() {
               isDarkMode ? Colors.Text_Dark.Default : Colors.Text_Light.Default
             }
             onPress={() => {
-              resetQuestion();
-              resetResource();
-              resetQuestions();
-              resetResources();
-              router.push("flashcard/upload");
-              SheetManager.hide("hub-flashcards-sheet");
+              if (!session.record.verified) {
+                toast(
+                  "You're not a verified user, please verify your email address to create flashcard/s.",
+                  { position: "top-center" }
+                );
+              } else {
+                resetQuestion();
+                resetResource();
+                resetQuestions();
+                resetResources();
+                router.push("flashcard/upload");
+                SheetManager.hide("hub-flashcards-sheet");
+              }
             }}
           />
           <ThemedText

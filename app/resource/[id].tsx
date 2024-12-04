@@ -45,38 +45,49 @@ export default function Page() {
   };
 
   const downloadFile = async (fileName: string) => {
-    try {
-      const url = client_instance.files.getUrl(collectionData, fileName);
+    if (!data) {
+      toast.error("Data is not yet loaded.");
+      return;
+    }
 
-      await RNFetchBlob.config({
-        fileCache: true,
-        addAndroidDownloads: {
-          useDownloadManager: true,
-          notification: true,
-        },
-      })
-        .fetch("GET", url)
-        .then(async (res) => {
-          if (res && res.info().status === 200) {
-            console.log(res);
-            console.log(res.path());
-          }
-        });
+    try {
+      let url = client_instance.files.getUrl(collectionData, fileName);
+
+      if (url) {
+        await RNFetchBlob.config({
+          addAndroidDownloads: {
+            useDownloadManager: true,
+            notification: true,
+          },
+        })
+          .fetch("GET", url)
+          .then(async (res) => {
+            toast.dismiss();
+            toast.loading("Downloading...", { dismissible: false });
+
+            if (res.path()) {
+              toast.dismiss();
+              toast.success("Download successful.");
+            }
+          })
+          .catch((error) => {
+            console.error("Error during fetch:", error);
+            toast.error("Failed to download file.");
+          });
+      }
     } catch (error) {
       toast.error("Cannot open file.");
-      console.log(error);
       throw error;
     }
   };
 
-  const { isFetched, data } = useQuery({
+  const { data } = useQuery({
     queryKey: [id],
     queryFn: fetchData,
     enabled: true,
-    refetchIntervalInBackground: false,
   });
 
-  if (!isFetched) {
+  if (!data) {
     return (
       <SafeAreaView
         style={[
@@ -132,35 +143,37 @@ export default function Page() {
           text="Attached files"
           style={{ fontFamily: "WorkSans_700Bold", fontSize: 16 }}
         />
-        {data.resource_files.map((file: any) => (
-          <Pressable
-            key={file}
-            style={({ pressed }) => [
-              {
-                backgroundColor: isDarkMode
-                  ? Colors.Backgrounds_Light.Brand
-                  : Colors.Backgrounds_Dark.Brand,
-                padding: 12,
-                borderRadius: 8,
-                opacity: pressed ? 0.9 : 1,
-                flexDirection: "row",
-                gap: 8,
-              },
-            ]}
-            onPress={() => {
-              downloadFile(file);
-            }}
-          >
-            <ThemedText
-              text={file}
-              style={{
-                color: isDarkMode
-                  ? Colors.Text_Dark.Secondary
-                  : Colors.Text_Dark.Default,
-              }}
-            />
-          </Pressable>
-        ))}
+        {data?.resource_files?.length > 0 ? (
+          data.resource_files.map((file: any) => (
+            <Pressable
+              key={file}
+              style={({ pressed }) => [
+                {
+                  backgroundColor: isDarkMode
+                    ? Colors.Backgrounds_Light.Brand
+                    : Colors.Backgrounds_Dark.Brand,
+                  padding: 12,
+                  borderRadius: 8,
+                  opacity: pressed ? 0.9 : 1,
+                  flexDirection: "row",
+                  gap: 8,
+                },
+              ]}
+              onPress={() => downloadFile(file)}
+            >
+              <ThemedText
+                text={file}
+                style={{
+                  color: isDarkMode
+                    ? Colors.Text_Dark.Secondary
+                    : Colors.Text_Dark.Default,
+                }}
+              />
+            </Pressable>
+          ))
+        ) : (
+          <ThemedText text="No files available." />
+        )}
       </View>
     </SafeAreaView>
   );
