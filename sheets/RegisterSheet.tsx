@@ -44,7 +44,9 @@ export default function RegisterSheet() {
         <View style={{ gap: 8, marginVertical: 16 }}>
           <TextInput
             style={{
-              backgroundColor: Colors.Backgrounds_Light.Brand,
+              backgroundColor: isDarkMode
+                ? Colors.Backgrounds_Light.Brand
+                : Colors[palette][200],
               padding: 8,
               borderRadius: 8,
               fontFamily: "WorkSans_400Regular",
@@ -59,7 +61,9 @@ export default function RegisterSheet() {
           />
           <TextInput
             style={{
-              backgroundColor: Colors.Backgrounds_Light.Brand,
+              backgroundColor: isDarkMode
+                ? Colors.Backgrounds_Light.Brand
+                : Colors[palette][200],
               padding: 8,
               borderRadius: 8,
               fontFamily: "WorkSans_400Regular",
@@ -74,7 +78,9 @@ export default function RegisterSheet() {
           />
           <TextInput
             style={{
-              backgroundColor: Colors.Backgrounds_Light.Brand,
+              backgroundColor: isDarkMode
+                ? Colors.Backgrounds_Light.Brand
+                : Colors[palette][200],
               padding: 8,
               borderRadius: 8,
               fontFamily: "WorkSans_400Regular",

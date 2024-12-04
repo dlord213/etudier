@@ -81,7 +81,6 @@ const useTaskStore = create<TaskStoreInterface>()(
       isCompleted: false,
     },
     loadStoredTasks: async () => {
-      get().clearStoredTasks();
       try {
         const tasks = await AsyncStorage.getItem("@tasks");
         if (tasks) {

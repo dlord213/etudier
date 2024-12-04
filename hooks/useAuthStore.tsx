@@ -40,6 +40,7 @@ interface AuthStoreInterface {
   isChangePasswordSent: boolean;
   isVerifyEmailSent: boolean;
   loadStoredSession: () => Promise<void>;
+  updateSession: () => Promise<void>;
   clearStoredSession: () => Promise<void>;
   handleLogin: () => Promise<void>;
   handleRegister: () => Promise<void>;
@@ -128,6 +129,32 @@ const useAuthStore = create<AuthStoreInterface>()(
       } catch (err) {
         get().clearStoredSession();
         set({ isAuthing: false, isLoggedIn: false });
+      }
+    },
+    updateSession: async () => {
+      try {
+        if (get().client_instance.authStore.isValid) {
+          try {
+            const refreshedData = await get()
+              .client_instance.collection("users")
+              .authRefresh();
+
+            set({ session: refreshedData });
+
+            await AsyncStorage.setItem(
+              "@session",
+              JSON.stringify(refreshedData)
+            );
+
+            set({ isAuthing: false });
+            set({ isLoggedIn: true });
+          } catch (error) {
+            get().clearStoredSession();
+            set({ isAuthing: false, isLoggedIn: false });
+          }
+        }
+      } catch (err) {
+        throw err;
       }
     },
     clearStoredSession: async () => {

@@ -132,7 +132,7 @@ export default function Page() {
         style={{
           backgroundColor: isDarkMode
             ? Colors.Text_Dark.Secondary
-            : Colors.Text_Light.Secondary,
+            : Colors[palette][400],
           padding: 16,
           borderTopLeftRadius: 16,
           borderTopRightRadius: 16,

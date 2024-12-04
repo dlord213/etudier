@@ -16,6 +16,7 @@ import ResourceUploadFileSheet from "@/sheets/ResourceUploadFileSheet";
 import PremiumUpgradeSheet from "@/sheets/PremiumUpgradeSheet";
 import PremiumPaymentSheet from "@/sheets/PremiumPaymentSheet";
 import PremiumScreenshotUploadSheet from "@/sheets/PremiumScreenshotUpload";
+import EditProfileSheet from "@/sheets/SettingsEditProfileSheet";
 
 registerSheet("login-sheet", LoginSheet);
 registerSheet("register-sheet", RegisterSheet);
@@ -33,6 +34,7 @@ registerSheet("hub-resource-upload-file-sheet", ResourceUploadFileSheet);
 registerSheet("premium-upgrade-sheet", PremiumUpgradeSheet);
 registerSheet("premium-payment-sheet", PremiumPaymentSheet);
 registerSheet("premium-screenshot-upload-sheet", PremiumScreenshotUploadSheet);
+registerSheet("settings-edit-profile-sheet", EditProfileSheet);
 
 declare module "react-native-actions-sheet" {
   interface Sheets {
@@ -56,6 +58,7 @@ declare module "react-native-actions-sheet" {
     "premium-upgrade-sheet": SheetDefinition;
     "premium-payment-sheet": SheetDefinition;
     "premium-screenshot-upload-sheet": SheetDefinition;
+    "settings-edit-profile-sheet": SheetDefinition;
   }
 }
 

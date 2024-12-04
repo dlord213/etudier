@@ -186,7 +186,7 @@ export default function Page() {
               {
                 backgroundColor: isDarkMode
                   ? Colors.Backgrounds_Light.Brand
-                  : Colors.Backgrounds_Dark.Brand,
+                  : Colors[palette][200],
                 padding: 12,
                 borderRadius: 8,
                 opacity: pressed ? 0.9 : 1,
@@ -204,7 +204,7 @@ export default function Page() {
               style={{
                 color: isDarkMode
                   ? Colors.Text_Light.Default
-                  : Colors.Text_Dark.Default,
+                  : Colors[palette][600],
                 fontFamily: "WorkSans_700Bold",
                 fontSize: 20,
               }}
@@ -214,7 +214,7 @@ export default function Page() {
               style={{
                 color: isDarkMode
                   ? Colors.Text_Dark.Secondary
-                  : Colors.Text_Light.Tertiary,
+                  : Colors[palette][500],
               }}
             />
           </Pressable>

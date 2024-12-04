@@ -87,49 +87,45 @@ export default function Page() {
           onPress={() => router.push("/settings")}
         />
       </View>
-      <View style={{ gap: 16, marginBottom: 8 }}>
-        <View
-          style={{
-            flexDirection: "row",
-            gap: 24,
-            alignItems: "center",
-            justifyContent: "center",
-          }}
-        >
-          {!session.record.avatar ? (
-            <FontAwesome
-              name="user-circle"
-              size={64}
-              color={
-                isDarkMode
-                  ? Colors.Text_Dark.Default
-                  : Colors.Text_Light.Default
-              }
-            />
-          ) : (
-            <Image
-              style={{
-                width: 64,
-                height: 64,
-                backgroundColor: isDarkMode
-                  ? Colors.Backgrounds_Dark.Brand
-                  : Colors.Backgrounds_Light.Brand,
-                borderRadius: 999,
-              }}
-              src={session.record.avatar}
-            />
-          )}
-          <View>
-            <ThemedText
-              text={session.record.name != "" ? session.record.name : "No name"}
-              style={{
-                fontFamily: "WorkSans_700Bold",
-                color: Colors[palette][500],
-                fontSize: 24,
-              }}
-            />
-            <ThemedText text={session.record.email} color="Tertiary" />
-          </View>
+      <View
+        style={{
+          flexDirection: "row",
+          gap: 24,
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
+        {!session.record.avatar ? (
+          <FontAwesome
+            name="user-circle"
+            size={64}
+            color={
+              isDarkMode ? Colors.Text_Dark.Default : Colors.Text_Light.Default
+            }
+          />
+        ) : (
+          <Image
+            style={{
+              width: 64,
+              height: 64,
+              backgroundColor: isDarkMode
+                ? Colors.Backgrounds_Dark.Brand
+                : Colors.Backgrounds_Light.Brand,
+              borderRadius: 999,
+            }}
+            src={session.record.avatar}
+          />
+        )}
+        <View>
+          <ThemedText
+            text={session.record.name != "" ? session.record.name : "No name"}
+            style={{
+              fontFamily: "WorkSans_700Bold",
+              color: Colors[palette][500],
+              fontSize: 24,
+            }}
+          />
+          <ThemedText text={session.record.email} color="Tertiary" />
         </View>
       </View>
       <View
@@ -146,6 +142,7 @@ export default function Page() {
             />
             <Pressable
               style={{ flexDirection: "row", gap: 16, alignItems: "center" }}
+              onPress={() => SheetManager.show("settings-edit-profile-sheet")}
             >
               <Ionicons name="pencil-sharp" size={24} color={iconColor} />
               <ThemedText text="Edit Profile" />

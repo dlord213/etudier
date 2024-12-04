@@ -219,7 +219,7 @@ export default function Index() {
                 color: Colors[palette][600],
               }}
             >
-              Sign-up
+              Register
             </Text>
           </Pressable>
           <Pressable
