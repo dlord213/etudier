@@ -1,13 +1,15 @@
-import { Pressable, Text, TextInput, View } from "react-native";
+import { Image, Pressable, Text, TextInput, View } from "react-native";
 import ActionSheet, { SheetManager } from "react-native-actions-sheet";
+import { toast } from "sonner-native";
+import { useMutation } from "@tanstack/react-query";
+import { useState } from "react";
+import * as DocumentPicker from "expo-document-picker";
 
 import Colors from "@/constants/Colors";
 import useAuthStore from "@/hooks/useAuthStore";
 import useThemeStore from "@/hooks/useThemeStore";
 import ThemedText from "@/components/ThemedText";
-import { toast } from "sonner-native";
-import { useMutation } from "@tanstack/react-query";
-import { useState } from "react";
+import FontAwesome from "@expo/vector-icons/FontAwesome";
 
 export default function EditProfileSheet() {
   const { isDarkMode, palette } = useThemeStore();
@@ -15,21 +17,30 @@ export default function EditProfileSheet() {
 
   const [name, setName] = useState("");
   const [username, setUsername] = useState("");
+  const [imgFilePath, setImgFilePath] = useState<any[]>([]);
+  const [avatarURL, setAvatarURL] = useState<any>();
+
+  const avatarSource =
+    imgFilePath.uri ||
+    client_instance.files.getUrl(session.record, session.record.avatar);
 
   const dataMutation = useMutation({
     mutationFn: async () => {
       try {
-        const userData: Record<string, string> = {};
-        if (username) userData.username = username;
-        if (name) userData.name = name;
+        const formData = new FormData();
 
-        if (Object.keys(userData).length === 0) {
-          throw new Error("No fields to update.");
+        if (username) formData.append("username", username);
+        if (name) formData.append("name", name);
+        if (imgFilePath) {
+          formData.append("avatar", {
+            uri: imgFilePath.uri,
+            name: imgFilePath.name,
+            type: imgFilePath.mimeType,
+          });
         }
-
         const updateRecord = await client_instance
           .collection("users")
-          .update(session.record.id, userData);
+          .update(session.record.id, formData);
 
         return updateRecord;
       } catch (err) {
@@ -55,6 +66,30 @@ export default function EditProfileSheet() {
     },
   });
 
+  const pickFile = async () => {
+    try {
+      const response = await DocumentPicker.getDocumentAsync({
+        type: ["image/*"],
+        copyToCacheDirectory: true,
+      });
+
+      if (response && response.assets && response.assets.length > 0) {
+        const file = response.assets[0];
+        if (file && file.size < 5242880) {
+          setImgFilePath(file);
+          console.log(file);
+        } else {
+          throw new Error("File URI is not available.");
+        }
+      } else {
+        throw new Error("No file selected or invalid response.");
+      }
+    } catch (error) {
+      console.error("Error picking file:", error);
+      toast(`Error: ${error.message || error}`, { duration: 3000 });
+    }
+  };
+
   return (
     <ActionSheet
       containerStyle={{
@@ -69,10 +104,44 @@ export default function EditProfileSheet() {
       }}
     >
       <View style={{ padding: 16 }}>
-        <ThemedText
-          text="Edit profile"
-          style={{ fontFamily: "WorkSans_900Black", fontSize: 36 }}
-        />
+        <View
+          style={{
+            justifyContent: "center",
+            alignItems: "center",
+            gap: 16,
+          }}
+        >
+          {!avatarSource ? (
+            <FontAwesome
+              name="user-circle"
+              size={64}
+              color={
+                isDarkMode
+                  ? Colors.Text_Dark.Default
+                  : Colors.Text_Light.Default
+              }
+            />
+          ) : (
+            <Image
+              style={{
+                width: 64,
+                height: 64,
+                backgroundColor: isDarkMode
+                  ? Colors.Backgrounds_Dark.Brand
+                  : Colors.Backgrounds_Light.Brand,
+                borderRadius: 999,
+              }}
+              src={avatarSource}
+            />
+          )}
+          <Pressable
+            onPress={() => {
+              pickFile();
+            }}
+          >
+            <ThemedText text="Upload picture" color="Tertiary" />
+          </Pressable>
+        </View>
         <View style={{ gap: 8, marginVertical: 16 }}>
           <TextInput
             style={{

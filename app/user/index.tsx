@@ -17,6 +17,7 @@ import useThemeStore from "@/hooks/useThemeStore";
 import useAuthStore from "@/hooks/useAuthStore";
 import useNoteStore from "@/hooks/useNoteStore";
 import useTaskStore from "@/hooks/useTaskStore";
+import { useEffect, useState } from "react";
 
 export default function Page() {
   const { isDarkMode, palette, isOLEDMode } = useThemeStore();
@@ -24,6 +25,7 @@ export default function Page() {
   const { storedTasks, clearStoredTasks } = useTaskStore();
 
   const {
+    client_instance,
     session,
     handleLogout,
     requestVerification,
@@ -32,6 +34,9 @@ export default function Page() {
     uploadOnCloud,
   } = useAuthStore();
 
+  const [avatarURL, setAvatarURL] = useState<any>(
+    client_instance.files.getUrl(session.record, session.record.avatar)
+  );
   const iconColor = isDarkMode
     ? Colors.Text_Dark.Default
     : Colors.Text_Light.Default;
@@ -103,7 +108,7 @@ export default function Page() {
               isDarkMode ? Colors.Text_Dark.Default : Colors.Text_Light.Default
             }
           />
-        ) : (
+        ) : avatarURL ? (
           <Image
             style={{
               width: 64,
@@ -113,9 +118,9 @@ export default function Page() {
                 : Colors.Backgrounds_Light.Brand,
               borderRadius: 999,
             }}
-            src={session.record.avatar}
+            src={avatarURL}
           />
-        )}
+        ) : null}
         <View>
           <ThemedText
             text={session.record.name != "" ? session.record.name : "No name"}
