@@ -12,7 +12,6 @@ import { router, useFocusEffect, useNavigation } from "expo-router";
 import { startOfToday } from "date-fns";
 
 import AntDesign from "@expo/vector-icons/AntDesign";
-import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 
 import Colors from "@/constants/Colors";
 import useThemeStore from "@/hooks/useThemeStore";
@@ -92,7 +91,7 @@ export default function Page() {
             : Colors.Text_Light.Default,
         }}
         placeholderTextColor={
-          isDarkMode ? Colors.Text_Dark.Secondary : Colors.Text_Light.Secondary
+          isDarkMode ? Colors.Text_Dark.Secondary : Colors[palette][300]
         }
         cursorColor={Colors[palette][600]}
         selectionColor={Colors[palette][600]}

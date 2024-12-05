@@ -29,6 +29,7 @@ interface NoteStoreInterface {
   toggleGridView: () => void;
   addNote: () => Promise<void>;
   findNote: (id: string) => void;
+  deleteNote: (id: string) => void;
   saveNoteChanges: () => Promise<void>;
   resetForm: () => void;
   loadNoteSettings: () => Promise<void>;
@@ -127,6 +128,15 @@ const useNoteStore = create<NoteStoreInterface>()(
       if (note) {
         set({ form: note });
       }
+    },
+    deleteNote: async (id: string) => {
+      const updatedNotes = get().storedNotes.filter(
+        (note) => note.id.toString() !== id
+      );
+
+      set({ storedNotes: updatedNotes });
+      await AsyncStorage.setItem("@notes", JSON.stringify(updatedNotes));
+      get().getSortedStoredNotes();
     },
     saveNoteChanges: async () => {
       const updatedNote = get().form;

@@ -26,6 +26,7 @@ export default function Page() {
   const { height: screenHeight } = useWindowDimensions();
   const {
     findNote,
+    deleteNote,
     setTitle,
     setDescription,
     form,
@@ -100,6 +101,7 @@ export default function Page() {
                     action: {
                       label: "Delete",
                       onClick: () => {
+                        deleteNote(id)
                         router.back();
                         toast.dismiss();
                       },
