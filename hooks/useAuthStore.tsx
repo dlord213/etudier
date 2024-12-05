@@ -253,11 +253,7 @@ const useAuthStore = create<AuthStoreInterface>()(
             name: get().form.name,
           });
 
-        const authData = await get()
-          .client_instance.collection("users")
-          .authWithPassword(email, password);
-
-        await AsyncStorage.setItem("@session", JSON.stringify(authData));
+        await AsyncStorage.setItem("@session", JSON.stringify(registrationData));
         await AsyncStorage.removeItem("@notes");
         await AsyncStorage.removeItem("@tasks");
 
