@@ -18,6 +18,7 @@ import PremiumPaymentSheet from "@/sheets/PremiumPaymentSheet";
 import PremiumScreenshotUploadSheet from "@/sheets/PremiumScreenshotUpload";
 import EditProfileSheet from "@/sheets/SettingsEditProfileSheet";
 import PremiumGCashPaymentSheet from "@/sheets/PremiumGCashPaymentSheet";
+import FocusModeOptionsSheet from "@/sheets/FocusModeOptionsSheet";
 
 registerSheet("login-sheet", LoginSheet);
 registerSheet("register-sheet", RegisterSheet);
@@ -37,6 +38,7 @@ registerSheet("premium-payment-sheet", PremiumPaymentSheet);
 registerSheet("premium-gcash-payment-sheet", PremiumGCashPaymentSheet);
 registerSheet("premium-screenshot-upload-sheet", PremiumScreenshotUploadSheet);
 registerSheet("settings-edit-profile-sheet", EditProfileSheet);
+registerSheet("focus-mode-options-sheet", FocusModeOptionsSheet);
 
 declare module "react-native-actions-sheet" {
   interface Sheets {
@@ -62,6 +64,7 @@ declare module "react-native-actions-sheet" {
     "premium-gcash-payment-sheet": SheetDefinition;
     "premium-screenshot-upload-sheet": SheetDefinition;
     "settings-edit-profile-sheet": SheetDefinition;
+    "focus-mode-options-sheet": SheetDefinition;
   }
 }
 

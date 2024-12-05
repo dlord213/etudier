@@ -10,6 +10,7 @@ import ThemedText from "@/components/ThemedText";
 import Colors from "@/constants/Colors";
 import useThemeStore from "@/hooks/useThemeStore";
 import useFocusModeStore, { FocusModeStates } from "@/hooks/useFocusModeStore";
+import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
 
 export default function Page() {
   const { isDarkMode, isOLEDMode, palette } = useThemeStore();
@@ -50,16 +51,24 @@ export default function Page() {
             currentState == FocusModeStates.Study ? "Focus Mode" : "Break Mode"
           }
         />
-        {isSheetIconVisible ? (
-          <FontAwesome
-            name="hourglass-1"
+        <View style={{ flexDirection: "row", gap: 8, alignItems: "center" }}>
+          <FontAwesome6
+            name="gear"
             size={24}
             color={iconColor}
-            onPress={() => {
-              SheetManager.show("focus-mode-study-completed-sheet");
-            }}
+            onPress={() => SheetManager.show("focus-mode-options-sheet")}
           />
-        ) : null}
+          {isSheetIconVisible ? (
+            <FontAwesome
+              name="hourglass-1"
+              size={24}
+              color={iconColor}
+              onPress={() => {
+                SheetManager.show("focus-mode-study-completed-sheet");
+              }}
+            />
+          ) : null}
+        </View>
       </View>
       <View style={{ flexDirection: "row", gap: 4 }}>
         <View
