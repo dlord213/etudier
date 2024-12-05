@@ -75,10 +75,32 @@ export default function Page() {
             }
           />
         ) : (
-          <ThemedText
-            text="No notes stored."
-            style={{ fontFamily: "WorkSans_900Black", fontSize: 24 }}
-          />
+          <>
+            <View
+              style={{
+                flexDirection: "row",
+                justifyContent: "space-between",
+                alignItems: "center",
+              }}
+            >
+              <ThemedText
+                style={{ fontFamily: "WorkSans_900Black", fontSize: 32 }}
+                text="Notes"
+              />
+              <MaterialIcons
+                name="sort"
+                size={24}
+                color={iconColor}
+                onPress={() => {
+                  SheetManager.show("note-sort-sheet");
+                }}
+              />
+            </View>
+            <ThemedText
+              text="No notes stored."
+              style={{ fontFamily: "WorkSans_900Black", fontSize: 24 }}
+            />
+          </>
         )}
         <Pressable
           style={{

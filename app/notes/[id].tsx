@@ -17,6 +17,7 @@ import Colors from "@/constants/Colors";
 import useThemeStore from "@/hooks/useThemeStore";
 import ThemedText from "@/components/ThemedText";
 import useNoteStore from "@/hooks/useNoteStore";
+import { toast } from "sonner-native";
 
 export default function Page() {
   const { id } = useLocalSearchParams();
@@ -89,6 +90,24 @@ export default function Page() {
               color={iconColor}
               onPress={() => router.back()}
             />
+            <View style={{ flexDirection: "row", gap: 8 }}>
+              <AntDesign
+                name="delete"
+                size={24}
+                color={iconColor}
+                onPress={() => {
+                  toast("Delete note?", {
+                    action: {
+                      label: "Delete",
+                      onClick: () => {
+                        router.back();
+                        toast.dismiss();
+                      },
+                    },
+                  });
+                }}
+              />
+            </View>
           </View>
           <TextInput
             style={{

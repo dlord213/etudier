@@ -39,8 +39,6 @@ export default function EditProfileSheet() {
           });
         }
 
-        console.log(imgFilePath);
-
         const updateRecord = await client_instance
           .collection("users")
           .update(session.record.id, formData);
@@ -83,7 +81,6 @@ export default function EditProfileSheet() {
         const file = response.assets[0];
         if (file && file.size < 5242880) {
           setImgFilePath(file);
-          console.log(file);
         } else {
           throw new Error("File URI is not available.");
         }
