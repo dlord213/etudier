@@ -169,6 +169,8 @@ export default function Page() {
       <FlatList
         data={combinedColors}
         horizontal
+        showsHorizontalScrollIndicator={false}
+        showsVerticalScrollIndicator={false}
         contentContainerStyle={{ gap: 8 }}
         style={{ maxHeight: 56 }}
         renderItem={({
