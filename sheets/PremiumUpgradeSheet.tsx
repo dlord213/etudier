@@ -39,7 +39,6 @@ export default function PremiumUpgradeSheet() {
             }}
           />
           <ThemedText text="• Customizable time intervals on focus mode" />
-          <ThemedText text="• No more ads on the app" />
           <ThemedText text="• Access premium flashcard/quiz" />
           <ThemedText text="• More colors on themes" />
           <ThemedText text="• Cloud sync" />
