@@ -25,6 +25,10 @@ export default function Page() {
 
   const styleState = styles(isDarkMode, isOLEDMode);
 
+  const iconColor = isDarkMode
+    ? Colors.Text_Dark.Default
+    : Colors.Text_Light.Default;
+
   const handleNext = () => {
     if (currentIndex < questions.length - 1) {
       setCurrentIndex((prevIndex) => prevIndex + 1);
@@ -237,19 +241,36 @@ export default function Page() {
                 },
               ]}
               onPress={() => {
-                toast(
-                  choice === currentFlashcard.answer
-                    ? "Your answer is correct!"
-                    : "Your answer is incorrect",
-                  {
-                    onDismiss: () => {
-                      if (choice === currentFlashcard.answer) {
-                        setScore((val: number) => val + 1);
+                toast.custom(
+                  <View
+                    style={{
+                      flexDirection: "row",
+                      justifyContent: "space-between",
+                      width: screenWidth / 1.2,
+                      backgroundColor: Colors[palette][600],
+                      padding: 16,
+                      borderRadius: 8,
+                    }}
+                  >
+                    <ThemedText
+                      text={
+                        choice === currentFlashcard.answer
+                          ? "Your answer is correct!"
+                          : "Your answer is incorrect"
                       }
-                      toast.dismiss();
-                      handleNext();
-                    },
-                  }
+                    />
+                    {choice === currentFlashcard.answer ? (
+                      <AntDesign
+                        name="arrowright"
+                        size={20}
+                        color={iconColor}
+                        onPress={async () => {
+                          handleNext();
+                          await toast.dismiss();
+                        }}
+                      />
+                    ) : null}
+                  </View>
                 );
               }}
             >
