@@ -10,10 +10,12 @@ import useModalSheetStore from "@/hooks/useModalSheetStore";
 import useTaskStore from "@/hooks/useTaskStore";
 import useThemeStore from "@/hooks/useThemeStore";
 import ThemedTextInput from "@/components/ThemedTextInput";
+import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
 
 export default function TaskSheet() {
   const {
     addTask,
+    deleteTask,
     form,
     isEditingTask,
     resetForm,
@@ -69,17 +71,28 @@ export default function TaskSheet() {
             onPress={updateDate}
           />
           {isEditingTask ? (
-            <MaterialIcons
-              name="edit-square"
-              size={28}
-              color={Colors[palette][400]}
-              onPress={() => {
-                updateTask();
-                if (form.title) {
+            <View style={{ flexDirection: "row", gap: 16 }}>
+              <FontAwesome6
+                name="delete-left"
+                size={28}
+                color={Colors[palette][600]}
+                onPress={async () => {
+                  await deleteTask(form.id.toString());
                   SheetManager.hide("task-sheet");
-                }
-              }}
-            />
+                }}
+              />
+              <MaterialIcons
+                name="edit-square"
+                size={28}
+                color={Colors[palette][400]}
+                onPress={() => {
+                  updateTask();
+                  if (form.title) {
+                    SheetManager.hide("task-sheet");
+                  }
+                }}
+              />
+            </View>
           ) : (
             <AntDesign
               name="plussquare"

@@ -46,6 +46,7 @@ interface TaskStoreInterface {
   updateTitle: (newTitle: TaskForm["title"]) => void;
   updateDate: () => void;
   updateTask: () => Promise<void>;
+  deleteTask: (id: string) => Promise<void>;
   toggleIsCompleted: (id: number) => Promise<void>;
   toggleIsEditingTask: () => void;
   toggleOverdueTasksVisible: () => void;
@@ -202,6 +203,32 @@ const useTaskStore = create<TaskStoreInterface>()(
         }
 
         try {
+          get().getOverdueTasks();
+          get().getTodayTasks();
+          get().getTomorrowTasks();
+          get().getUpcomingTasks();
+          get().getCompletedTasks();
+
+          await AsyncStorage.setItem(
+            "@tasks",
+            JSON.stringify(get().storedTasks)
+          );
+        } catch (error) {
+          ToastAndroid.show(
+            `Error updating task: ${error}`,
+            ToastAndroid.SHORT
+          );
+        }
+      }
+    },
+    deleteTask: async (id: string) => {
+      if (get().isEditingTask) {
+        try {
+          const updatedTasks = get().storedTasks.filter(
+            (task) => task.id.toString() !== id
+          );
+
+          set({ storedTasks: updatedTasks });
           get().getOverdueTasks();
           get().getTodayTasks();
           get().getTomorrowTasks();
