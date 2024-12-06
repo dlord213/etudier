@@ -1,15 +1,47 @@
 import { Pressable, Text, View } from "react-native";
 import ActionSheet, { SheetManager } from "react-native-actions-sheet";
+import { TimerPickerModal } from "react-native-timer-picker";
+import { useState } from "react";
+import { toast } from "sonner-native";
 
 import Colors from "@/constants/Colors";
 import useAuthStore from "@/hooks/useAuthStore";
 import useThemeStore from "@/hooks/useThemeStore";
 import ThemedText from "@/components/ThemedText";
-import { toast } from "sonner-native";
 
 export default function FocusModeOptionsSheet() {
   const { isDarkMode, palette } = useThemeStore();
-  const { form, resetForm, toggleIsAuthing, handleLogin } = useAuthStore();
+  const { session } = useAuthStore();
+
+  const [showPicker, setShowPicker] = useState(false);
+  const [alarmString, setAlarmString] = useState<
+    string | null
+  >(null);
+  const [modalTitle, setModalTitle] = useState<string>("")
+
+  const formatTime = ({
+    hours,
+    minutes,
+    seconds,
+  }: {
+    hours?: number;
+    minutes?: number;
+    seconds?: number;
+  }) => {
+    const timeParts = [];
+
+    if (hours !== undefined) {
+      timeParts.push(hours.toString().padStart(2, "0"));
+    }
+    if (minutes !== undefined) {
+      timeParts.push(minutes.toString().padStart(2, "0"));
+    }
+    if (seconds !== undefined) {
+      timeParts.push(seconds.toString().padStart(2, "0"));
+    }
+
+    return timeParts.join(":");
+  };
 
   return (
     <ActionSheet
@@ -20,7 +52,6 @@ export default function FocusModeOptionsSheet() {
         padding: 16,
       }}
       onClose={() => {
-        resetForm();
       }}
     >
       <View style={{ padding: 16, gap: 12 }}>
@@ -57,8 +88,8 @@ export default function FocusModeOptionsSheet() {
             padding: 16,
             borderRadius: 16,
           }}
-          onPress={() => {
-            SheetManager.hide("focus-mode-options-sheet");
+          onPress={async () => {
+            setShowPicker(true)
           }}
         >
           <Text
@@ -71,6 +102,26 @@ export default function FocusModeOptionsSheet() {
             Set break mode time
           </Text>
         </Pressable>
+        <TimerPickerModal
+          visible={showPicker}
+          setIsVisible={setShowPicker}
+          onConfirm={(pickedDuration) => {
+            console.log(pickedDuration)
+            setAlarmString(formatTime(pickedDuration));
+            setShowPicker(false);
+          }}
+          disableInfiniteScroll
+          modalTitle={modalTitle}
+          onCancel={() => setShowPicker(false)}
+          closeOnOverlayPress
+          styles={{
+            theme: isDarkMode ? "dark" : "light",
+          }}
+          modalProps={{
+            overlayOpacity: 0.4,
+          }}
+          hideHours
+        />
       </View>
     </ActionSheet>
   );
