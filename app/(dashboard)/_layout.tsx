@@ -17,7 +17,7 @@ export default function Layout() {
   const { isModalOpen } = useModalSheetStore();
   const { loadTaskSettings, loadStoredTasks } = useTaskStore();
   const { loadNoteSettings, loadStoredNotes } = useNoteStore();
-  const { session } = useAuthStore();
+  const { client_instance, session, updateSession } = useAuthStore();
 
   const navBarBackgroundColor = hasColorOnNavBar
     ? isDarkMode
@@ -30,6 +30,12 @@ export default function Layout() {
       ? "#000000"
       : Colors.Backgrounds_Dark.Brand
     : Colors.Backgrounds_Light.Brand;
+
+  useEffect(() => {
+    if (!session.token) {
+      updateSession();
+    }
+  }, [session]);
 
   useEffect(() => {
     loadTaskSettings();
