@@ -253,6 +253,12 @@ const useAuthStore = create<AuthStoreInterface>()(
             name: get().form.name,
           });
 
+        const authData = await get()
+          .client_instance.collection("users")
+          .authWithPassword(email, password);
+
+        set({ session: authData });
+
         await AsyncStorage.setItem(
           "@session",
           JSON.stringify(registrationData)

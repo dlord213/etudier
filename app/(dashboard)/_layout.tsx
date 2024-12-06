@@ -32,12 +32,6 @@ export default function Layout() {
     : Colors.Backgrounds_Light.Brand;
 
   useEffect(() => {
-    if (!session.token) {
-      updateSession();
-    }
-  }, [session]);
-
-  useEffect(() => {
     loadTaskSettings();
     loadNoteSettings();
     loadStoredTasks();
