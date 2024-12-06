@@ -11,9 +11,11 @@ import Colors from "@/constants/Colors";
 import useThemeStore from "@/hooks/useThemeStore";
 import useFocusModeStore, { FocusModeStates } from "@/hooks/useFocusModeStore";
 import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
+import useAuthStore from "@/hooks/useAuthStore";
 
 export default function Page() {
   const { isDarkMode, isOLEDMode, palette } = useThemeStore();
+  const { session } = useAuthStore();
   const {
     currentState,
     timerDuration,
@@ -56,7 +58,16 @@ export default function Page() {
             name="gear"
             size={24}
             color={iconColor}
-            onPress={() => SheetManager.show("focus-mode-options-sheet")}
+            onPress={() => {
+              if (session.record.is_premium) {
+                if (isPlaying) {
+                  toggleIsPlaying();
+                }
+                SheetManager.show("focus-mode-options-sheet");
+              } else {
+                SheetManager.show("premium-upgrade-sheet");
+              }
+            }}
           />
           {isSheetIconVisible ? (
             <FontAwesome

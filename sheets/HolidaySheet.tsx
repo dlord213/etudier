@@ -11,7 +11,7 @@ import ThemedText from "@/components/ThemedText";
 
 export default function HolidaySheet() {
   const { isDarkMode, palette } = useThemeStore();
-  const apiKey = process.env.EXPO_PUBLIC_ETUDIER_API_NINJAS_KEY;
+  const apiKey = "NYnxa2AHDvskNMbNzOdvtDeuVh4w2PbTUgANITWD";
 
   const [country, setCountry] = useState<string>("");
 

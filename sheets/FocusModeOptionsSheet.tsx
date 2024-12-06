@@ -8,40 +8,20 @@ import Colors from "@/constants/Colors";
 import useAuthStore from "@/hooks/useAuthStore";
 import useThemeStore from "@/hooks/useThemeStore";
 import ThemedText from "@/components/ThemedText";
+import useFocusModeStore from "@/hooks/useFocusModeStore";
 
 export default function FocusModeOptionsSheet() {
   const { isDarkMode, palette } = useThemeStore();
   const { session } = useAuthStore();
+  const {
+    setBreakModeDuration,
+    setFocusModeDuration,
+    toggleIsPlaying,
+    isPlaying,
+  } = useFocusModeStore();
 
-  const [showPicker, setShowPicker] = useState(false);
-  const [alarmString, setAlarmString] = useState<
-    string | null
-  >(null);
-  const [modalTitle, setModalTitle] = useState<string>("")
-
-  const formatTime = ({
-    hours,
-    minutes,
-    seconds,
-  }: {
-    hours?: number;
-    minutes?: number;
-    seconds?: number;
-  }) => {
-    const timeParts = [];
-
-    if (hours !== undefined) {
-      timeParts.push(hours.toString().padStart(2, "0"));
-    }
-    if (minutes !== undefined) {
-      timeParts.push(minutes.toString().padStart(2, "0"));
-    }
-    if (seconds !== undefined) {
-      timeParts.push(seconds.toString().padStart(2, "0"));
-    }
-
-    return timeParts.join(":");
-  };
+  const [showBreakModePicker, setShowBreakModePicker] = useState(false);
+  const [showFocusModePicker, setShowFocusModePicker] = useState(false);
 
   return (
     <ActionSheet
@@ -50,8 +30,6 @@ export default function FocusModeOptionsSheet() {
           ? Colors.Backgrounds_Dark.Brand
           : Colors.Backgrounds_Light.Brand,
         padding: 16,
-      }}
-      onClose={() => {
       }}
     >
       <View style={{ padding: 16, gap: 12 }}>
@@ -68,8 +46,8 @@ export default function FocusModeOptionsSheet() {
             padding: 16,
             borderRadius: 16,
           }}
-          onPress={() => {
-            SheetManager.hide("focus-mode-options-sheet");
+          onPress={async () => {
+            setShowFocusModePicker(true);
           }}
         >
           <Text
@@ -89,7 +67,7 @@ export default function FocusModeOptionsSheet() {
             borderRadius: 16,
           }}
           onPress={async () => {
-            setShowPicker(true)
+            setShowBreakModePicker(true);
           }}
         >
           <Text
@@ -102,17 +80,17 @@ export default function FocusModeOptionsSheet() {
             Set break mode time
           </Text>
         </Pressable>
+        {/* BREAK MODE */}
         <TimerPickerModal
-          visible={showPicker}
-          setIsVisible={setShowPicker}
-          onConfirm={(pickedDuration) => {
-            console.log(pickedDuration)
-            setAlarmString(formatTime(pickedDuration));
-            setShowPicker(false);
+          visible={showBreakModePicker}
+          setIsVisible={setShowBreakModePicker}
+          onConfirm={(duration) => {
+            setBreakModeDuration(duration);
+            setShowBreakModePicker(false);
           }}
           disableInfiniteScroll
-          modalTitle={modalTitle}
-          onCancel={() => setShowPicker(false)}
+          modalTitle={"Set break time"}
+          onCancel={() => setShowBreakModePicker(false)}
           closeOnOverlayPress
           styles={{
             theme: isDarkMode ? "dark" : "light",
@@ -121,7 +99,32 @@ export default function FocusModeOptionsSheet() {
             overlayOpacity: 0.4,
           }}
           hideHours
+          hideSeconds
         />
+        {/* BREAK MODE */}
+
+        {/* FOCUS MODE */}
+        <TimerPickerModal
+          visible={showFocusModePicker}
+          setIsVisible={setShowFocusModePicker}
+          onConfirm={(duration) => {
+            setFocusModeDuration(duration);
+            setShowFocusModePicker(false);
+          }}
+          disableInfiniteScroll
+          modalTitle={"Set focus time"}
+          onCancel={() => setShowFocusModePicker(false)}
+          closeOnOverlayPress
+          styles={{
+            theme: isDarkMode ? "dark" : "light",
+          }}
+          modalProps={{
+            overlayOpacity: 0.4,
+          }}
+          hideHours
+          hideSeconds
+        />
+        {/* FOCUS MODE */}
       </View>
     </ActionSheet>
   );

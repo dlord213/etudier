@@ -259,10 +259,7 @@ const useAuthStore = create<AuthStoreInterface>()(
 
         set({ session: authData });
 
-        await AsyncStorage.setItem(
-          "@session",
-          JSON.stringify(registrationData)
-        );
+        await AsyncStorage.setItem("@session", JSON.stringify(authData));
         await AsyncStorage.removeItem("@notes");
         await AsyncStorage.removeItem("@tasks");
 

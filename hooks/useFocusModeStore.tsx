@@ -42,7 +42,7 @@ const useFocusModeStore = create<FocusModeInterface>()(
     },
     breakModeTimer: {
       hours: 0,
-      minutes: 15,
+      minutes: 5,
       seconds: 0,
     },
     timerDuration: 15 * 60,
@@ -50,7 +50,6 @@ const useFocusModeStore = create<FocusModeInterface>()(
     isOnFocusMode: true,
     isOnBreakMode: false,
     isSheetIconVisible: false,
-
     toggleIsPlaying: () => {
       set({ isPlaying: !get().isPlaying });
     },
@@ -65,19 +64,19 @@ const useFocusModeStore = create<FocusModeInterface>()(
     toggleIsSheetIconVisible: (val: boolean) => {
       set({ isSheetIconVisible: val });
     },
-
     setFocusModeState: (val: FocusModeStates) => {
       set({ currentState: val });
       get().adjustTimerDuration();
     },
-
     calculateTimerDuration: (timer: Timer) => {
-      return timer.hours * 3600 + timer.minutes * 60 + timer.seconds;
+      return timer.minutes * 60;
     },
     adjustTimerDuration: () => {
       const { currentState, focusModeTimer, breakModeTimer } = get();
       const activeTimer =
-        currentState === FocusModeStates.Study ? focusModeTimer : breakModeTimer;
+        currentState === FocusModeStates.Study
+          ? focusModeTimer
+          : breakModeTimer;
 
       set({ timerDuration: get().calculateTimerDuration(activeTimer) });
     },
