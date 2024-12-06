@@ -48,32 +48,6 @@ export default function PremiumPaymentSheet() {
             InstaPay/GCash
           </Text>
         </Pressable>
-        <Pressable
-          style={({ pressed }) => [
-            {
-              backgroundColor: pressed
-                ? Colors[palette][500]
-                : Colors[palette][600],
-              paddingHorizontal: 24,
-              paddingVertical: 12,
-              borderRadius: 8,
-            },
-          ]}
-          onPress={async () => {
-            await SheetManager.hide("premium-payment-sheet");
-            SheetManager.show("premium-screenshot-upload-sheet");
-          }}
-        >
-          <Text
-            style={{
-              fontFamily: "WorkSans_700Bold",
-              color: Colors.Text_Dark.Default,
-              textAlign: "center",
-            }}
-          >
-            PayPal
-          </Text>
-        </Pressable>
         <ThemedText
           text="After the payment, please wait for our server to process it. It might not reflect immediately on your end."
           color="Secondary"
