@@ -53,7 +53,7 @@ export default function Page() {
             currentState == FocusModeStates.Study ? "Focus Mode" : "Break Mode"
           }
         />
-        <View style={{ flexDirection: "row", gap: 8, alignItems: "center" }}>
+        <View style={{ flexDirection: "row", gap: 16, alignItems: "center" }}>
           <FontAwesome6
             name="gear"
             size={24}
@@ -75,7 +75,11 @@ export default function Page() {
               size={24}
               color={iconColor}
               onPress={() => {
-                SheetManager.show("focus-mode-study-completed-sheet");
+                if (currentState == FocusModeStates.Study) {
+                  SheetManager.show("focus-mode-study-completed-sheet");
+                } else {
+                  SheetManager.show("focus-mode-break-completed-sheet")
+                }
               }}
             />
           ) : null}

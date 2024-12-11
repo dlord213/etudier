@@ -35,6 +35,8 @@ export default function Page() {
         .collection("flashcard")
         .getOne(id, { expand: "user_id" });
 
+      console.log(flashCardData)
+
       return flashCardData;
     } catch (error) {
       throw error;
